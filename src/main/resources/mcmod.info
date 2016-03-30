@@ -1,0 +1,16 @@
+[
+{
+  "modid": "macrokey",
+  "name": "MacroKey",
+  "description": "This mod enables the use of commands that you can bind to keys. PSA to all admins: This is not a hacked client, nor does this mod add any change in functionality in the player's advantage.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://mods.curse.com/mc-mods/minecraft/243479-macrokey",
+  "updateUrl": "http://mods.curse.com/mc-mods/minecraft/243479-macrokey",
+  "authorList": ["Matthew Smeets"],
+  "credits": "Matthew Smeets (MattsOnMc/Mata)",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
