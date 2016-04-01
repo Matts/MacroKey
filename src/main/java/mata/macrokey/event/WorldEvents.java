@@ -1,4 +1,4 @@
-package mata.macrokey.handler;
+package mata.macrokey.event;
 
 import mata.macrokey.MacroKey;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class WorldEvents {
                 String message = I18n.translateToLocal("chat.join");
 
                 message = message.replace("%tag%", I18n.translateToLocal("chat.tag"));
-                message = message.replace("%loaded%",MacroKey.instance.binding.size()+"");
+                message = message.replace("%loaded%",MacroKey.instance.boundKeys.size()+"");
 
                 Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(message));
             }

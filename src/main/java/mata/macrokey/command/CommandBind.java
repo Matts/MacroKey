@@ -1,8 +1,7 @@
 package mata.macrokey.command;
 
 import mata.macrokey.MacroKey;
-import mata.macrokey.object.CommandBinding;
-import mata.macrokey.util.ConfigHelper;
+import mata.macrokey.object.BoundKey;
 import mata.macrokey.util.KeyHelper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -50,8 +49,8 @@ public class CommandBind implements ICommand {
             if(args[0].equalsIgnoreCase("list")){
                 sender.addChatMessage(new TextComponentString(TextFormatting.DARK_GREEN + localizeMessageWithTag("command.bind.list")));
 
-                for (int i = 0; i < MacroKey.instance.binding.size(); i++) {
-                    sender.addChatMessage(new TextComponentString(KeyHelper.getKeyFromInt(MacroKey.instance.binding.get(i).getKey()) + " | " + MacroKey.instance.binding.get(i).getExec()));
+                for (int i = 0; i < MacroKey.instance.boundKeys.size(); i++) {
+                    sender.addChatMessage(new TextComponentString(KeyHelper.getKeyFromInt(MacroKey.instance.boundKeys.get(i).getKeyCode()) + " | " + MacroKey.instance.boundKeys.get(i).getCommand()));
                 }
             }
             if(args[0].equalsIgnoreCase("help")){
@@ -61,7 +60,6 @@ public class CommandBind implements ICommand {
                 if (args.length >= 2) {
                     if(KeyHelper.getIntFromKey(args[1]) != null) {
                         int key = KeyHelper.getIntFromKey(args[1]);
-                        if (!ConfigHelper.doesBindingExist(key)) {
                             StringBuilder buffer = new StringBuilder();
 
                             for (int i = 2; i < args.length; i++) {
@@ -70,36 +68,15 @@ public class CommandBind implements ICommand {
 
                             buffer.trimToSize();
 
-                            CommandBinding bind = new CommandBinding(buffer.toString(), key);
-                            CommandBinding.saveBinding(bind);
-
-
+                            MacroKey.instance.jsonConfig.addKeybinding(new BoundKey(key, buffer.toString()));
 
                             sender.addChatMessage(new TextComponentString(localizeMessageWithTag("command.add.bindsuccessfull").replace("%exec%", buffer.toString()).replace("%key%", args[1])));
-                        } else {
-                            sender.addChatMessage(new TextComponentString(localizeMessageWithTag("chat.keyalreadybound")));
-                        }
+
                     }else {
                         sender.addChatMessage(new TextComponentString(localizeMessageWithTag("chat.keynotexist")));
                     }
                 } else{
                     sender.addChatMessage(new TextComponentString(localizeMessageWithTag("command.add.usage")));
-                }
-            }
-            if(args[0].equalsIgnoreCase("remove")){
-                if (args.length >= 2) {
-                    if(KeyHelper.getIntFromKey(args[1]) != null) {
-                        if (ConfigHelper.doesBindingExist(KeyHelper.getIntFromKey(args[1]))) {
-                            ConfigHelper.removeCommand(KeyHelper.getIntFromKey(args[1]));
-                            sender.addChatMessage(new TextComponentString(localizeMessageWithTag("command.add.unbindsuccessfull").replace("%key%", args[1])));
-                        } else {
-                            sender.addChatMessage(new TextComponentString(localizeMessageWithTag("chat.keynotbound")));
-                        }
-                    }else {
-                        sender.addChatMessage(new TextComponentString(localizeMessageWithTag("chat.keynotexist")));
-                    }
-                }else{
-                    sender.addChatMessage(new TextComponentString(localizeMessageWithTag("command.remove.usage")));
                 }
             }
         } else{

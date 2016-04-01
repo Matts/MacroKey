@@ -1,8 +1,10 @@
 package mata.macrokey;
 
-import mata.macrokey.object.CommandBinding;
 import mata.macrokey.proxy.CommonProxy;
+import mata.macrokey.object.BoundKey;
+import mata.macrokey.util.JsonConfig;
 import mata.macrokey.util.LogHelper;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,12 +13,11 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Matt on 3/30/2016.
  */
-@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME)
+@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, clientSideOnly=true)
 public class MacroKey {
 
     @Mod.Instance
@@ -27,10 +28,15 @@ public class MacroKey {
 
     public Configuration configuration;
 
-    public List<CommandBinding> binding;
+    public static KeyBinding[] forgeKeybindings;
+
+    public JsonConfig jsonConfig;
+
+    public ArrayList<BoundKey> boundKeys;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
+
         LogHelper.debug("PreInit");
 
         LogHelper.info("Starting the initialization of MacroKey...");
@@ -41,12 +47,12 @@ public class MacroKey {
 
         event.getModMetadata().version = Reference.MOD_VERSION;
 
-        binding = new ArrayList<CommandBinding>();
         configuration = new Configuration(event.getSuggestedConfigurationFile());
-
         configuration.load();
 
-        CommandBinding.loadKeybindings();
+        jsonConfig = new JsonConfig(event.getSuggestedConfigurationFile());
+        jsonConfig.loadKeybindings();
+
     }
 
     @Mod.EventHandler
@@ -59,7 +65,7 @@ public class MacroKey {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        LogHelper.debug("Init");
+        LogHelper.debug("PostInit");
     }
 
 

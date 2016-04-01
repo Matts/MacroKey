@@ -35,4 +35,6 @@ public class Reference {
     public static final String COMMON_PROXY ="mata.macrokey.proxy.CommonProxy";
     public static final String CLIENT_PROXY ="mata.macrokey.proxy.ClientProxy";
 
+    public static final Integer MACROKEY_OPTIONS_BUTTON = 5003;
+
 }

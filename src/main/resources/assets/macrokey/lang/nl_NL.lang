@@ -2,14 +2,21 @@ chat.tag=§7[MacroKey]§f
 
 chat.join=%tag% %loaded% bindingen geladen.
 
-chat.keyalreadybound=%tag% Die knop is al gebonden aan een commando.
-chat.keynotbound=%tag% Die knop is nog niet gebonden.
 chat.keynotexist=%tag% Die knop bestaat niet.
 
 command.add.bindsuccessfull=%tag% '%exec%' is gebonden aan '%key%'.
-command.add.unbindsuccessfull=%tag% '%key%' is ontbonden
 
 command.bind.usage=%tag% Gebruik: /bind add <key> <command> OR /bind list OR /bind help
 command.add.usage=%tag% Gebruik: /bind add <key> <command>
-command.remove.usage=%tag% Gebruik: /bind add <key> <command>
 command.bind.list=--- lijst van alle gebonden knoppen ---
+
+key.macrokey.category=MacroKey
+key.openmacrokey.desc=Open de MacroKey Gui
+
+gui.createkeybindings.screenTitle=Nieuwe binding
+gui.createkeybindings.commandExecute=Commando
+gui.createkeybindings.toBind=Knop om commando mee te koppelen
+gui.createkeybindings.saveBind=Opslaan
+
+gui.keybindings.screenTitle=MacroKey Keybinding
+gui.keybindings.addkeybinding=Voeg binding toe
