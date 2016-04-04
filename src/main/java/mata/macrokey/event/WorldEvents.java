@@ -18,15 +18,18 @@ public class WorldEvents {
     @SideOnly(Side.CLIENT)
     public void onJoinEvent(EntityJoinWorldEvent event){
         if(event.getEntity() == Minecraft.getMinecraft().thePlayer) {
+
             if(!event.getEntity().isDead) {
                 String message = I18n.translateToLocal("chat.join");
 
                 message = message.replace("%tag%", I18n.translateToLocal("chat.tag"));
                 message = message.replace("%loaded%",MacroKey.instance.boundKeys.size()+"");
 
-                Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(message));
+                if(MacroKey.instance.configuration.getBoolean("isSpawnMessageEnabled",MacroKey.instance.configuration.CATEGORY_GENERAL, true, "set this to false if you are getting annoyed by the spam")) {
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(message));
+                }
+                MacroKey.instance.configuration.save();
             }
         }
     }
-
 }

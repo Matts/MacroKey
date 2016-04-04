@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by Matt on 3/30/2016.
  */
-@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, clientSideOnly=true)
+@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, clientSideOnly=true, guiFactory = "mata.macrokey.gui.config.GuiFactoryConfig")
 public class MacroKey {
 
     @Mod.Instance

@@ -14,9 +14,15 @@ key.macrokey.category=MacroKey
 key.openmacrokey.desc=Open de MacroKey Gui
 
 gui.createkeybindings.screenTitle=Nieuwe binding
+gui.createkeybindings.editKeybinding=Wijzig binding
 gui.createkeybindings.commandExecute=Commando
 gui.createkeybindings.toBind=Knop om commando mee te koppelen
+gui.createkeybindings.repeat=Houd knop ingedrukt om commando te herhalen
 gui.createkeybindings.saveBind=Opslaan
 
 gui.keybindings.screenTitle=MacroKey Keybinding
 gui.keybindings.addkeybinding=Voeg binding toe
+gui.keybindings.edit=Wijzig
+
+enabled=Ja
+disabled=Nee

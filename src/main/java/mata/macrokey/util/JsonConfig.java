@@ -65,11 +65,6 @@ public class JsonConfig {
             Gson gson = new GsonBuilder().create();
             BoundKey[] r = gson.fromJson(root, BoundKey[].class);
             MacroKey.instance.boundKeys.addAll(Arrays.asList(r));
-
-            for (BoundKey key :
-                    MacroKey.instance.boundKeys) {
-                System.out.println(key.getKeyCode());
-            }
         }
     }
 
@@ -95,7 +90,7 @@ public class JsonConfig {
 
         ConfigCategory category = MacroKey.instance.configuration.getCategory("bindings");
         for (Map.Entry<String, Property> entry : category.entrySet()) {
-            addKeybinding(new BoundKey(Integer.parseInt(entry.getKey()), entry.getValue().getString()));
+            addKeybinding(new BoundKey(Integer.parseInt(entry.getKey()), entry.getValue().getString(), false));
         }
 
     }

@@ -16,9 +16,15 @@ key.openmacrokey.desc=Open MacroKey Gui
 key.macrokeybinding=MacroKey Keybindings
 
 gui.createkeybindings.screenTitle=Create New Keybinding
+gui.createkeybindings.editKeybinding=Edit Old Keybinding
 gui.createkeybindings.commandExecute=Command to be executed
 gui.createkeybindings.toBind=Key to bind the command to
+gui.createkeybindings.repeat=Repeat command while button pressed
 gui.createkeybindings.saveBind=Save Keybinding
 
 gui.keybindings.screenTitle=MacroKey Keybinding
 gui.keybindings.addkeybinding=Add Keybinding
+gui.keybindings.edit=Edit
+
+enabled=Enabled
+disabled=Disabled

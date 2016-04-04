@@ -17,6 +17,9 @@ public class BoundKey {
     @SerializedName("command")
     @Expose
     private String command;
+    @SerializedName("repeat")
+    @Expose
+    private boolean repeat;
 
 
     private transient boolean isPressed;
@@ -24,9 +27,10 @@ public class BoundKey {
     public BoundKey() {
     }
 
-    public BoundKey(int keyCode, String command) {
+    public BoundKey(int keyCode, String command, boolean repeat) {
         this.keyCode = keyCode;
         this.command = command;
+        this.repeat = repeat;
     }
 
     public int getKeyCode() {
@@ -44,6 +48,15 @@ public class BoundKey {
 
     public void setCommand(String command) {
         this.command = command;
+        MacroKey.instance.jsonConfig.saveKeybinding();
+    }
+
+    public boolean isRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
         MacroKey.instance.jsonConfig.saveKeybinding();
     }
 

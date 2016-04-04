@@ -68,7 +68,7 @@ public class CommandBind implements ICommand {
 
                             buffer.trimToSize();
 
-                            MacroKey.instance.jsonConfig.addKeybinding(new BoundKey(key, buffer.toString()));
+                            MacroKey.instance.jsonConfig.addKeybinding(new BoundKey(key, buffer.toString(), false));
 
                             sender.addChatMessage(new TextComponentString(localizeMessageWithTag("command.add.bindsuccessfull").replace("%exec%", buffer.toString()).replace("%key%", args[1])));
 

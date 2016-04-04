@@ -17,13 +17,13 @@ ext.configFile = file "build.properties"
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "BETA-1.1"
+version = "1.0.4"
 group = "mata.macrokey.macrokey"
 archivesBaseName = "macrokey"
 
 
 minecraft {
-    version = "1.9-12.16.0.1813-1.9"
+    version = "1.9-12.16.0.1835-1.9"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

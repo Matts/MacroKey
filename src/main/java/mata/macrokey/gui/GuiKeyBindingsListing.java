@@ -63,6 +63,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         private final String keyDesc;
         private final GuiButton btnChangeKeyBinding;
         private final GuiButton btnRemoveKeyBinding;
+        private final GuiButton btnEdit;
 
         private boolean deleted=false;
 
@@ -70,7 +71,8 @@ public class GuiKeyBindingsListing extends GuiListExtended {
             this.boundKey = bind;
             this.keyDesc = bind.getCommand();
             this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, bind.getCommand());
-            this.btnRemoveKeyBinding = new GuiButton(0, 0, 0, 20, 20, "X");
+            this.btnRemoveKeyBinding = new GuiButton(1, 0, 0, 15, 20, "X");
+            this.btnEdit = new GuiButton(2, 0, 0, 30, 20, I18n.format("gui.keybindings.edit"));
         }
 
         @Override
@@ -84,11 +86,17 @@ public class GuiKeyBindingsListing extends GuiListExtended {
                 boolean flag = this.boundKey.equals(GuiKeyBindingsListing.this.guiKeybindings.boundKey);
 
                 GuiKeyBindingsListing.this.mc.fontRendererObj.drawString(this.keyDesc, x + 90 - GuiKeyBindingsListing.this.maxListLabelWidth, y + slotHeight / 2 - GuiKeyBindingsListing.this.mc.fontRendererObj.FONT_HEIGHT / 2, 16777215);
-                this.btnChangeKeyBinding.xPosition = x + 105;
+                this.btnChangeKeyBinding.xPosition = x + 95;
                 this.btnChangeKeyBinding.yPosition = y;
                 this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.boundKey.getKeyCode());
 
-                this.btnRemoveKeyBinding.xPosition = x + 180;
+                this.btnEdit.xPosition = x + 170;
+                this.btnEdit.yPosition = y;
+                this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
+
+                this.btnEdit.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
+
+                this.btnRemoveKeyBinding.xPosition = x + 200;
                 this.btnRemoveKeyBinding.yPosition = y;
                 this.btnRemoveKeyBinding.enabled = true;
                 this.btnRemoveKeyBinding.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
@@ -121,14 +129,21 @@ public class GuiKeyBindingsListing extends GuiListExtended {
 
         @Override
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
-
+            if(this.btnEdit.mousePressed(mc, mouseX, mouseY)){
+                mc.displayGuiScreen(new GuiCreateKeybinding(GuiKeyBindingsListing.this.guiKeybindings, boundKey));
+                return true;
+            }
             if(this.btnChangeKeyBinding.mousePressed(mc, mouseX, mouseY)){
                 GuiKeyBindingsListing.this.guiKeybindings.boundKey = this.boundKey;
                 return true;
-            }else if(this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)){
+            }
+            if(this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)){
                 boundKey.delete();
                 deleted=true;
+                mc.displayGuiScreen(guiKeybindings);
+                return true;
             }
+
             return false;
 
         }
@@ -136,6 +151,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         @Override
         public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
             this.btnChangeKeyBinding.mouseReleased(x, y);
+            this.btnEdit.mouseReleased(x,y);
         }
     }
 }
