@@ -3,23 +3,28 @@ package mata.macrokey.handler;
 import mata.macrokey.MacroKey;
 import mata.macrokey.Reference;
 import mata.macrokey.gui.GuiKeybindings;
-import mata.macrokey.gui.config.GuiConfigMod;
+import mata.macrokey.language.ParseCommand;
+import mata.macrokey.object.BoundKey;
+import mata.macrokey.object.ToBeExecutedCommand;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.client.GuiModList;
-import net.minecraftforge.fml.client.GuiSlotModList;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by Matt on 3/31/2016.
@@ -60,10 +65,16 @@ public class GuiEventHandler {
         }
 
         for(int i = 0; i< MacroKey.instance.boundKeys.size(); i++) {
-            if(Keyboard.isKeyDown(MacroKey.instance.boundKeys.get(i).getKeyCode()) & (MacroKey.instance.boundKeys.get(i).isRepeat() | !MacroKey.instance.boundKeys.get(i).isPressed())){
+            if(Keyboard.isKeyDown(MacroKey.instance.boundKeys.get(i).getKeyCode())){
                 MacroKey.instance.boundKeys.get(i).setPressed(true);
-                EntityPlayerSP entity = Minecraft.getMinecraft().thePlayer;
-                entity.sendChatMessage(MacroKey.instance.boundKeys.get(i).getCommand());
+
+                String command = MacroKey.instance.boundKeys.get(i).getCommand();
+                if(command.contains("exec") || (command.contains("sleep") & command.contains(";"))) {
+                    ParseCommand.parse(command);
+                }else{
+                    Minecraft.getMinecraft().thePlayer.sendChatMessage(command);
+                }
+
             }
             if(!Keyboard.isKeyDown(MacroKey.instance.boundKeys.get(i).getKeyCode())){
                 MacroKey.instance.boundKeys.get(i).setPressed(false);
@@ -71,14 +82,35 @@ public class GuiEventHandler {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
-    public void onEvent(GuiOpenEvent event)
-    {
-        //if (event.getGui() instanceof GuiSlotModList)
-        //{
-            //System.out.println("GuiOpenEvent for GuiIngameModOptions");
-           // event.setGui(new GuiConfigMod(null));
-        //}
+    public static int ticks;
+    public static List<ToBeExecutedCommand> keyList;
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if(keyList==null){
+            keyList = new ArrayList<ToBeExecutedCommand>();
+        }
+        if (event.phase == TickEvent.Phase.START) {
+            if(Minecraft.getMinecraft().thePlayer != null){
+                if(keyList.size()>0){
+                    for(ToBeExecutedCommand key : keyList){
+                        if(ticks>=key.getTicks()){
+                            Minecraft.getMinecraft().thePlayer.sendChatMessage(key.getCommand());
+                            keyList.remove(key);
+                            break;
+                        }
+                    }
+                }
+                for(BoundKey key : MacroKey.instance.boundKeys){
+                    if(key.isPressed() && key.isRepeat()){
+                        Minecraft.getMinecraft().thePlayer.sendChatMessage(key.getCommand());
+                    }
+                }
+
+                ticks++;
+            }else{
+                keyList = null;
+            }
+        }
     }
 }

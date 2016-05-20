@@ -1,4 +1,3 @@
-
 // For those who want the bleeding edge
 buildscript {
     repositories {
@@ -12,18 +11,31 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+/*
+// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
+*/
 
 ext.configFile = file "build.properties"
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
 
-version = "1.0.4"
-group = "mata.macrokey.macrokey"
-archivesBaseName = "macrokey"
-
+version = config.mod_version
+group = config.mod_group
+archivesBaseName = config.mod_name
+if (System.getenv().BUILD_NUMBER)
+	version = "${config.mod_version}.b${System.getenv().BUILD_NUMBER}"
 
 minecraft {
-    version = "1.9-12.16.0.1835-1.9"
+    version = "${config.mc_version}-${config.forge_version}"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -32,7 +44,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "snapshot_20160312"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 idea.module.inheritOutputDirs = true
@@ -70,7 +82,7 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        include '**/reference.properties'
+		include '**/reference.properties'
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -83,6 +95,12 @@ processResources
     }
 }
 
-jar {
-    appendix = "1.9"
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+	appendix = config.mc_version
+    classifier = 'deobf'
+}
+ 
+artifacts {
+        archives deobfJar
 }

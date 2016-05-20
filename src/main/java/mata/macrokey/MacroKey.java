@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by Matt on 3/30/2016.
  */
-@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, clientSideOnly=true, guiFactory = Reference.GUI_FACTORY, updateJSON = "https://dl.dropboxusercontent.com/u/14369750/update.json")
+@Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, useMetadata = true, clientSideOnly=true, guiFactory = Reference.GUI_FACTORY, updateJSON = "https://bitbucket.org/MattsMc/versionchecking/raw/master/macrokey.json")
 public class MacroKey {
 
     @Mod.Instance

@@ -22,26 +22,28 @@ public class GuiKeyBindingsListing extends GuiListExtended {
     private final GuiKeybindings guiKeybindings;
     private final GuiListExtended.IGuiListEntry[] listEntries;
 
-    private int maxListLabelWidth = 0;
+    private int[] maxListLabelWidth;
 
     public GuiKeyBindingsListing(GuiKeybindings controls, Minecraft mcIn) {
         super(mcIn, controls.width + 45, controls.height, 63, controls.height - 32, 20);
         this.mc = mcIn;
         this.guiKeybindings = controls;
         this.listEntries = new GuiListExtended.IGuiListEntry[MacroKey.instance.boundKeys.size()];
+        this.maxListLabelWidth = new int[MacroKey.instance.boundKeys.size()];
 
         int i = 0;
 
         for(BoundKey bind : MacroKey.instance.boundKeys){
-                this.listEntries[i++] = new GuiKeyBindingsListing.KeyEntry(bind);
+                this.listEntries[i] = new GuiKeyBindingsListing.KeyEntry(bind, i);
 
                 int j = mcIn.fontRendererObj.getStringWidth(I18n.format(bind.getCommand(), new Object[0]));
 
-                if (j > this.maxListLabelWidth)
+                if (j > this.maxListLabelWidth[i])
                 {
-                    this.maxListLabelWidth = j;
+                    this.maxListLabelWidth[i] = j;
                 }
-            }
+            i++;
+        }
 
     }
 
@@ -65,9 +67,12 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         private final GuiButton btnRemoveKeyBinding;
         private final GuiButton btnEdit;
 
+        private int index;
+
         private boolean deleted=false;
 
-        public KeyEntry(BoundKey bind) {
+        public KeyEntry(BoundKey bind, int i) {
+            this.index=i;
             this.boundKey = bind;
             this.keyDesc = bind.getCommand();
             this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, bind.getCommand());
@@ -85,7 +90,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
             if(!deleted) {
                 boolean flag = this.boundKey.equals(GuiKeyBindingsListing.this.guiKeybindings.boundKey);
 
-                GuiKeyBindingsListing.this.mc.fontRendererObj.drawString(this.keyDesc, x + 90 - GuiKeyBindingsListing.this.maxListLabelWidth, y + slotHeight / 2 - GuiKeyBindingsListing.this.mc.fontRendererObj.FONT_HEIGHT / 2, 16777215);
+                GuiKeyBindingsListing.this.mc.fontRendererObj.drawString(this.keyDesc, x + 90 - GuiKeyBindingsListing.this.maxListLabelWidth[index], y + slotHeight / 2 - GuiKeyBindingsListing.this.mc.fontRendererObj.FONT_HEIGHT / 2, 16777215);
                 this.btnChangeKeyBinding.xPosition = x + 95;
                 this.btnChangeKeyBinding.yPosition = y;
                 this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.boundKey.getKeyCode());
@@ -153,6 +158,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
             this.btnChangeKeyBinding.mouseReleased(x, y);
             this.btnEdit.mouseReleased(x,y);
         }
+
     }
 }
 
