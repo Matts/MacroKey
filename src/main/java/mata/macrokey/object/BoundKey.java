@@ -1,12 +1,13 @@
 package mata.macrokey.object;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import mata.macrokey.MacroKey;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class BoundKey {

@@ -5,8 +5,6 @@ import mata.macrokey.object.ToBeExecutedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 
-import java.text.ParseException;
-
 
 public class ParseCommand {
 

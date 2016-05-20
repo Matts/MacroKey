@@ -1,8 +1,8 @@
 package mata.macrokey.proxy;
 
 import mata.macrokey.MacroKey;
-import mata.macrokey.handler.GuiHandler;
 import mata.macrokey.event.WorldEvents;
+import mata.macrokey.handler.GuiHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 

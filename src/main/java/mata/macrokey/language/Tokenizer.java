@@ -1,8 +1,5 @@
 package mata.macrokey.language;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

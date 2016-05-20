@@ -1,7 +1,7 @@
 package mata.macrokey;
 
-import mata.macrokey.proxy.CommonProxy;
 import mata.macrokey.object.BoundKey;
+import mata.macrokey.proxy.CommonProxy;
 import mata.macrokey.util.JsonConfig;
 import mata.macrokey.util.LogHelper;
 import net.minecraft.client.settings.KeyBinding;

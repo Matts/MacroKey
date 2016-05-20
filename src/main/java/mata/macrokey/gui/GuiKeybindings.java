@@ -2,7 +2,9 @@ package mata.macrokey.gui;
 
 import mata.macrokey.object.BoundKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 

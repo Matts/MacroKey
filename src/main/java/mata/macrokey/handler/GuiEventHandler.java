@@ -6,10 +6,10 @@ import mata.macrokey.gui.GuiKeybindings;
 import mata.macrokey.language.ParseCommand;
 import mata.macrokey.object.BoundKey;
 import mata.macrokey.object.ToBeExecutedCommand;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiControls;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -23,8 +23,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Created by Matt on 3/31/2016.
@@ -65,7 +63,7 @@ public class GuiEventHandler {
         }
 
         for(int i = 0; i< MacroKey.instance.boundKeys.size(); i++) {
-            if(Keyboard.isKeyDown(MacroKey.instance.boundKeys.get(i).getKeyCode())){
+            if(Keyboard.isKeyDown(MacroKey.instance.boundKeys.get(i).getKeyCode()) & (!MacroKey.instance.boundKeys.get(i).isPressed())){
                 MacroKey.instance.boundKeys.get(i).setPressed(true);
 
                 String command = MacroKey.instance.boundKeys.get(i).getCommand();
@@ -102,7 +100,7 @@ public class GuiEventHandler {
                     }
                 }
                 for(BoundKey key : MacroKey.instance.boundKeys){
-                    if(key.isPressed() && key.isRepeat()){
+                    if(key.isPressed() && key.isRepeat() && !(key.getCommand().contains("exec") || (key.getCommand().contains("sleep") & key.getCommand().contains(";")))){
                         Minecraft.getMinecraft().thePlayer.sendChatMessage(key.getCommand());
                     }
                 }
