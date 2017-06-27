@@ -30,9 +30,9 @@ public class GuiCreateLayer extends GuiScreen{
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, !editing ? this.screenTitle : this.editTitle, this.width / 2, 8, 16777215);
-        addButton.drawButton(parentScreen.mc, mouseX, mouseY);
-        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY);
+        this.drawCenteredString(this.fontRenderer, !editing ? this.screenTitle : this.editTitle, this.width / 2, 8, 16777215);
+        addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
 
         this.textFieldName.drawTextBox();
 
@@ -65,7 +65,7 @@ public class GuiCreateLayer extends GuiScreen{
         this.buttonList.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, "Save Layer"));
         this.buttonList.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.format("gui.cancel", new Object[0])));
 
-        this.textFieldName = new GuiTextField(9, this.fontRendererObj, this.width / 2 - 100, 50, 200, 20);
+        this.textFieldName = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.textFieldName.setFocused(true);
         this.textFieldName.setMaxStringLength(20);
 

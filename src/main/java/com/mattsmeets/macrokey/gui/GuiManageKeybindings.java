@@ -47,10 +47,10 @@ public class GuiManageKeybindings extends GuiScreen implements GuiYesNoCallback 
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.keyBindingList.drawScreen(mouseX, mouseY, partialTicks);
-        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
-        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
-        layerEditor.drawButton(Minecraft.getMinecraft(), mouseX,mouseY);
+        layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
         if(currentSelectedLayer==-1){
             layerSwitcher.displayString = "Layer: Master";
@@ -58,9 +58,9 @@ public class GuiManageKeybindings extends GuiScreen implements GuiYesNoCallback 
             layerSwitcher.displayString = "Layer: " + MacroKey.instance.layers.get(currentSelectedLayer).getDisplayName();
         }
 
-        layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
-        this.drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 8, 16777215);
+        this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
     }
 
     @Override

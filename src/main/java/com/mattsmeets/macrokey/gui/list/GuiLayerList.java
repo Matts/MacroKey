@@ -34,7 +34,7 @@ public class GuiLayerList extends GuiListExtended {
         for(Layer layer : MacroKey.instance.layers){
             this.listEntries[i] = new GuiLayerList.KeyEntry(layer, i);
 
-            int j = mcIn.fontRendererObj.getStringWidth(I18n.format(layer.getDisplayName(), new Object[0]));
+            int j = mcIn.fontRenderer.getStringWidth(I18n.format(layer.getDisplayName(), new Object[0]));
 
             if (j > this.maxListLabelWidth[i])
             {
@@ -79,25 +79,20 @@ public class GuiLayerList extends GuiListExtended {
         }
 
         @Override
-        public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
-
-        }
-
-        @Override
-        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
             if(!deleted) {
-                GuiLayerList.this.mc.fontRendererObj.drawString(this.keyDesc, x + 90 - GuiLayerList.this.maxListLabelWidth[index], y + slotHeight / 2 - GuiLayerList.this.mc.fontRendererObj.FONT_HEIGHT / 2, 16777215);
+                GuiLayerList.this.mc.fontRenderer.drawString(this.keyDesc, x + 90 - GuiLayerList.this.maxListLabelWidth[index], y + slotHeight / 2 - GuiLayerList.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
 
-                this.btnEdit.xPosition = x + 140;
-                this.btnEdit.yPosition = y;
+                this.btnEdit.x = x + 140;
+                this.btnEdit.y = y;
                 this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
 
-                this.btnEdit.drawButton(GuiLayerList.this.mc, mouseX, mouseY);
+                this.btnEdit.drawButton(GuiLayerList.this.mc, mouseX, mouseY, 0.0f);
 
-                this.btnRemove.xPosition = x + 200;
-                this.btnRemove.yPosition = y;
+                this.btnRemove.x = x + 200;
+                this.btnRemove.y = y;
                 this.btnRemove.enabled = true;
-                this.btnRemove.drawButton(GuiLayerList.this.mc, mouseX, mouseY);
+                this.btnRemove.drawButton(GuiLayerList.this.mc, mouseX, mouseY, 0.0f);
             }
         }
 
@@ -120,6 +115,9 @@ public class GuiLayerList extends GuiListExtended {
 
         }
 
+        @Override
+        public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
+        }
     }
 }
 

@@ -1,0 +1,30 @@
+chat.tag=§7[MacroKey]§f
+
+chat.join=%tag% %loaded% Tastenbelegungen geladen.
+
+chat.keynotexist=%tag% Diese Taste existiert nicht.
+
+command.add.bindsuccessfull=%tag% '%exec%' wurde zu '%key%' zugeordnet.
+
+command.bind.usage=%tag% Kommandoverwendung: /bind add <taste> <befehl> ODER /bind list ODER /bind help
+command.add.usage=%tag% Kommandoverwendung: /bind add <taste> <befehl>
+command.bind.list=--- Zeige Tastenbelegungsliste ---
+
+key.macrokey.category=MacroKey
+key.openmacrokey.desc=MacroKey Bildschirm öffnen
+
+key.macrokeybinding=MacroKey Tastenbelegungen
+
+gui.createkeybindings.screenTitle=Neue Tastenbelegung erzeugen
+gui.createkeybindings.editKeybinding=Alte Tastenbelegung ändern
+gui.createkeybindings.commandExecute=Auszuführendes Kommando
+gui.createkeybindings.toBind=Taste an die das Kommando zugeordnet werden soll
+gui.createkeybindings.repeat=Kommando wiederholen solange die Taste gedrückt bleibt
+gui.createkeybindings.saveBind=Tastenbelegung sichern
+
+gui.keybindings.screenTitle=MacroKey Tastenbelegung
+gui.keybindings.addkeybinding=Tastenbelegung hinzufügen
+gui.keybindings.edit=Bearbeiten
+
+enabled=Enabled
+disabled=Disabled
