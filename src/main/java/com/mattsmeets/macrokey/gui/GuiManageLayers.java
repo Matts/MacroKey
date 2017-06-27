@@ -38,10 +38,10 @@ public class GuiManageLayers extends GuiScreen implements GuiYesNoCallback {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.layerList.drawScreen(mouseX, mouseY, partialTicks);
-        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
-        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
-        this.drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 8, 16777215);
+        this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
     }
 
     @Override

@@ -47,21 +47,21 @@ public class GuiCreateKeybinding extends GuiScreen{
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, !editing ? this.screenTitle : this.editTitle, this.width / 2, 8, 16777215);
-        addButton.drawButton(parentScreen.mc, mouseX, mouseY);
-        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY);
+        this.drawCenteredString(this.fontRenderer, !editing ? this.screenTitle : this.editTitle, this.width / 2, 8, 16777215);
+        addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 
         this.repeatCommand.displayString = repeatEnabled ? I18n.format("enabled", new Object[0]) : I18n.format("disabled", new Object[0]);
         this.commandActive.displayString = isCommandActive ? I18n.format("enabled", new Object[0]) : I18n.format("disabled", new Object[0]);
 
-        repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY);
-        commandActive.drawButton(parentScreen.mc, mouseX, mouseY);
+        repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
 
 
         this.command.drawTextBox();
-        this.drawString(this.fontRendererObj, I18n.format("gui.createkeybindings.commandExecute", new Object[0]), this.width / 2+ 67 - toExecuteOffset, 37, -6250336);
-        this.drawString(this.fontRendererObj, I18n.format("gui.createkeybindings.toBind", new Object[0]), this.width / 2 + 67 - toBindOffset, 90, -6250336);
+        this.drawString(this.fontRenderer, I18n.format("gui.createkeybindings.commandExecute", new Object[0]), this.width / 2+ 67 - toExecuteOffset, 37, -6250336);
+        this.drawString(this.fontRenderer, I18n.format("gui.createkeybindings.toBind", new Object[0]), this.width / 2 + 67 - toBindOffset, 90, -6250336);
 
         List<String> list = new ArrayList<String>();
         list.add("Hold to repeat");
@@ -69,7 +69,7 @@ public class GuiCreateKeybinding extends GuiScreen{
         int k = 0;
         this.maxListLabelWidth = new int[list.size()];
         for(String string : list) {
-            int j = mc.fontRendererObj.getStringWidth(string);
+            int j = mc.fontRenderer.getStringWidth(string);
 
             if (j > this.maxListLabelWidth[k]) {
                 this.maxListLabelWidth[k] = j;
@@ -77,8 +77,8 @@ public class GuiCreateKeybinding extends GuiScreen{
             k++;
         }
 
-        this.drawString(this.fontRendererObj, list.get(0), this.width / 2 + 50 - maxListLabelWidth[0] - toBindOffset, 145, -6250336);
-        this.drawString(this.fontRendererObj, list.get(1), this.width / 2 + 50 - maxListLabelWidth[1] - toBindOffset, 168, -6250336);
+        this.drawString(this.fontRenderer, list.get(0), this.width / 2 + 50 - maxListLabelWidth[0] - toBindOffset, 145, -6250336);
+        this.drawString(this.fontRenderer, list.get(1), this.width / 2 + 50 - maxListLabelWidth[1] - toBindOffset, 168, -6250336);
 
 
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
@@ -103,7 +103,7 @@ public class GuiCreateKeybinding extends GuiScreen{
         {
             this.btnKeyBinding.displayString = TextFormatting.GOLD + this.btnKeyBinding.displayString;
         }
-        this.btnKeyBinding.drawButton(mc, mouseX, mouseY);
+        this.btnKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
 
     }
 
@@ -125,21 +125,21 @@ public class GuiCreateKeybinding extends GuiScreen{
         this.parentScreen=guiScreen;
         this.result = new BoundKey();
 
-        int toBind = guiScreen.mc.fontRendererObj.getStringWidth(I18n.format("gui.createkeybindings.toBind", new Object[0]));
+        int toBind = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.toBind", new Object[0]));
 
         if (toBind > this.toBindOffset)
         {
             this.toBindOffset = toBind;
         }
 
-        int execute = guiScreen.mc.fontRendererObj.getStringWidth(I18n.format("gui.createkeybindings.commandExecute", new Object[0]));
+        int execute = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.commandExecute", new Object[0]));
 
         if (execute > this.toExecuteOffset)
         {
             this.toExecuteOffset = execute;
         }
 
-        int repeat = guiScreen.mc.fontRendererObj.getStringWidth(I18n.format("gui.createkeybindings.repeat", new Object[0]));
+        int repeat = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.repeat", new Object[0]));
 
         if (repeat > this.repeatOffset)
         {
@@ -163,7 +163,7 @@ public class GuiCreateKeybinding extends GuiScreen{
         this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, I18n.format("disabled", new Object[0])));
 
 
-        this.command = new GuiTextField(9, this.fontRendererObj, this.width / 2 - 100, 50, 200, 20);
+        this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
         this.command.setMaxStringLength(Integer.MAX_VALUE);
 

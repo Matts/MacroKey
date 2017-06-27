@@ -67,7 +67,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         for(BoundKey bind : boundKeyList){
             this.listEntries[i] = new GuiKeyBindingsListing.KeyEntry(bind, i);
 
-            int j = mcIn.fontRendererObj.getStringWidth(I18n.format(bind.getCommand(), new Object[0]));
+            int j = mcIn.fontRenderer.getStringWidth(I18n.format(bind.getCommand(), new Object[0]));
 
             if (j > this.maxListLabelWidth[i])
             {
@@ -126,34 +126,29 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         }
 
         @Override
-        public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
-
-        }
-
-        @Override
-        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
             if(!deleted) {
                 boolean flag = this.boundKey.equals(GuiKeyBindingsListing.this.guiKeybindings.boundKey);
 
-                GuiKeyBindingsListing.this.mc.fontRendererObj.drawString(this.keyDesc, x + 90 - GuiKeyBindingsListing.this.maxListLabelWidth[index], y + slotHeight / 2 - GuiKeyBindingsListing.this.mc.fontRendererObj.FONT_HEIGHT / 2, 16777215);
+                GuiKeyBindingsListing.this.mc.fontRenderer.drawString(this.keyDesc, x + 90 - GuiKeyBindingsListing.this.maxListLabelWidth[index], y + slotHeight / 2 - GuiKeyBindingsListing.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
 
                 if(isMaster) {
-                    this.btnChangeKeyBinding.xPosition = x + 95;
-                    this.btnChangeKeyBinding.yPosition = y;
+                    this.btnChangeKeyBinding.x = x + 95;
+                    this.btnChangeKeyBinding.y = y;
                     this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.boundKey.getKeyCode());
 
-                    this.btnEdit.xPosition = x + 170;
-                    this.btnEdit.yPosition = y;
+                    this.btnEdit.x = x + 170;
+                    this.btnEdit.y = y;
                     this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
-                    this.btnEdit.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
+                    this.btnEdit.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY, 0.0f);
 
-                    this.btnRemoveKeyBinding.xPosition = x + 200;
-                    this.btnRemoveKeyBinding.yPosition = y;
+                    this.btnRemoveKeyBinding.x = x + 200;
+                    this.btnRemoveKeyBinding.y = y;
                     this.btnRemoveKeyBinding.enabled = true;
-                    this.btnRemoveKeyBinding.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
+                    this.btnRemoveKeyBinding.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY, 0.0f);
                 }else{
-                    this.btnEnabledInLayer.xPosition = x + 95;
-                    this.btnEnabledInLayer.yPosition = y;
+                    this.btnEnabledInLayer.x = x + 95;
+                    this.btnEnabledInLayer.y = y;
 
                     if(enabledInLayer){
                         this.btnEnabledInLayer.displayString = "Enabled";
@@ -161,7 +156,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
                         this.btnEnabledInLayer.displayString = "Disabled";
                     }
 
-                    this.btnEnabledInLayer.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
+                    this.btnEnabledInLayer.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY, 0.0f);
                 }
 
                 boolean flag1=false;
@@ -185,7 +180,7 @@ public class GuiKeyBindingsListing extends GuiListExtended {
                     this.btnChangeKeyBinding.displayString = TextFormatting.GOLD + this.btnChangeKeyBinding.displayString;
                 }
 
-                this.btnChangeKeyBinding.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY);
+                this.btnChangeKeyBinding.drawButton(GuiKeyBindingsListing.this.mc, mouseX, mouseY, 0.0f);
             }
         }
 
@@ -224,6 +219,10 @@ public class GuiKeyBindingsListing extends GuiListExtended {
         public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
             this.btnChangeKeyBinding.mouseReleased(x, y);
             this.btnEdit.mouseReleased(x,y);
+        }
+
+        @Override
+        public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
         }
 
     }
