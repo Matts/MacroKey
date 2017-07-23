@@ -10,18 +10,29 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
+ext.configFile = file "build.properties"
 
-version = "1.12-forge14.21.0.2375-1.1.7.0"
-group = "com.mattsmeets.macrokey" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "MacroKey"
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
 
-sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+
+version = config.mod_version
+group = config.mod_group
+archivesBaseName = config.mod_name
+
+if (System.getenv().BUILD_NUMBER)
+    version = "${config.mod_version}.b${System.getenv().BUILD_NUMBER}"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+    sourceCompatibility = targetCompatibility = '1.8'
 }
 
 minecraft {
-    version = "1.12-14.21.0.2375"
+    version = "${config.mc_version}-${config.forge_version}"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -65,6 +76,7 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+        include '**/reference.properties'
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -73,5 +85,6 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+        exclude '**/reference.properties'
     }
 }
