@@ -5,6 +5,9 @@ import com.google.common.base.Throwables;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Created by Matt on 3/30/2016.
+ */
 public class Reference {
 
     private static String getProp(String id) {
@@ -25,9 +28,9 @@ public class Reference {
 
     private static Properties prop;
 
-    public static final String MOD_ID = getProp("MOD_ID");
-    public static final String MOD_NAME = getProp("MOD_NAME");
-    public static final String MOD_VERSION = getProp("VERSION");
+    public static final String MOD_ID = "macrokey";
+    public static final String MOD_NAME = "MacroKey";
+    public static final String MOD_VERSION = getProp("version");
 
     public static final String COMMON_PROXY ="com.mattsmeets.macrokey.proxy.CommonProxy";
     public static final String CLIENT_PROXY ="com.mattsmeets.macrokey.proxy.ClientProxy";
