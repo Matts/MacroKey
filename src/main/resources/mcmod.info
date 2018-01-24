@@ -1,0 +1,16 @@
+[
+{
+  "modid": "macrokey",
+  "name": "MacroKey Keybinding",
+  "description": "This mod enables the use of commands that you can bind to keys. PSA to all admins: This is not a hacked client, nor does this mod add any change in functionality in the player's advantage.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://curse.com/project/243479",
+  "updateUrl": "http://curse.com/project/243479",
+  "authorList": ["Matt Smeets"],
+  "credits": "Matthew Smeets (@Matt_Smeets)",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
