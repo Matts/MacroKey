@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey;
 
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -8,7 +9,7 @@ import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import com.mattsmeets.macrokey.service.LogHelper;
 import com.mattsmeets.macrokey.service.PropertyLoader;
 
-@Mod(modid = ModReference.MOD_ID, name = ModReference.MOD_NAME, clientSideOnly = true, useMetadata = true)
+@Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true)
 public class MacroKey {
 
     @Mod.Instance
@@ -32,7 +33,9 @@ public class MacroKey {
         this.logger = new LogHelper(event.getModLog());
 
         // setting the version from reference
-        event.getModMetadata().version = ModReference.MOD_VERSION;
+        ModMetadata modMetadata = event.getModMetadata();
+        modMetadata.version = ModReference.MOD_VERSION;
+        modMetadata.name = ModReference.MOD_NAME;
 
         // MacroKey is a client side only mod, so we never want a server to run it
         if (event.getSide() == Side.SERVER) {
