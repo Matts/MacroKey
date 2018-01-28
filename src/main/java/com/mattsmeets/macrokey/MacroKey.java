@@ -1,11 +1,17 @@
 package com.mattsmeets.macrokey;
 
+import java.io.IOException;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
+import com.mattsmeets.macrokey.repository.BindingsRepository;
+import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
 import com.mattsmeets.macrokey.service.PropertyLoader;
 
@@ -18,6 +24,10 @@ public class MacroKey {
     public PropertyLoader referencePropLoader;
     public LogHelper logger;
 
+    public JsonConfig bindingsJSONConfig;
+
+    public BindingsRepository bindingsRepository;
+
     /**
      * Any pre-preInitialization stuff that has to occur...
      *
@@ -29,8 +39,10 @@ public class MacroKey {
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
+        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), "bindings.json");
+        this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
 
         // setting the version from reference
         ModMetadata modMetadata = event.getModMetadata();
@@ -44,6 +56,20 @@ public class MacroKey {
 
         this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
         this.logger.debug("PreInitialization");
+
+        this.bindingsJSONConfig.initializeFile();
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) throws IOException {
+        this.logger.info("Getting ready to take over the world!");
+        this.logger.debug("PreInitialization");
+
+        this.bindingsRepository
+                .findAllMacros(true)
+                .forEach((macro) ->
+                        System.out.println(macro.getKeyCode() + " " + macro.getCommand())
+                );
     }
 
 }
