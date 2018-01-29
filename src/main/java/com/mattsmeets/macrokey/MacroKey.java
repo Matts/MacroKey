@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
+import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
@@ -20,6 +21,9 @@ public class MacroKey {
 
     @Mod.Instance
     public static MacroKey instance;
+
+    @SidedProxy(clientSide = ModReference.CLIENT_PROXY)
+    public static CommonProxy proxy;
 
     public PropertyLoader referencePropLoader;
     public LogHelper logger;
@@ -64,6 +68,8 @@ public class MacroKey {
     public void init(FMLInitializationEvent event) throws IOException {
         this.logger.info("Getting ready to take over the world!");
         this.logger.debug("PreInitialization");
+
+        proxy.init();
 
         this.bindingsRepository
                 .findAllMacros(true)
