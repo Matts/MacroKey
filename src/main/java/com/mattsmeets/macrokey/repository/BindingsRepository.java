@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import scala.actors.threadpool.Arrays;
@@ -29,7 +30,7 @@ public class BindingsRepository {
         return this.macros;
     }
 
-    public List<Macro> findMacroByKeycode(int keyCode) {
+    public Set<Macro> findMacroByKeycode(int keyCode) {
         return this
                 .macros
                 .stream()
@@ -38,7 +39,7 @@ public class BindingsRepository {
                                 macro.getKeyCode() == keyCode
                                         && macro.isActive()
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public int findFileVersion() {
