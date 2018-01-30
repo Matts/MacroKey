@@ -21,6 +21,9 @@ version = config.mod_version
 group = config.mod_group
 archivesBaseName = config.mod_name
 
+if (System.getenv().BUILD_NUMBER)
+	version = "${config.mod_version}.b${System.getenv().BUILD_NUMBER}"
+
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'

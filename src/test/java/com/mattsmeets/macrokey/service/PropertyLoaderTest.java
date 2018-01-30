@@ -24,14 +24,14 @@ public class PropertyLoaderTest {
         PropertyLoader loader = new PropertyLoader("does.not.exist");
     }
 
-    @Test
+    /*@Test
     public void testGetPropertyFromReferenceFile() throws PropertyInitalizationException {
         PropertyLoader loader = new PropertyLoader("reference.properties");
 
         assertEquals("${mod_version}", loader.getProperty("mod_version"));
         assertEquals("${mc_version}", loader.getProperty("mc_version"));
         assertEquals("${mod_name}", loader.getProperty("mod_name"));
-    }
+    }*/
 
     @Test
     public void testPropertyCalls() {
