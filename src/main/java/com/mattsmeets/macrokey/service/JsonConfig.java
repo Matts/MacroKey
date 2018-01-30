@@ -50,11 +50,12 @@ public class JsonConfig {
     }
 
     public <T> T bindJsonElementToObject(Class<T> classToBind, JsonElement element) {
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(element, classToBind);
+        return new GsonBuilder()
+                .create()
+                .fromJson(element, classToBind);
     }
 
-    public void saveObjectToJson(JsonElement element) throws IOException {
-        this.jsonService.saveJSONElementToFile(element, this.file);
+    public <T> void saveObjectToJson(T object) throws IOException {
+        this.jsonService.saveObjectsToFile(object, this.file);
     }
 }

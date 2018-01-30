@@ -2,37 +2,96 @@ package com.mattsmeets.macrokey.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import scala.actors.threadpool.Arrays;
-
 import com.google.gson.JsonObject;
+import com.mattsmeets.macrokey.model.BindingsFile;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.service.JsonConfig;
 
+/**
+ * Repository class for the bindings.json file
+ */
 public class BindingsRepository {
 
+    /**
+     * JsonConfig helper class
+     */
     private JsonConfig config;
 
-    private ArrayList<Macro> macros;
-    private int fileVersion;
+    /**
+     * File template used for serializing data into bindings.json
+     */
+    private BindingsFile bindingsFile;
 
+    /**
+     * Initialisation of the repository
+     * Note:
+     *   The repository will automatically
+     *   sync when initialized
+     *
+     * @param jsonConfig the JsonConfig helper
+     *
+     * @throws IOException when the file can not be found or modified
+     */
     public BindingsRepository(JsonConfig jsonConfig) throws IOException {
         this.config = jsonConfig;
+
+        loadConfiguration();
     }
 
-    public ArrayList<Macro> findAllMacros(boolean sync) throws IOException {
+    /**
+     * Set the used bindings file.
+     *
+     * @param bindingsFile instance of BindingsFile
+     */
+    public void setBindingsFile(BindingsFile bindingsFile) {
+        this.bindingsFile = bindingsFile;
+    }
+
+    /**
+     * Find all active macro's
+     *
+     * @param sync update from file before retrieving all macros
+     *
+     * @return list of all macros
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public Set<Macro> findAllMacros(boolean sync) throws IOException {
         if (sync)
-            sync();
+            // if specified to update memory with latest changes
+            loadConfiguration();
 
-        return this.macros;
+        return this.bindingsFile.getMacros();
     }
 
-    public Set<Macro> findMacroByKeycode(int keyCode) {
-        return this
-                .macros
+    /**
+     * Find active macro's by its keycode
+     *
+     * @param keyCode uses Keyboard keyCode
+     * @param sync update from file before retrieving all macros
+     *
+     * @return list of active macro's with the given keyCode as trigger
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public Set<Macro> findMacroByKeycode(int keyCode, boolean sync) throws IOException {
+        if (sync)
+            // if specified to update memory with latest changes
+            loadConfiguration();
+
+        // get all macros and filter through them
+        // searching for entries that have the given
+        // keyCode, and are active; finally collect
+        // the results into a Set<Macro>.
+        return this.bindingsFile
+                .getMacros()
                 .stream()
                 .filter(
                         (macro) ->
@@ -42,17 +101,137 @@ public class BindingsRepository {
                 .collect(Collectors.toSet());
     }
 
-    public int findFileVersion() {
-        return fileVersion;
+    /**
+     * Add Macro
+     *
+     * @param macro affected macro
+     * @param sync update file after adding macro
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void addMacro(Macro macro, boolean sync) throws IOException {
+        this.bindingsFile.addMacro(macro);
+
+        if (sync) {
+            // if specified to update configuration
+            saveConfiguration();
+        }
     }
 
-    private void sync() throws IOException {
-        this.macros = null;
+    /**
+     * Edit Macro
+     *
+     * @param macro affected macro
+     * @param sync update file after adding macro
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void updateMacro(Macro macro, boolean sync) throws IOException {
+        this.bindingsFile.setMacros(
+                // get all macro's and go through all of them
+                // when the UMID matches with the given macro
+                // then return the given macro instead of the
+                // macro that is currently being iterated over.
+                // finally collect results into a Set<Macro>
+                this.bindingsFile
+                        .getMacros()
+                        .stream()
+                        .map(savedMacro -> macro.getUMID() == savedMacro.getUMID() ? macro : savedMacro)
+                        .collect(Collectors.toSet())
+        );
 
+        if (sync) {
+            // if specified to update configuration
+            saveConfiguration();
+        }
+    }
+
+    /**
+     * Remove Macro by UUID
+     *
+     * @param umid the unique macro identifier of the affected macro
+     * @param sync update file after adding macro
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void deleteMacro(UUID umid, boolean sync) throws IOException {
+        this.bindingsFile.setMacros(
+                // get all macro's and filter them
+                // when the umid of the macro matches
+                // the given umid, then we will filter
+                // that out of the result set
+                this.bindingsFile
+                        .getMacros()
+                        .stream()
+                        .filter(savedMacro -> umid.compareTo(savedMacro.getUMID()) != 0)
+                        .collect(Collectors.toSet())
+        );
+
+        if (sync) {
+            // if specified to update configuration
+            saveConfiguration();
+        }
+    }
+
+    /**
+     * Remove Macro by instance
+     *
+     * @param macro the affected macro
+     * @param sync update file after adding macro
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void deleteMacro(Macro macro, boolean sync) throws IOException {
+        this.deleteMacro(macro.getUMID(), sync);
+    }
+
+    /**
+     * Get file configuration version
+     *
+     * @return will return the value of the "version" key
+     */
+    public int findFileVersion() {
+        return this.bindingsFile.getVersion();
+    }
+
+    /**
+     * Save the current BindingFile to json
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void saveConfiguration() throws IOException {
+        this.config.saveObjectToJson(this.bindingsFile);
+    }
+
+    /**
+     * Loads the json file into memory
+     *
+     * @throws IOException when file can not be found or read
+     */
+    public void loadConfiguration() throws IOException {
         JsonObject jsonObject = this.config.getJSONObject();
 
-        Macro[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
-        this.macros = new ArrayList<Macro>(Arrays.asList(macroArray));
-        this.fileVersion = jsonObject.get("version").getAsInt();
+        if (jsonObject != null) {
+            // on initialization the bindingsFile will not be set.
+            if (this.bindingsFile == null) {
+                setBindingsFile(new BindingsFile(jsonObject.get("version").getAsInt()));
+            }
+
+            // retrieve all macro's from the bindings.json file
+            // and add them inside our bindingsFile
+            Macro[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
+            this.bindingsFile
+                    .setMacros(Arrays
+                            .stream(macroArray)
+                            .collect(Collectors.toSet())
+                    );
+        } else {
+            // the bindings.json has just been created, or
+            // has been corrupted. We will just create a fresh
+            // installation to prevent errors.
+            setBindingsFile(new BindingsFile(2, new HashSet<>()));
+
+            saveConfiguration();
+        }
     }
 }

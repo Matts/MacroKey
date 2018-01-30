@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -45,8 +46,6 @@ public class MacroKey {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
-        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), "bindings.json");
-        this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
 
         // setting the version from reference
         ModMetadata modMetadata = event.getModMetadata();
@@ -61,7 +60,12 @@ public class MacroKey {
         this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
         this.logger.debug("PreInitialization");
 
+        // set-up the bindings.json service & files
+        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), "bindings.json");
         this.bindingsJSONConfig.initializeFile();
+
+        // BindingsRepository has a dependency on the bindings.json file being created
+        this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
     }
 
     @Mod.EventHandler
@@ -70,12 +74,6 @@ public class MacroKey {
         this.logger.debug("PreInitialization");
 
         proxy.init();
-
-        this.bindingsRepository
-                .findAllMacros(true)
-                .forEach((macro) ->
-                        System.out.println(macro.getKeyCode() + " " + macro.getCommand())
-                );
     }
 
 }

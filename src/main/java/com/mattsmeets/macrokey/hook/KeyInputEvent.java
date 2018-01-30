@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.hook;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,9 +27,9 @@ public class KeyInputEvent {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-    public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
+    public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
         int keyCode = Keyboard.getEventKey();
-        Set<Macro> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode);
+        Set<Macro> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, false);
 
         if (macros.size() > 0) {
             if (Keyboard.getEventKeyState()) {

@@ -34,4 +34,11 @@ public class JSONService {
         writer.close();
     }
 
+    public <T> void saveObjectsToFile(T element, File file) throws IOException {
+        Writer writer = new FileWriter(file);
+
+        Gson gson = new GsonBuilder().create();
+        gson.toJson(element, writer);
+        writer.close();
+    }
 }

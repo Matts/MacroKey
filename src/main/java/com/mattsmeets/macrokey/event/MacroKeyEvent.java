@@ -13,11 +13,44 @@ import com.mattsmeets.macrokey.model.Macro;
 @SideOnly(Side.CLIENT)
 public class MacroKeyEvent extends Event {
 
-    private Set<Macro> macros;
-    private EntityPlayerSP currentPlayer;
-    private boolean pressed;
+    /**
+     * States the key pressed event can be in
+     */
+    public static enum MacroState {
+        KEY_UP(false),
+        KEY_DOWN(true);
 
-    public MacroKeyEvent(Set<Macro> macros, boolean pressed) {
+        private boolean state;
+
+        MacroState(boolean state) {
+            this.state = state;
+        }
+
+        public boolean isKeyDown() {
+            return this.state;
+        }
+
+        public boolean isKeyUp() {
+            return !this.state;
+        }
+    }
+
+    /**
+     * The macro('s) that have been activated
+     */
+    private Set<Macro> macros;
+
+    /**
+     * Current player / sender
+     */
+    private EntityPlayerSP currentPlayer;
+
+    /**
+     * Current state of the button
+     */
+    private MacroState pressed;
+
+    public MacroKeyEvent(Set<Macro> macros, MacroState pressed) {
         this.macros = macros;
         this.pressed = pressed;
 
@@ -34,17 +67,17 @@ public class MacroKeyEvent extends Event {
 
     public static class MacroKeyPressEvent extends MacroKeyEvent {
         public MacroKeyPressEvent(Set<Macro> macros) {
-            super(macros, true);
+            super(macros, MacroState.KEY_DOWN);
         }
     }
 
     public static class MacroKeyReleaseEvent extends MacroKeyEvent {
         public MacroKeyReleaseEvent(Set<Macro> macros) {
-            super(macros, false);
+            super(macros, MacroState.KEY_UP);
         }
     }
 
-    public boolean isPressed() {
+    public MacroState getMacroState() {
         return pressed;
     }
 }

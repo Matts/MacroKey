@@ -18,4 +18,5 @@ One of the biggest complaints I have found about macro mods in the past is that 
 
 ### Useful Links
 Issue Tracker: https://github.com/Matts/MacroKey/issues
+
 Project Backlog: https://github.com/Matts/MacroKey/projects/1
