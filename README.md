@@ -1,6 +1,8 @@
 # MacroKey
 MacroKey Keybinding is a Minecraft Forge mod that allows you to bind commands to keys.
 
+[![Build Status](https://ci.mattsmeets.com/buildStatus/icon?job=MacroKey&build=38)](https://ci.mattsmeets.com/job/MacroKey/38/)
+
 ### Ad Material
 When you find yourself in a situation where you want to be able to access a command fast, you may realize you can be 1 click away.
 

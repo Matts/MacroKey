@@ -1,9 +1,7 @@
 package com.mattsmeets.macrokey.proxy;
 
-public class CommonProxy {
+public abstract class CommonProxy {
 
-    public void init() {
-
-    }
+    public abstract void init();
 
 }

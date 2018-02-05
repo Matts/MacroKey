@@ -58,4 +58,19 @@ public interface MacroInterface {
      */
     public Macro setActive(boolean active);
 
+    /**
+     * When holding button, should we repeat?
+     *
+     * @return repeat
+     */
+    public boolean willRepeat();
+
+    /**
+     * Set the 'repeat' flag on a macro.
+     *
+     * @param repeat willRepeat
+     * @return the current Macro instance
+     */
+    public Macro setRepeat(boolean repeat);
+
 }

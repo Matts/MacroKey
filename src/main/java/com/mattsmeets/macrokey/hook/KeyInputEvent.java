@@ -19,6 +19,7 @@ import com.mattsmeets.macrokey.model.Macro;
 
 public class KeyInputEvent {
 
+    // private stash of pressed keys
     private Set<Integer> pressedKeys;
 
     public KeyInputEvent() {
@@ -29,22 +30,35 @@ public class KeyInputEvent {
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
         int keyCode = Keyboard.getEventKey();
+
+        // find all macro's by the current key pressed, while not syncing
         Set<Macro> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, false);
 
+        // if the list is not empty
         if (macros.size() > 0) {
+            // is the button pressed, or being released
             if (Keyboard.getEventKeyState()) {
+                /*
+                if the key has not been pressed during last events, send
+                an event, and add it to the current index of pressed keys
+                 */
                 if (!this.pressedKeys.contains(keyCode)) {
                     MinecraftForge.EVENT_BUS.post(new MacroKeyEvent.MacroKeyPressEvent(macros));
+                    this.pressedKeys.add(keyCode);
                 }
-                this.pressedKeys.add(keyCode);
             } else {
+                /*
+                if the key has been pressed during last events, send
+                an event, and remove it from the current index of pressed keys
+                 */
                 if (this.pressedKeys.contains(keyCode)) {
                     MinecraftForge.EVENT_BUS.post(new MacroKeyEvent.MacroKeyReleaseEvent(macros));
+                    this.pressedKeys.remove(keyCode);
                 }
-                this.pressedKeys.remove(keyCode);
             }
         }
 
+        // un-set set for gc
         macros = null;
     }
 

@@ -28,9 +28,17 @@ public class PropertyLoaderTest {
     public void testGetPropertyFromReferenceFile() throws PropertyInitalizationException {
         PropertyLoader loader = new PropertyLoader("reference.properties");
 
-        assertEquals("${mod_version}", loader.getProperty("mod_version"));
-        assertEquals("${mc_version}", loader.getProperty("mc_version"));
-        assertEquals("${mod_name}", loader.getProperty("mod_name"));
+        // need to do this since the reference.properties file is
+        // set when building on CI server (or from CLI)
+        String buildNum = System.getProperty("BUILD_NUMBER");
+        if(buildNum == null) {
+            assertEquals("${mod_version}", loader.getProperty("mod_version"));
+            assertEquals("${mc_version}", loader.getProperty("mc_version"));
+            assertEquals("${mod_name}", loader.getProperty("mod_name"));
+        } else {
+            assertEquals("MacroKey Keybinding", loader.getProperty("mod_name"));
+            assertEquals("1.12", loader.getProperty("mc_version"));
+        }
     }*/
 
     @Test
