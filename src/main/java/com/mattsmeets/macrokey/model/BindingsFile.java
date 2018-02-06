@@ -3,12 +3,12 @@ package com.mattsmeets.macrokey.model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BindingsFile {
+public class BindingsFile implements BindingsFileInterface {
 
     private int version;
-    private Set<Macro> macros;
+    private Set<MacroInterface> macros;
 
-    public BindingsFile(int version, Set<Macro> macros) {
+    public BindingsFile(int version, Set<MacroInterface> macros) {
         this.version = version;
         this.macros = macros;
     }
@@ -25,15 +25,15 @@ public class BindingsFile {
         this.version = version;
     }
 
-    public Set<Macro> getMacros() {
+    public Set<MacroInterface> getMacros() {
         return macros;
     }
 
-    public void setMacros(Set<Macro> macros) {
+    public void setMacros(Set<MacroInterface> macros) {
         this.macros = macros;
     }
 
-    public void addMacro(Macro macro) {
+    public void addMacro(MacroInterface macro) {
         this.macros.add(macro);
     }
 }

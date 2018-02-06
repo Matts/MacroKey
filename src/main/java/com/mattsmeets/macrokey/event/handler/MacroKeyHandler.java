@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.mattsmeets.macrokey.event.LimitedInGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroKeyEvent;
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 
 @SideOnly(Side.CLIENT)
 public class MacroKeyHandler {
@@ -17,7 +18,7 @@ public class MacroKeyHandler {
     /**
      * private stash of macro's to run
      */
-    private Set<Macro> macrosToRun;
+    private Set<MacroInterface> macrosToRun;
 
     public MacroKeyHandler() {
         this.macrosToRun = new HashSet<>();

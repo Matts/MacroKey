@@ -1,17 +1,17 @@
 package com.mattsmeets.macrokey.repository;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 import com.mattsmeets.macrokey.model.BindingsFile;
+import com.mattsmeets.macrokey.model.BindingsFileInterface;
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.service.JsonConfig;
 
 /**
@@ -27,7 +27,7 @@ public class BindingsRepository {
     /**
      * File template used for serializing data into bindings.json
      */
-    private BindingsFile bindingsFile;
+    private BindingsFileInterface bindingsFile;
 
     /**
      * Initialisation of the repository
@@ -50,7 +50,7 @@ public class BindingsRepository {
      *
      * @param bindingsFile instance of BindingsFile
      */
-    public void setBindingsFile(BindingsFile bindingsFile) {
+    public void setBindingsFile(BindingsFileInterface bindingsFile) {
         this.bindingsFile = bindingsFile;
     }
 
@@ -63,7 +63,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public Set<Macro> findAllMacros(boolean sync) throws IOException {
+    public Set<MacroInterface> findAllMacros(boolean sync) throws IOException {
         if (sync)
             // if specified to update memory with latest changes
             loadConfiguration();
@@ -81,7 +81,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public Set<Macro> findMacroByKeycode(int keyCode, boolean sync) throws IOException {
+    public Set<MacroInterface> findMacroByKeycode(int keyCode, boolean sync) throws IOException {
         if (sync)
             // if specified to update memory with latest changes
             loadConfiguration();
@@ -109,7 +109,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public void addMacro(Macro macro, boolean sync) throws IOException {
+    public void addMacro(MacroInterface macro, boolean sync) throws IOException {
         this.bindingsFile.addMacro(macro);
 
         if (sync) {
@@ -126,7 +126,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public void updateMacro(Macro macro, boolean sync) throws IOException {
+    public void updateMacro(MacroInterface macro, boolean sync) throws IOException {
         this.bindingsFile.setMacros(
                 // get all macro's and go through all of them
                 // when the UMID matches with the given macro
@@ -181,7 +181,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacro(Macro macro, boolean sync) throws IOException {
+    public void deleteMacro(MacroInterface macro, boolean sync) throws IOException {
         this.deleteMacro(macro.getUMID(), sync);
     }
 
@@ -219,7 +219,7 @@ public class BindingsRepository {
 
             // retrieve all macro's from the bindings.json file
             // and add them inside our bindingsFile
-            Macro[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
+            MacroInterface[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
             this.bindingsFile
                     .setMacros(Arrays
                             .stream(macroArray)

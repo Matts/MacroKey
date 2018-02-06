@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 
 @SideOnly(Side.CLIENT)
 public class MacroKeyEvent extends Event {
@@ -38,7 +39,7 @@ public class MacroKeyEvent extends Event {
     /**
      * The macro('s) that have been activated
      */
-    private Set<Macro> macros;
+    private Set<MacroInterface> macros;
 
     /**
      * Current player / sender
@@ -50,14 +51,14 @@ public class MacroKeyEvent extends Event {
      */
     private MacroState pressed;
 
-    public MacroKeyEvent(Set<Macro> macros, MacroState pressed) {
+    public MacroKeyEvent(Set<MacroInterface> macros, MacroState pressed) {
         this.macros = macros;
         this.pressed = pressed;
 
         this.currentPlayer = Minecraft.getMinecraft().player;
     }
 
-    public Set<Macro> getMacros() {
+    public Set<MacroInterface> getMacros() {
         return this.macros;
     }
 
@@ -66,13 +67,13 @@ public class MacroKeyEvent extends Event {
     }
 
     public static class MacroKeyPressEvent extends MacroKeyEvent {
-        public MacroKeyPressEvent(Set<Macro> macros) {
+        public MacroKeyPressEvent(Set<MacroInterface> macros) {
             super(macros, MacroState.KEY_DOWN);
         }
     }
 
     public static class MacroKeyReleaseEvent extends MacroKeyEvent {
-        public MacroKeyReleaseEvent(Set<Macro> macros) {
+        public MacroKeyReleaseEvent(Set<MacroInterface> macros) {
             super(macros, MacroState.KEY_UP);
         }
     }

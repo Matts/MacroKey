@@ -24,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.google.gson.JsonObject;
 import com.mattsmeets.macrokey.model.BindingsFile;
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.service.JsonConfig;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,17 +41,17 @@ public class BindingsRepositoryTest {
         BindingsFile file = mock(BindingsFile.class);
         Macro macro = mock(Macro.class);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro);
 
-        Set<Macro> input = new HashSet<>();
+        Set<MacroInterface> input = new HashSet<>();
         input.add(macro);
 
         this.bindingsRepository.setBindingsFile(file);
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<Macro> result = this.bindingsRepository.findAllMacros(false);
+        Set<MacroInterface> result = this.bindingsRepository.findAllMacros(false);
 
         assertEquals(expectedResult, result);
     }
@@ -60,16 +61,16 @@ public class BindingsRepositoryTest {
         BindingsFile file = mock(BindingsFile.class);
         Macro macro = mock(Macro.class);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
 
-        Set<Macro> input = new HashSet<>();
+        Set<MacroInterface> input = new HashSet<>();
         input.add(macro);
 
         this.bindingsRepository.setBindingsFile(file);
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<Macro> result = this.bindingsRepository.findAllMacros(false);
+        Set<MacroInterface> result = this.bindingsRepository.findAllMacros(false);
 
         assertNotEquals(expectedResult, result);
     }
@@ -78,12 +79,12 @@ public class BindingsRepositoryTest {
     public void testFindAllWithSyncTrue() throws IOException {
         Macro macro = mock(Macro.class);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro);
 
         when(jsonConfig.getJSONObject()).thenThrow(new IOException());
 
-        Set<Macro> result = this.bindingsRepository.findAllMacros(true);
+        Set<MacroInterface> result = this.bindingsRepository.findAllMacros(true);
 
         // will never come here, if so it should go red
         assertEquals(expectedResult, result);
@@ -99,11 +100,11 @@ public class BindingsRepositoryTest {
         Macro macro4 = new Macro(2, "testing", true);
         Macro macro5 = new Macro(3, "testing", false);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro1);
         expectedResult.add(macro2);
 
-        Set<Macro> input = new HashSet<>();
+        Set<MacroInterface> input = new HashSet<>();
         input.add(macro1);
         input.add(macro2);
         input.add(macro3);
@@ -114,7 +115,7 @@ public class BindingsRepositoryTest {
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<Macro> result = this.bindingsRepository.findMacroByKeycode(1, false);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false);
 
         assertEquals(expectedResult, result);
     }
@@ -135,11 +136,11 @@ public class BindingsRepositoryTest {
         Macro macro4Spy = spy(macro4);
         Macro macro5Spy = spy(macro5);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro1Spy);
         // expect to return macro2
 
-        Set<Macro> input = new HashSet<>();
+        Set<MacroInterface> input = new HashSet<>();
         input.add(macro1Spy);
         input.add(macro2Spy);
         input.add(macro3Spy);
@@ -150,7 +151,7 @@ public class BindingsRepositoryTest {
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<Macro> result = this.bindingsRepository.findMacroByKeycode(1, false);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false);
 
         verify(macro1Spy, times(1)).getKeyCode();
         verify(macro1Spy, times(1)).isActive();
@@ -176,12 +177,12 @@ public class BindingsRepositoryTest {
     public void testFindMacroByKeycodeWithSyncTrue() throws IOException {
         Macro macro = mock(Macro.class);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro);
 
         when(jsonConfig.getJSONObject()).thenThrow(new IOException());
 
-        Set<Macro> result = this.bindingsRepository.findMacroByKeycode(1, true);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, true);
 
         // will never come here, if so it should go red
         assertEquals(expectedResult, result);
@@ -200,7 +201,7 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.addMacro(macro, false);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro);
 
         assertEquals(expectedResult, file.getMacros());
@@ -225,7 +226,7 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.addMacro(macro, true);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro);
 
         assertEquals(expectedResult, file.getMacros());
@@ -290,7 +291,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
 
-        Set<Macro> newMacroSet = new HashSet<>();
+        Set<MacroInterface> newMacroSet = new HashSet<>();
         newMacroSet.add(newMacroSpy);
 
         assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false));
@@ -330,7 +331,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
 
-        Set<Macro> newMacroSet = new HashSet<>();
+        Set<MacroInterface> newMacroSet = new HashSet<>();
         newMacroSet.add(newMacroSpy);
 
         assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false));
@@ -354,12 +355,12 @@ public class BindingsRepositoryTest {
         Macro macro2Spy = spy(macro2);
         Macro macro3Spy = spy(macro3);
 
-        Set<Macro> macros = new HashSet<>();
+        Set<MacroInterface> macros = new HashSet<>();
         macros.add(macro1Spy);
         macros.add(macro2Spy);
         macros.add(macro3Spy);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro2Spy);
         expectedResult.add(macro3Spy);
 
@@ -393,12 +394,12 @@ public class BindingsRepositoryTest {
         Macro macro2Spy = spy(macro2);
         Macro macro3Spy = spy(macro3);
 
-        Set<Macro> macros = new HashSet<>();
+        Set<MacroInterface> macros = new HashSet<>();
         macros.add(macro1Spy);
         macros.add(macro2Spy);
         macros.add(macro3Spy);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro2Spy);
         expectedResult.add(macro3Spy);
 
@@ -432,12 +433,12 @@ public class BindingsRepositoryTest {
         Macro macro2Spy = spy(macro2);
         Macro macro3Spy = spy(macro3);
 
-        Set<Macro> macros = new HashSet<>();
+        Set<MacroInterface> macros = new HashSet<>();
         macros.add(macro1Spy);
         macros.add(macro2Spy);
         macros.add(macro3Spy);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro2Spy);
         expectedResult.add(macro3Spy);
 
@@ -471,12 +472,12 @@ public class BindingsRepositoryTest {
         Macro macro2Spy = spy(macro2);
         Macro macro3Spy = spy(macro3);
 
-        Set<Macro> macros = new HashSet<>();
+        Set<MacroInterface> macros = new HashSet<>();
         macros.add(macro1Spy);
         macros.add(macro2Spy);
         macros.add(macro3Spy);
 
-        Set<Macro> expectedResult = new HashSet<>();
+        Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro2Spy);
         expectedResult.add(macro3Spy);
 

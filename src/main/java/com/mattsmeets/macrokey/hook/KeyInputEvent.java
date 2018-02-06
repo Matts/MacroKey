@@ -16,6 +16,7 @@ import org.lwjgl.input.Keyboard;
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.MacroKeyEvent;
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 
 public class KeyInputEvent {
 
@@ -32,7 +33,7 @@ public class KeyInputEvent {
         int keyCode = Keyboard.getEventKey();
 
         // find all macro's by the current key pressed, while not syncing
-        Set<Macro> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, false);
+        Set<MacroInterface> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, false);
 
         // if the list is not empty
         if (macros.size() > 0) {
