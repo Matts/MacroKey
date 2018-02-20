@@ -18,7 +18,7 @@ import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
 import com.mattsmeets.macrokey.service.PropertyLoader;
 
-@Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true)
+@Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public class MacroKey {
 
     @Mod.Instance
@@ -52,6 +52,7 @@ public class MacroKey {
         ModMetadata modMetadata = event.getModMetadata();
         modMetadata.version = ModReference.MOD_VERSION;
         modMetadata.name = ModReference.MOD_NAME;
+        modMetadata.updateJSON = ModReference.UPDATE_URL;
 
         // MacroKey is a client side only mod, so we never want a server to run it
         if (event.getSide() == Side.SERVER) {
