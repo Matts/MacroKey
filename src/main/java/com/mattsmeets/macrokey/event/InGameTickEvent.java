@@ -1,0 +1,41 @@
+package com.mattsmeets.macrokey.event;
+
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.common.eventhandler.Event;
+
+public class InGameTickEvent extends Event {
+    public static class LimitedInGameTickEvent extends InGameTickEvent {
+
+        public LimitedInGameTickEvent(EntityPlayerSP entityPlayerSP) {
+            super(entityPlayerSP, true);
+        }
+    }
+
+    /**
+     * Current player / sender
+     */
+    private EntityPlayerSP currentPlayer;
+
+    /**
+     * Is this a limited tick event
+     */
+    private boolean limitedTickEvent;
+
+    public InGameTickEvent(EntityPlayerSP entityPlayerSP, boolean limited) {
+        this.currentPlayer = entityPlayerSP;
+        this.limitedTickEvent = limited;
+    }
+
+    public InGameTickEvent(EntityPlayerSP entityPlayerSP) {
+        this.currentPlayer = entityPlayerSP;
+        this.limitedTickEvent = false;
+    }
+
+    public EntityPlayerSP getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public boolean isLimitedTick() {
+        return limitedTickEvent;
+    }
+}

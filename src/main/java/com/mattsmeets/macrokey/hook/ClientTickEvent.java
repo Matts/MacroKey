@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.hook;
 
+import com.mattsmeets.macrokey.event.InGameTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.common.MinecraftForge;
@@ -7,8 +8,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.mattsmeets.macrokey.event.LimitedInGameTickEvent;
 
 @SideOnly(Side.CLIENT)
 public class ClientTickEvent {
@@ -18,18 +17,24 @@ public class ClientTickEvent {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+
+        // check if we are in-game
+        if (player == null) {
+            return;
+        }
+
+        MinecraftForge.EVENT_BUS.post(new InGameTickEvent(player, false));
+
         // rate-limiting so users can define
         // how fast a repeating command should execute
-        if(delta < delay) {
+        if (delta < delay) {
             delta++;
             return;
         }
 
-        // check if we are in-game
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        if(player != null) {
-            MinecraftForge.EVENT_BUS.post(new LimitedInGameTickEvent(player));
-        }
+        MinecraftForge.EVENT_BUS.post(new InGameTickEvent.LimitedInGameTickEvent(player));
+
 
         // set delta back to zero
         delta = 0;

@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.mattsmeets.macrokey.model.Macro;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
