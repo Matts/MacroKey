@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.hook;
 
+import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -13,7 +14,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientTickEvent {
 
     private int delta;
-    private int delay = 20; /* TODO: #14, make the tick delay a config option */
+    // retrieve the given delay within the config,
+    // this will by default be 20 ticks
+    private int delay = ModConfig.repeatDelay;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
