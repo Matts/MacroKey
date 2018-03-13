@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.event.handler;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroKeyEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
@@ -30,6 +31,15 @@ public class MacroKeyHandler {
         } else {
             this.macrosToRun.removeAll(event.getMacros());
         }
+
+        Minecraft.getMinecraft().player.openGui(
+                MacroKey.instance,
+                5002,
+                Minecraft.getMinecraft().world,
+                (int) Minecraft.getMinecraft().player.posX,
+                (int) Minecraft.getMinecraft().player.posY,
+                (int) Minecraft.getMinecraft().player.posZ
+        );
     }
 
     @SubscribeEvent
