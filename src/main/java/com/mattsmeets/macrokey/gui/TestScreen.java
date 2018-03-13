@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 public class TestScreen extends GuiScreen implements GuiYesNoCallback {
     private GuiScreen parentScreen;
@@ -29,6 +30,8 @@ public class TestScreen extends GuiScreen implements GuiYesNoCallback {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        drawRect(width/2-100, 0, width/2+100, height, -6250336);
 
         for (GuiButton button :
                 this.buttonList) {
@@ -70,6 +73,21 @@ public class TestScreen extends GuiScreen implements GuiYesNoCallback {
 
         prevMouseX = -1;
         prevMouseY = -1;
+
+        if(buttonDragging != null) {
+            buttonDragging.x = width / 2 - 75;
+        }
+
+        StringBuilder str = new StringBuilder();
+
+        this.buttonList.sort(Comparator.comparing(o -> o.y));
+
+        for (GuiButton button :
+                this.buttonList) {
+            str.append(button.displayString).append(", ");
+        }
+
+        System.out.println(str);
 
         buttonDragging = null;
     }
