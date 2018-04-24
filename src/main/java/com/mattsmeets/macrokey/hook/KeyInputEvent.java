@@ -33,7 +33,7 @@ public class KeyInputEvent {
         int keyCode = Keyboard.getEventKey();
 
         // find all macro's by the current key pressed, while not syncing
-        Set<MacroInterface> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, false);
+        Set<MacroInterface> macros = MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, true, false);
 
         // if the list is not empty
         if (macros.size() > 0) {

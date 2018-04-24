@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.*;
 import com.mattsmeets.macrokey.service.JsonConfig;
 
@@ -183,15 +184,19 @@ public class BindingsRepository {
         return this.bindingsFile.getMacros();
     }
 
+    public boolean isMacroInLayer(MacroInterface macro, LayerInterface layer) {
+        return layer.getMacros().contains(macro.getUMID());
+    }
+
     /**
-     * Find active macro's by its ULID
+     * Find active macro by its ULID
      *
      * @param ulid the macro's ulid
-     * @param sync    update from file before retrieving all macros
+     * @param sync update from file before retrieving all macros
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findMacroByUUID(UUID ulid, boolean sync) throws IOException {
+    public MacroInterface findMacroByUUID(UUID ulid, boolean sync) throws IOException {
         if (sync)
             // if specified to update memory with latest changes
             loadConfiguration();
@@ -207,7 +212,10 @@ public class BindingsRepository {
                         (macro) ->
                                 macro.getUMID() == ulid
                 )
-                .collect(Collectors.toSet());
+                .reduce((u, v) -> {
+                    throw new IllegalStateException("More than one ID found");
+                })
+                .orElse(null);
     }
 
     /**
@@ -218,7 +226,7 @@ public class BindingsRepository {
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findMacroByKeycode(int keyCode, boolean sync) throws IOException {
+    public Set<MacroInterface> findMacroByKeycode(int keyCode, boolean inCurrentLayer, boolean sync) throws IOException {
         if (sync)
             // if specified to update memory with latest changes
             loadConfiguration();
@@ -234,6 +242,7 @@ public class BindingsRepository {
                         (macro) ->
                                 macro.getKeyCode() == keyCode
                                         && macro.isActive()
+                                        && (!inCurrentLayer || MacroKey.instance.activeLayer == null || this.isMacroInLayer(macro, MacroKey.instance.activeLayer))
                 )
                 .collect(Collectors.toSet());
     }

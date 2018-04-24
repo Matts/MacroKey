@@ -47,7 +47,7 @@ public class BindingsRepositoryTest {
 
         when(file.getLayers()).thenReturn(input);
 
-        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer.getULID(),false);
+        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer.getULID(), false);
 
         assertEquals(layer, result);
 
@@ -67,7 +67,7 @@ public class BindingsRepositoryTest {
 
         when(file.getLayers()).thenReturn(input);
 
-        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer1.getULID(),false);
+        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer1.getULID(), false);
 
         assertEquals(null, result);
 
@@ -88,7 +88,7 @@ public class BindingsRepositoryTest {
 
         when(file.getLayers()).thenReturn(input);
 
-        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer.getULID(),false);
+        LayerInterface result = this.bindingsRepository.findLayerByUUID(layer.getULID(), false);
 
         assertEquals(null, result);
 
@@ -513,7 +513,7 @@ public class BindingsRepositoryTest {
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false, false);
 
         assertEquals(expectedResult, result);
     }
@@ -549,7 +549,7 @@ public class BindingsRepositoryTest {
 
         when(file.getMacros()).thenReturn(input);
 
-        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false, false);
 
         verify(macro1Spy, times(1)).getKeyCode();
         verify(macro1Spy, times(1)).isActive();
@@ -580,7 +580,7 @@ public class BindingsRepositoryTest {
 
         when(jsonConfig.getJSONObject()).thenThrow(new IOException());
 
-        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, true);
+        Set<MacroInterface> result = this.bindingsRepository.findMacroByKeycode(1, false, true);
 
         // will never come here, if so it should go red
         assertEquals(expectedResult, result);
@@ -692,7 +692,7 @@ public class BindingsRepositoryTest {
         Set<MacroInterface> newMacroSet = new HashSet<>();
         newMacroSet.add(newMacroSpy);
 
-        assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false));
+        assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false, false));
 
         verify(fileSpy).setMacros(any());
 
@@ -732,7 +732,7 @@ public class BindingsRepositoryTest {
         Set<MacroInterface> newMacroSet = new HashSet<>();
         newMacroSet.add(newMacroSpy);
 
-        assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false));
+        assertEquals(newMacroSet, this.bindingsRepository.findMacroByKeycode(20, false, false));
 
         verify(fileSpy).setMacros(any());
 
@@ -920,8 +920,8 @@ public class BindingsRepositoryTest {
 
         assertEquals(20, object.get("version").getAsInt());
 
-        Macro[] macros = new Macro[] { mock(Macro.class) };
-        Layer[] layers = new Layer[] { mock(Layer.class) };
+        Macro[] macros = new Macro[]{mock(Macro.class)};
+        Layer[] layers = new Layer[]{mock(Layer.class)};
 
         when(jsonConfig.getJSONObject()).thenReturn(object);
         when(jsonConfig.bindJsonElementToObject(eq(Macro[].class), any())).thenReturn(macros);
