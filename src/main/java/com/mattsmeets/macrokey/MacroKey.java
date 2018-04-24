@@ -2,9 +2,7 @@ package com.mattsmeets.macrokey;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
-import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
