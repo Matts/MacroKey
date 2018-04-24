@@ -7,14 +7,20 @@ public class BindingsFile implements BindingsFileInterface {
 
     private int version;
     private Set<MacroInterface> macros;
+    private Set<LayerInterface> layers;
 
-    public BindingsFile(int version, Set<MacroInterface> macros) {
+    public BindingsFile(int version, Set<MacroInterface> macros, Set<LayerInterface> layers) {
         this.version = version;
         this.macros = macros;
+        this.layers = layers;
+    }
+
+    public BindingsFile(int version, Set<MacroInterface> macros) {
+        this(version, macros, new HashSet<>());
     }
 
     public BindingsFile(int version) {
-        this(version, new HashSet<>());
+        this(version, new HashSet<>(), new HashSet<>());
     }
 
     public int getVersion() {
@@ -35,5 +41,17 @@ public class BindingsFile implements BindingsFileInterface {
 
     public void addMacro(MacroInterface macro) {
         this.macros.add(macro);
+    }
+
+    public Set<LayerInterface> getLayers() {
+        return layers;
+    }
+
+    public void setLayers(Set<LayerInterface> layers) {
+        this.layers = layers;
+    }
+
+    public void addLayer(LayerInterface layer) {
+        this.layers.add(layer);
     }
 }

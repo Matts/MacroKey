@@ -3,6 +3,8 @@ package com.mattsmeets.macrokey;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.mattsmeets.macrokey.model.Layer;
+import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.Macro;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -33,6 +35,8 @@ public class MacroKey {
     public JsonConfig bindingsJSONConfig;
 
     public BindingsRepository bindingsRepository;
+
+    public LayerInterface activeLayer;
 
     /**
      * Any pre-preInitialization stuff that has to occur...
