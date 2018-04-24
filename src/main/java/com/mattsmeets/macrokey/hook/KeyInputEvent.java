@@ -1,22 +1,22 @@
 package com.mattsmeets.macrokey.hook;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.event.MacroKeyEvent;
+import com.mattsmeets.macrokey.model.MacroInterface;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.input.Keyboard;
 
-import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.event.MacroKeyEvent;
-import com.mattsmeets.macrokey.model.Macro;
-import com.mattsmeets.macrokey.model.MacroInterface;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.mattsmeets.macrokey.MacroKey.instance;
 
 public class KeyInputEvent {
 
@@ -32,9 +32,22 @@ public class KeyInputEvent {
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
         int keyCode = Keyboard.getEventKey();
 
+        // find if the current key being pressed is the dedicated
+        // MacroKey gui button. If so, open its GUI
+        if (instance.forgeKeybindings[0].isPressed()) {
+            Minecraft.getMinecraft().player.openGui(
+                    instance,
+                    ModConfig.guiMacroManagementId,
+                    Minecraft.getMinecraft().world,
+                    (int) Minecraft.getMinecraft().player.posX,
+                    (int) Minecraft.getMinecraft().player.posY,
+                    (int) Minecraft.getMinecraft().player.posZ
+            );
+        }
+
         // find all macro's by the current key pressed, while not syncing
         Set<MacroInterface> macros =
-                MacroKey.instance.bindingsRepository.findMacroByKeycode(keyCode, MacroKey.instance.activeLayer, false);
+                instance.bindingsRepository.findMacroByKeycode(keyCode, instance.activeLayer, false);
 
         // if the list is not empty
         if (macros.size() > 0) {

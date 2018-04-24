@@ -1,5 +1,7 @@
 package com.mattsmeets.macrokey.event.handler;
 
+import com.mattsmeets.macrokey.MacroKey;
+import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroKeyEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
