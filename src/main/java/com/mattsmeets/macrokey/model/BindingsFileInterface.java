@@ -29,4 +29,18 @@ public interface BindingsFileInterface {
      */
     public void addMacro(MacroInterface macro);
 
+    /**
+     * @return Set of Layer's
+     */
+    public Set<LayerInterface> getLayers();
+
+    /**
+     * @param layers Set of Layer's
+     */
+    public void setLayers(Set<LayerInterface> layers);
+
+    /**
+     * @param layer layer to add
+     */
+    public void addLayer(LayerInterface layer);
 }
