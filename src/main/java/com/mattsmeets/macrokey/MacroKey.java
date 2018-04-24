@@ -1,11 +1,15 @@
 package com.mattsmeets.macrokey;
 
-import java.io.IOException;
-import java.util.UUID;
-
+import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.proxy.CommonProxy;
+import com.mattsmeets.macrokey.repository.BindingsRepository;
+import com.mattsmeets.macrokey.service.JsonConfig;
+import com.mattsmeets.macrokey.service.LogHelper;
+import com.mattsmeets.macrokey.service.PropertyLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,12 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
-import com.mattsmeets.macrokey.proxy.CommonProxy;
-import com.mattsmeets.macrokey.repository.BindingsRepository;
-import com.mattsmeets.macrokey.service.JsonConfig;
-import com.mattsmeets.macrokey.service.LogHelper;
-import com.mattsmeets.macrokey.service.PropertyLoader;
+import java.io.IOException;
 
 @Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public class MacroKey {
@@ -29,7 +28,7 @@ public class MacroKey {
     @SidedProxy(clientSide = ModReference.CLIENT_PROXY)
     public static CommonProxy proxy;
 
-    public PropertyLoader referencePropLoader;
+    public final PropertyLoader referencePropLoader;
     public LogHelper logger;
 
     public JsonConfig bindingsJSONConfig;
@@ -67,7 +66,7 @@ public class MacroKey {
         this.logger.debug("PreInitialization");
 
         // set-up the bindings.json service & files
-        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), "bindings.json");
+        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), ModConfig.bindingFile);
         this.bindingsJSONConfig.initializeFile();
 
         // BindingsRepository has a dependency on the bindings.json file being created

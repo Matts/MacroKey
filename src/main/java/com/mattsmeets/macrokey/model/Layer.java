@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class Layer implements LayerInterface {
 
-    private UUID ulid;
+    private final UUID ulid;
     private String displayName;
     private Set<UUID> macros;
 
@@ -56,11 +56,5 @@ public class Layer implements LayerInterface {
 
     public UUID getULID() {
         return ulid;
-    }
-
-    public Layer setULID(UUID ulid) {
-        this.ulid = ulid;
-
-        return this;
     }
 }

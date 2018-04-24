@@ -17,7 +17,7 @@ public class BindingsRepository {
     /**
      * JsonConfig helper class
      */
-    private JsonConfig config;
+    private final JsonConfig config;
 
     /**
      * File template used for serializing data into bindings.json
@@ -226,14 +226,16 @@ public class BindingsRepository {
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findMacroByKeycode(int keyCode, boolean inCurrentLayer, boolean sync) throws IOException {
+    public Set<MacroInterface> findMacroByKeycode(int keyCode, LayerInterface layer, boolean sync) throws IOException {
         if (sync)
             // if specified to update memory with latest changes
             loadConfiguration();
 
         // get all macros and filter through them
         // searching for entries that have the given
-        // keyCode, and are active; finally collect
+        // keyCode, and are active; it then checks
+        // if the layer is null, or the macro exists
+        // in the current layer. finally collect
         // the results into a Set<Macro>.
         return this.bindingsFile
                 .getMacros()
@@ -242,7 +244,7 @@ public class BindingsRepository {
                         (macro) ->
                                 macro.getKeyCode() == keyCode
                                         && macro.isActive()
-                                        && (!inCurrentLayer || MacroKey.instance.activeLayer == null || this.isMacroInLayer(macro, MacroKey.instance.activeLayer))
+                                        && (layer == null || isMacroInLayer(macro, layer))
                 )
                 .collect(Collectors.toSet());
     }

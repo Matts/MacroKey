@@ -14,6 +14,9 @@ public class ModConfig {
     @Config.Comment("How many ticks need to pass for the repeatable command cooldown timer to expire (default: 20 ticks -> 1 second)")
     public static int repeatDelay = 20;
 
+    @Config.Comment("What file should be used for saving the bindings and various other dynamic information")
+    public static String bindingFile = "bindings.json";
+
     @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
     public static class EventHandler {
         @SubscribeEvent

@@ -57,13 +57,4 @@ public interface LayerInterface {
      * @return unique layer id
      */
     public UUID getULID();
-
-    /**
-     * Set the unique layer id
-     *
-     * @param ulid unique layer id
-     * @return the current Layer instance
-     */
-    public Layer setULID(UUID ulid);
-
 }
