@@ -9,13 +9,18 @@ public class BindingsFile implements BindingsFileInterface {
     private Set<MacroInterface> macros;
     private Set<LayerInterface> layers;
 
-    public BindingsFile(int version, Set<MacroInterface> macros) {
+    public BindingsFile(int version, Set<MacroInterface> macros, Set<LayerInterface> layers) {
         this.version = version;
         this.macros = macros;
+        this.layers = layers;
+    }
+
+    public BindingsFile(int version, Set<MacroInterface> macros) {
+        this(version, macros, new HashSet<>());
     }
 
     public BindingsFile(int version) {
-        this(version, new HashSet<>());
+        this(version, new HashSet<>(), new HashSet<>());
     }
 
     public int getVersion() {

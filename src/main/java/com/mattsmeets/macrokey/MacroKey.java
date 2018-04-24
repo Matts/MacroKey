@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.Macro;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -74,7 +75,7 @@ public class MacroKey {
     public void init(FMLInitializationEvent event) throws IOException {
         this.logger.info("Getting ready to take over the world!");
         this.logger.debug("PreInitialization");
-
+        
         proxy.init();
     }
 
