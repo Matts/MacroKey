@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MacroListFragment extends GuiListExtended {
@@ -34,7 +35,7 @@ public class MacroListFragment extends GuiListExtended {
 
     public LayerInterface currentLayer;
 
-    public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) throws IOException {
+    public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) {
         super(guiMacroManagement.mc, guiMacroManagement.width + 45, guiMacroManagement.height, 63, guiMacroManagement.height - 32, 20);
 
         this.guiMacroManagement = guiMacroManagement;
@@ -46,7 +47,13 @@ public class MacroListFragment extends GuiListExtended {
             this.currentLayer = layer;
         }
 
-        Set<MacroInterface> keys = instance.bindingsRepository.findAllMacros(true);
+        Set<MacroInterface> keys = new HashSet<>();
+
+        try {
+            keys = instance.bindingsRepository.findAllMacros(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.listEntries = new GuiListExtended.IGuiListEntry[keys.size()];
         this.listLabelLengths = new int[keys.size()];

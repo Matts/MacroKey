@@ -51,7 +51,9 @@ public class GuiMacroManagement extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
+
         this.keyBindingList.drawScreen(mouseX, mouseY, partialTicks);
+
         buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
         buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
@@ -99,15 +101,11 @@ public class GuiMacroManagement extends GuiScreen {
         this.buttonList.add(layerEditor = new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, "Layer Editor"));
         this.buttonList.add(layerSwitcher = new GuiButton(3, this.width / 2 - 155, 40, 150, 20, "Switch Layer"));
 
-        try {
-            if (currentSelectedLayer > this.layers.size() - 1 || currentSelectedLayer == -1) {
-                currentSelectedLayer = -1;
-                this.keyBindingList = new MacroListFragment(this, null);
-            } else {
-                this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (currentSelectedLayer > this.layers.size() - 1 || currentSelectedLayer == -1) {
+            currentSelectedLayer = -1;
+            this.keyBindingList = new MacroListFragment(this, null);
+        } else {
+            this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
         }
     }
 
@@ -115,17 +113,15 @@ public class GuiMacroManagement extends GuiScreen {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        try {
-            if (updateList) {
-                if (currentSelectedLayer == -1) {
-                    this.keyBindingList = new MacroListFragment(this, null);
-                } else {
-                    this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
-                }
+
+        if (updateList) {
+            if (currentSelectedLayer == -1) {
+                this.keyBindingList = new MacroListFragment(this, null);
+            } else {
+                this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        
         updateList = false;
     }
 
