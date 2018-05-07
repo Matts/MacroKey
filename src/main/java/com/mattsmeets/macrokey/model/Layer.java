@@ -50,8 +50,18 @@ public class Layer implements LayerInterface {
         return this;
     }
 
-    public Layer addMacro(Macro macro) {
+    public Layer addMacro(MacroInterface macro) {
         return this.addMacro(macro.getUMID());
+    }
+
+    public Layer removeMacro(UUID macro) {
+        this.macros.remove(macro);
+
+        return this;
+    }
+
+    public Layer removeMacro(MacroInterface macro) {
+        return this.removeMacro(macro.getUMID());
     }
 
     public UUID getULID() {

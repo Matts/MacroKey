@@ -81,7 +81,7 @@ public class BindingsRepository {
                 .stream()
                 .filter(
                         (layer) ->
-                                layer.getULID() == ulid
+                                layer.getULID().equals(ulid)
                 )
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
@@ -122,7 +122,7 @@ public class BindingsRepository {
                 this.bindingsFile
                         .getLayers()
                         .stream()
-                        .map(savedLayer -> layer.getULID() == savedLayer.getULID() ? layer : savedLayer)
+                        .map((savedLayer) -> layer.getULID().equals(savedLayer.getULID()) ? layer : savedLayer)
                         .collect(Collectors.toSet())
         );
 
@@ -210,7 +210,7 @@ public class BindingsRepository {
                 .stream()
                 .filter(
                         (macro) ->
-                                macro.getUMID() == ulid
+                                macro.getUMID().equals(ulid)
                 )
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
@@ -282,7 +282,7 @@ public class BindingsRepository {
                 this.bindingsFile
                         .getMacros()
                         .stream()
-                        .map(savedMacro -> macro.getUMID() == savedMacro.getUMID() ? macro : savedMacro)
+                        .map(savedMacro -> macro.getUMID().equals(savedMacro.getUMID()) ? macro : savedMacro)
                         .collect(Collectors.toSet())
         );
 

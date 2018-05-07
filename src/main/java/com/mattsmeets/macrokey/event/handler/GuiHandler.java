@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -20,8 +21,13 @@ public class GuiHandler implements IGuiHandler {
     @Nullable
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if(ID == ModConfig.guiMacroManagementId)
-            return new GuiMacroManagement(Minecraft.getMinecraft().currentScreen, Minecraft.getMinecraft().gameSettings);
+        if(ID == ModConfig.guiMacroManagementId) {
+            try {
+                return new GuiMacroManagement(Minecraft.getMinecraft().currentScreen, Minecraft.getMinecraft().gameSettings);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 }

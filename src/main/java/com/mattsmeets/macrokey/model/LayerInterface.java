@@ -49,7 +49,24 @@ public interface LayerInterface {
      * @param macro a macro to have
      * @return the current Layer instance
      */
-    public Layer addMacro(Macro macro);
+    public Layer addMacro(MacroInterface macro);
+
+    /**
+     * Remove a macro the Layer shouldn't have
+     *
+     * @param macro a macro to remove
+     * @return the current Layer instance
+     */
+    public Layer removeMacro(UUID macro);
+
+    /**
+     * Remove a macro the Layer shouldn't have
+     *
+     * @param macro a macro to remove
+     * @return the current Layer instance
+     */
+    public Layer removeMacro(MacroInterface macro);
+
 
     /**
      * Get the unique layer id
