@@ -22,29 +22,33 @@ public class GuiMacroManagement extends GuiScreen {
     private MacroListFragment keyBindingList;
 
     private GuiScreen parentScreen;
-    private GameSettings options;
+    private GameSettings settings;
 
     private GuiButton layerEditor;
     private GuiButton layerSwitcher;
 
     public MacroInterface macroModify;
 
-    protected String screenTitle = I18n.format("gui.keybindings.screenTitle");
+    private String screenTitle = I18n.format("gui.keybindings.screenTitle");
 
     private GuiButton buttonDone;
     private GuiButton buttonAdd;
 
-    public int currentSelectedLayer;
+    private int currentSelectedLayer;
     private List<LayerInterface> layers;
 
-    private static boolean updateList = false;
+    private boolean updateList = false;
 
-    public GuiMacroManagement(GuiScreen screen, GameSettings settings) throws IOException {
+    public GuiMacroManagement(GuiScreen screen, GameSettings settings) {
         this.parentScreen = screen;
-        this.options = settings;
-        currentSelectedLayer = -1;
+        this.settings = settings;
+        this.currentSelectedLayer = -1;
 
-        this.layers = new ArrayList<>(instance.bindingsRepository.findAllLayers(false));
+        try {
+            this.layers = new ArrayList<>(instance.bindingsRepository.findAllLayers(false));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -71,9 +75,21 @@ public class GuiMacroManagement extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 0) {
-            this.mc.displayGuiScreen(this.parentScreen);
+    protected void actionPerformed(GuiButton button) {
+        switch(button.id) {
+            case 0:
+                this.mc.displayGuiScreen(this.parentScreen);
+                break;
+            case 3:
+                if (currentSelectedLayer < this.layers.size() - 1) {
+                    currentSelectedLayer++;
+                } else {
+                    currentSelectedLayer = -1;
+                }
+
+                updateList = true;
+
+                break;
         }
         /*if (button.id == 1) {
             this.mc.displayGuiScreen(new GuiCreateKeybinding(this));
@@ -81,14 +97,6 @@ public class GuiMacroManagement extends GuiScreen {
         if (button.id == 2) {
             this.mc.displayGuiScreen(new GuiManageLayers(this, mc.gameSettings));
         }*/
-        if (button.id == 3) {
-            if (currentSelectedLayer < this.layers.size() - 1) {
-                currentSelectedLayer++;
-            } else {
-                currentSelectedLayer = -1;
-            }
-            updateList = true;
-        }
     }
 
 
@@ -114,34 +122,38 @@ public class GuiMacroManagement extends GuiScreen {
     public void updateScreen() {
         super.updateScreen();
 
-        if (updateList) {
-            if (currentSelectedLayer == -1) {
-                this.keyBindingList = new MacroListFragment(this, null);
-            } else {
-                this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
-            }
+        if (!updateList) {
+            return;
         }
-        
+
+        if (currentSelectedLayer == -1) {
+            this.keyBindingList = new MacroListFragment(this, null);
+        } else {
+            this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
+        }
+
         updateList = false;
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (this.macroModify != null) {
-            if (keyCode == 1) {
-                this.macroModify.setKeyCode(0);
-            } else if (keyCode != 0) {
-                this.macroModify.setKeyCode(keyCode);
-            } else if (typedChar > 0) {
-                this.macroModify.setKeyCode(typedChar + 256);
-            }
-
-            MinecraftForge.EVENT_BUS.post(new MacroChangedEvent(this.macroModify));
-
-            this.macroModify = null;
-        } else {
+        if (this.macroModify == null) {
             super.keyTyped(typedChar, keyCode);
+
+            return;
         }
+
+        if (keyCode == 1) {
+            this.macroModify.setKeyCode(0);
+        } else if (keyCode != 0) {
+            this.macroModify.setKeyCode(keyCode);
+        } else if (typedChar > 0) {
+            this.macroModify.setKeyCode(typedChar + 256);
+        }
+
+        MinecraftForge.EVENT_BUS.post(new MacroChangedEvent(this.macroModify));
+
+        this.macroModify = null;
     }
 
     @Override
@@ -160,6 +172,7 @@ public class GuiMacroManagement extends GuiScreen {
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
+
         this.keyBindingList.handleMouseInput();
     }
 

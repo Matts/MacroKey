@@ -1,13 +1,9 @@
 package com.mattsmeets.macrokey.gui.fragment;
 
-import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.LayerChangedEvent;
 import com.mattsmeets.macrokey.gui.GuiMacroManagement;
-import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
@@ -18,11 +14,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static com.mattsmeets.macrokey.MacroKey.instance;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.mattsmeets.macrokey.MacroKey.instance;
 
 public class MacroListFragment extends GuiListExtended {
 
@@ -31,21 +27,13 @@ public class MacroListFragment extends GuiListExtended {
 
     private int[] listLabelLengths;
 
-    public boolean isMaster;
-
-    public LayerInterface currentLayer;
+    private final LayerInterface currentLayer;
 
     public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) {
         super(guiMacroManagement.mc, guiMacroManagement.width + 45, guiMacroManagement.height, 63, guiMacroManagement.height - 32, 20);
 
         this.guiMacroManagement = guiMacroManagement;
-
-        if (layer == null) {
-            isMaster = true;
-        } else {
-            isMaster = false;
-            this.currentLayer = layer;
-        }
+        this.currentLayer = layer;
 
         Set<MacroInterface> keys = new HashSet<>();
 
@@ -89,7 +77,6 @@ public class MacroListFragment extends GuiListExtended {
 
         private final MacroInterface macro;
 
-        private final String keyDesc;
         private final GuiButton btnChangeKeyBinding;
         private final GuiButton btnRemoveKeyBinding;
         private final GuiButton btnEdit;
@@ -97,82 +84,80 @@ public class MacroListFragment extends GuiListExtended {
         private final GuiButton btnEnabledInLayer;
         private boolean enabledInLayer;
 
-        private int index;
+        private final int index;
 
         private boolean deleted = false;
 
-        public KeyEntry(MacroInterface macro, int i) {
-            this.index = i;
+        public KeyEntry(MacroInterface macro, int index) {
+            this.index = index;
             this.macro = macro;
 
-            this.keyDesc = macro.getCommand();
             this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, macro.getCommand());
             this.btnRemoveKeyBinding = new GuiButton(1, 0, 0, 15, 20, "X");
             this.btnEdit = new GuiButton(2, 0, 0, 30, 20, I18n.format("gui.keybindings.edit"));
             this.btnEnabledInLayer = new GuiButton(3, 0, 0, 75, 20, "Disabled");
 
             if (currentLayer != null) {
-                if (instance.bindingsRepository.isMacroInLayer(this.macro, currentLayer)) {
-                    enabledInLayer = true;
-                } else {
-                    enabledInLayer = false;
-                }
+                enabledInLayer = instance.bindingsRepository.isMacroInLayer(this.macro, currentLayer);
             }
         }
 
         @Override
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
-            if (!deleted) {
-                boolean flag = this.macro.equals(MacroListFragment.this.guiMacroManagement.macroModify);
-
-                MacroListFragment.this.mc.fontRenderer.drawString(this.keyDesc, x + 90 - MacroListFragment.this.listLabelLengths[index], y + slotHeight / 2 - MacroListFragment.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
-
-                if (isMaster) {
-                    this.btnChangeKeyBinding.x = x + 95;
-                    this.btnChangeKeyBinding.y = y;
-                    this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.macro.getKeyCode());
-
-                    this.btnEdit.x = x + 170;
-                    this.btnEdit.y = y;
-                    this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
-                    this.btnEdit.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
-
-                    this.btnRemoveKeyBinding.x = x + 200;
-                    this.btnRemoveKeyBinding.y = y;
-                    this.btnRemoveKeyBinding.enabled = true;
-                    this.btnRemoveKeyBinding.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
-                } else {
-                    this.btnEnabledInLayer.x = x + 95;
-                    this.btnEnabledInLayer.y = y;
-
-                    if (enabledInLayer) {
-                        this.btnEnabledInLayer.displayString = "Enabled";
-                    } else {
-                        this.btnEnabledInLayer.displayString = "Disabled";
-                    }
-
-                    this.btnEnabledInLayer.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
-                }
-
-                boolean flag1 = false;
-
-                if (this.macro.getKeyCode() != 0) {
-                    for (KeyBinding keybinding : MacroListFragment.this.mc.gameSettings.keyBindings) {
-                        if (keybinding.getKeyCode() == this.macro.getKeyCode()) {
-                            flag1 = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (flag) {
-                    this.btnChangeKeyBinding.displayString = TextFormatting.WHITE + "> " + TextFormatting.YELLOW + this.btnChangeKeyBinding.displayString + TextFormatting.WHITE + " <";
-                } else if (flag1) {
-                    this.btnChangeKeyBinding.displayString = TextFormatting.GOLD + this.btnChangeKeyBinding.displayString;
-                }
-
-                this.btnChangeKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
+            if (this.deleted) {
+                System.out.println("deleted");
+                return;
             }
+
+            boolean macroKeyCodeModifyFlag = this.macro.equals(MacroListFragment.this.guiMacroManagement.macroModify);
+
+            MacroListFragment.this.mc.fontRenderer.drawString(this.macro.getCommand(), x + 90 - MacroListFragment.this.listLabelLengths[index], y + slotHeight / 2 - MacroListFragment.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
+
+            if (currentLayer == null) {
+                this.btnChangeKeyBinding.x = x + 95;
+                this.btnChangeKeyBinding.y = y;
+                this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.macro.getKeyCode());
+
+                this.btnEdit.x = x + 170;
+                this.btnEdit.y = y;
+                this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
+                this.btnEdit.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
+
+                this.btnRemoveKeyBinding.x = x + 200;
+                this.btnRemoveKeyBinding.y = y;
+                this.btnRemoveKeyBinding.enabled = true;
+                this.btnRemoveKeyBinding.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
+            } else {
+                this.btnEnabledInLayer.x = x + 95;
+                this.btnEnabledInLayer.y = y;
+
+                if (enabledInLayer) {
+                    this.btnEnabledInLayer.displayString = "Enabled";
+                } else {
+                    this.btnEnabledInLayer.displayString = "Disabled";
+                }
+
+                this.btnEnabledInLayer.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
+            }
+
+            boolean currentKeyAlreadyUsedFlag = false;
+
+            if (this.macro.getKeyCode() != 0) {
+                for (KeyBinding keybinding : MacroListFragment.this.mc.gameSettings.keyBindings) {
+                    if (keybinding.getKeyCode() == this.macro.getKeyCode()) {
+                        currentKeyAlreadyUsedFlag = true;
+                        break;
+                    }
+                }
+            }
+
+            if (macroKeyCodeModifyFlag) {
+                this.btnChangeKeyBinding.displayString = TextFormatting.WHITE + "> " + TextFormatting.YELLOW + this.btnChangeKeyBinding.displayString + TextFormatting.WHITE + " <";
+            } else if (currentKeyAlreadyUsedFlag) {
+                this.btnChangeKeyBinding.displayString = TextFormatting.GOLD + this.btnChangeKeyBinding.displayString;
+            }
+
+            this.btnChangeKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
         }
 
 
@@ -184,19 +169,23 @@ public class MacroListFragment extends GuiListExtended {
             }*/
             if (this.btnChangeKeyBinding.mousePressed(mc, mouseX, mouseY)) {
                 MacroListFragment.this.guiMacroManagement.macroModify = this.macro;
+
                 return true;
             }
-            /*if (this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)) {
-                boundKey.delete();
-                Layer.removeKeybinding(boundKey);
-                deleted = true;
-                mc.displayGuiScreen(guiKeybindings);
+            if (this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)) {
+                try {
+                    instance.bindingsRepository.deleteMacro(this.macro, true,true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                this.deleted = true;
+                mc.displayGuiScreen(guiMacroManagement);
+
                 return true;
             }
-            */
             if (this.btnEnabledInLayer.mousePressed(mc, mouseX, mouseY)) {
-                enabledInLayer = !enabledInLayer;
-                if (enabledInLayer) {
+                if (!enabledInLayer) {
                     currentLayer.addMacro(this.macro);
                 } else {
                     currentLayer.removeMacro(this.macro);
@@ -206,7 +195,6 @@ public class MacroListFragment extends GuiListExtended {
             }
 
             return false;
-
         }
 
         @Override
