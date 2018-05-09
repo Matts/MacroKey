@@ -19,24 +19,30 @@ import java.util.List;
 public class GuiModifyMacro extends GuiScreen {
     private final GuiScreen parentScreen;
 
-    private final String screenTitle = I18n.format("gui.createkeybindings.screenTitle");
-    private final String editTitle = I18n.format("gui.createkeybindings.editKeybinding");
+    private final String
+            defaultScreenTitleText = I18n.format("gui.modify.text.title.new"),
+            editScreenTitleText = I18n.format("gui.modify.text.title.edit"),
+            repeatOnHoldText = I18n.format("gui.modify.text.repeat"),
+            enableCommandText = I18n.format("gui.modify.text.enable"),
+            commandBoxTitleText = I18n.format("gui.modify.text.command"),
+            keyBoxTitleText = I18n.format("gui.modify.text.key"),
+            saveButtonText = I18n.format("gui.modify.text.save");
+
+    private final String
+            enabledText = I18n.format("enabled"),
+            disabledText = I18n.format("disabled"),
+            cancelText = I18n.format("gui.cancel");
 
     private final boolean existing;
 
     private GuiTextField command;
 
     private GuiButton btnKeyBinding;
-
-    private GuiButton repeatCommand;
-    private GuiButton commandActive;
-
+    private GuiButton repeatCommand, commandActive;
     private GuiButton addButton, cancelButton;
 
     private boolean changingKey = false;
     private MacroInterface result;
-
-    private int toBindOffset = 0, repeatOffset = 0, toExecuteOffset = 0;
 
     private boolean repeatEnabled = false;
     private boolean isCommandActive = true;
@@ -50,24 +56,6 @@ public class GuiModifyMacro extends GuiScreen {
             this.repeatEnabled = key.willRepeat();
             this.isCommandActive = key.isActive();
         }
-
-        int toBind = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.toBind"));
-
-        if (toBind > this.toBindOffset) {
-            this.toBindOffset = toBind;
-        }
-
-        int execute = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.commandExecute"));
-
-        if (execute > this.toExecuteOffset) {
-            this.toExecuteOffset = execute;
-        }
-
-        int repeat = guiScreen.mc.fontRenderer.getStringWidth(I18n.format("gui.createkeybindings.repeat"));
-
-        if (repeat > this.repeatOffset) {
-            this.repeatOffset = repeat;
-        }
     }
 
     public GuiModifyMacro(GuiScreen guiScreen) {
@@ -77,12 +65,12 @@ public class GuiModifyMacro extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, I18n.format("gui.createkeybindings.saveBind", new Object[0])));
-        this.buttonList.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.format("gui.cancel", new Object[0])));
+        this.buttonList.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, saveButtonText));
+        this.buttonList.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, cancelText));
 
         this.buttonList.add(this.btnKeyBinding = new GuiButton(3, this.width / 2 - 75, 100, 150, 20, GameSettings.getKeyDisplayString(0)));
-        this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, I18n.format("disabled", new Object[0])));
-        this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, I18n.format("disabled", new Object[0])));
+        this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
+        this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
@@ -90,17 +78,22 @@ public class GuiModifyMacro extends GuiScreen {
 
         if (existing) {
             command.setText(result.getCommand());
+
             this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(result.getKeyCode());
-            this.repeatCommand.displayString = repeatEnabled ? I18n.format("enabled") : I18n.format("disabled");
-            this.commandActive.displayString = isCommandActive ? I18n.format("enabled") : I18n.format("disabled");
+            this.repeatCommand.displayString = repeatEnabled ? enabledText : disabledText;
+            this.commandActive.displayString = isCommandActive ? enabledText : disabledText;
         }
     }
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        if (button.id == 0) {
-            if (command.getText().length() > 1) {
+        switch (button.id) {
+            case 0:
+                if (command.getText().length() <= 1) {
+                    break;
+                }
+
                 result.setCommand(command.getText());
 
                 if (existing) {
@@ -110,10 +103,11 @@ public class GuiModifyMacro extends GuiScreen {
                 }
 
                 this.mc.displayGuiScreen(parentScreen);
-            }
-        }
-        if (button.id == 1) {
-            this.mc.displayGuiScreen(parentScreen);
+
+                break;
+            case 1:
+                this.mc.displayGuiScreen(parentScreen);
+                break;
         }
     }
 
@@ -123,7 +117,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.drawDefaultBackground();
 
         // draw title
-        this.drawCenteredString(this.fontRenderer, existing ? this.screenTitle : this.editTitle, this.width / 2, 8, 16777215);
+        this.drawCenteredString(this.fontRenderer, existing ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 16777215);
 
         // render add and cancel buttons
         addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
@@ -132,33 +126,18 @@ public class GuiModifyMacro extends GuiScreen {
         // draw keycode as keyboard key
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 
-        this.repeatCommand.displayString = repeatEnabled ? I18n.format("enabled") : I18n.format("disabled");
-        this.commandActive.displayString = isCommandActive ? I18n.format("enabled") : I18n.format("disabled");
+        this.repeatCommand.displayString = repeatEnabled ? enabledText : disabledText;
+        this.commandActive.displayString = isCommandActive ? enabledText : disabledText;
 
         repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
 
         this.command.drawTextBox();
-        this.drawString(this.fontRenderer, I18n.format("gui.createkeybindings.commandExecute"), this.width / 2 + 67 - toExecuteOffset, 37, -6250336);
-        this.drawString(this.fontRenderer, I18n.format("gui.createkeybindings.toBind"), this.width / 2 + 67 - toBindOffset, 90, -6250336);
 
-        List<String> list = new ArrayList<>();
-        list.add(I18n.format("gui.modify.text.repeat"));
-        list.add(I18n.format("gui.modify.text.enable"));
-        int k = 0;
-
-        int[] listLabelLength = new int[list.size()];
-        for (String string : list) {
-            int j = mc.fontRenderer.getStringWidth(I18n.format(string));
-
-            if (j > listLabelLength[k]) {
-                listLabelLength[k] = j;
-            }
-            k++;
-        }
-
-        this.drawString(this.fontRenderer, list.get(0), this.width / 2 + 50 - mc.fontRenderer.getStringWidth(list.get(0)) - 150, 145, -6250336);
-        this.drawString(this.fontRenderer, list.get(1), this.width / 2 + 50, 168, -6250336);
+        this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
+        this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
+        this.drawString(this.fontRenderer, commandBoxTitleText, this.width / 2 + 67 - mc.fontRenderer.getStringWidth(commandBoxTitleText), 37, -6250336);
+        this.drawString(this.fontRenderer, keyBoxTitleText, this.width / 2 + 67 - mc.fontRenderer.getStringWidth(keyBoxTitleText), 90, -6250336);
 
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 

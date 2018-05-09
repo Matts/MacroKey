@@ -1,11 +1,25 @@
-# Config Strings
+## Config Strings ##
 macrokey.config.title=MacroKey Keybinding Configuration
+####
 
-text.display.layer=Layer: %s
-text.master=Master
+## Layer translations ##
+text.layer.display=Layer: %s
+text.layer.master=Master
+####
+
+## GuiModifyMacro aka create/edit macro's ##
+gui.modify.text.title.new=Create Keybinding
+gui.modify.text.title.edit=Edit Keybinding
+
+gui.modify.text.command=Command to be executed
+gui.modify.text.key=Key to bind the command to
 
 gui.modify.text.repeat=Hold to repeat
 gui.modify.text.enable=Enable command
+
+gui.modify.text.save=Save Keybinding
+####
+
 
 # 1.6 translations, please change
 chat.tag=§7[MacroKey]§f

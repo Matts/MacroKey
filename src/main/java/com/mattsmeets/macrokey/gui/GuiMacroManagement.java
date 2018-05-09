@@ -59,6 +59,10 @@ public class GuiMacroManagement extends GuiScreen {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        if(this.updateList){
+            this.updateScreen();
+        }
+
         this.keyBindingList.drawScreen(mouseX, mouseY, partialTicks);
 
         buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
@@ -123,8 +127,8 @@ public class GuiMacroManagement extends GuiScreen {
 
         try {
             this.keyBindingList = new MacroListFragment(this, currentLayer);
-            this.layerSwitcher.displayString = I18n.format("text.display.layer",
-                    currentLayer == null ? I18n.format("text.master") : currentLayer.getDisplayName());
+            this.layerSwitcher.displayString = I18n.format("text.layer.display",
+                    currentLayer == null ? I18n.format("text.layer.master") : currentLayer.getDisplayName());
         } catch (IOException e) {
             e.printStackTrace();
         }
