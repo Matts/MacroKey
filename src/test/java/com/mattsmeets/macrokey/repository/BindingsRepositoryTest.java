@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -562,6 +563,8 @@ public class BindingsRepositoryTest {
         layer.addMacro(macro2);
         layer.addMacro(macro3);
         layer.addMacro(macro4);
+
+        when(file.getLayers()).thenReturn(Collections.singleton(layer));
 
         Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro1);

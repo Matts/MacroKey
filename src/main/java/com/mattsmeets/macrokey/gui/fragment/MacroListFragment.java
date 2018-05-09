@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.gui.fragment;
 
 import com.mattsmeets.macrokey.event.LayerChangedEvent;
+import com.mattsmeets.macrokey.gui.GuiModifyMacro;
 import com.mattsmeets.macrokey.gui.GuiMacroManagement;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
@@ -15,8 +16,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
@@ -29,26 +31,25 @@ public class MacroListFragment extends GuiListExtended {
 
     private final LayerInterface currentLayer;
 
-    public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) {
+    private final List<MacroInterface> macros;
+
+    public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) throws IOException {
         super(guiMacroManagement.mc, guiMacroManagement.width + 45, guiMacroManagement.height, 63, guiMacroManagement.height - 32, 20);
 
         this.guiMacroManagement = guiMacroManagement;
         this.currentLayer = layer;
 
-        Set<MacroInterface> keys = new HashSet<>();
+        this.macros = instance.bindingsRepository.findAllMacros(true)
+                .stream()
+                .sorted(Comparator.comparing(MacroInterface::getUMID))
+                .collect(Collectors.toList());
 
-        try {
-            keys = instance.bindingsRepository.findAllMacros(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        this.listEntries = new GuiListExtended.IGuiListEntry[keys.size()];
-        this.listLabelLengths = new int[keys.size()];
+        this.listEntries = new GuiListExtended.IGuiListEntry[macros.size()];
+        this.listLabelLengths = new int[macros.size()];
 
         int i = 0;
 
-        for (MacroInterface macro : keys) {
+        for (MacroInterface macro : macros) {
             this.listEntries[i] = new MacroListFragment.KeyEntry(macro, i);
 
             int j = this.mc.fontRenderer.getStringWidth(I18n.format(macro.getCommand()));
@@ -105,7 +106,6 @@ public class MacroListFragment extends GuiListExtended {
         @Override
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
             if (this.deleted) {
-                System.out.println("deleted");
                 return;
             }
 
@@ -163,10 +163,11 @@ public class MacroListFragment extends GuiListExtended {
 
         @Override
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
-            /*if (this.btnEdit.mousePressed(mc, mouseX, mouseY)) {
-                mc.displayGuiScreen(new GuiCreateKeybinding(GuiKeyBindingsListing.this.guiKeybindings, boundKey));
+            if (this.btnEdit.mousePressed(mc, mouseX, mouseY)) {
+                mc.displayGuiScreen(new GuiModifyMacro(MacroListFragment.this.guiMacroManagement, macro));
+
                 return true;
-            }*/
+            }
             if (this.btnChangeKeyBinding.mousePressed(mc, mouseX, mouseY)) {
                 MacroListFragment.this.guiMacroManagement.macroModify = this.macro;
 
@@ -174,7 +175,7 @@ public class MacroListFragment extends GuiListExtended {
             }
             if (this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)) {
                 try {
-                    instance.bindingsRepository.deleteMacro(this.macro, true,true);
+                    instance.bindingsRepository.deleteMacro(this.macro, true, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -185,13 +186,16 @@ public class MacroListFragment extends GuiListExtended {
                 return true;
             }
             if (this.btnEnabledInLayer.mousePressed(mc, mouseX, mouseY)) {
-                if (!enabledInLayer) {
+                enabledInLayer = !enabledInLayer;
+                if (enabledInLayer) {
                     currentLayer.addMacro(this.macro);
                 } else {
                     currentLayer.removeMacro(this.macro);
                 }
 
                 MinecraftForge.EVENT_BUS.post(new LayerChangedEvent(currentLayer));
+
+                return true;
             }
 
             return false;

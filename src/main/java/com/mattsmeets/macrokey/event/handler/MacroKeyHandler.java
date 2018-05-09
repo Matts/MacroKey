@@ -1,11 +1,8 @@
 package com.mattsmeets.macrokey.event.handler;
 
-import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
-import com.mattsmeets.macrokey.event.MacroKeyEvent;
+import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,7 +23,7 @@ public class MacroKeyHandler {
     }
 
     @SubscribeEvent
-    public void onKeyEvent(MacroKeyEvent event) {
+    public void onKeyEvent(MacroActivationEvent event) {
         if (event.getMacroState().isKeyDown()) {
             this.macrosToRun.addAll(event.getMacros());
         } else {

@@ -81,6 +81,10 @@ public class MacroKey {
     public void init(FMLInitializationEvent event) throws IOException {
         this.logger.info("Getting ready to take over the world!");
         this.logger.debug("PreInitialization");
+/*
+        this.bindingsRepository.addMacro(new Macro(50, "/gamemode 1"), false);
+        this.bindingsRepository.addMacro(new Macro(50, "/gamemode 0"), false);
+        this.bindingsRepository.saveConfiguration();*/
 
         proxy.init();
     }

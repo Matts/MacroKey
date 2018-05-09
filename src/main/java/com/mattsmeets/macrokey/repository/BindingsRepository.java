@@ -188,7 +188,7 @@ public class BindingsRepository {
         return this.bindingsFile
                 .getLayers()
                 .stream()
-                .filter(layerI -> layerI.getULID() == layer.getULID() && layerI.getMacros().contains(macro.getUMID())).count() != 0;
+                .filter(layerI -> layerI.getULID().equals(layer.getULID()) && layerI.getMacros().contains(macro.getUMID())).count() != 0;
     }
 
     /**

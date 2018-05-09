@@ -1,7 +1,7 @@
 package com.mattsmeets.macrokey.hook;
 
 import com.mattsmeets.macrokey.config.ModConfig;
-import com.mattsmeets.macrokey.event.MacroKeyEvent;
+import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,7 +58,7 @@ public class KeyInputEvent {
                 an event, and add it to the current index of pressed keys
                  */
                 if (!this.pressedKeys.contains(keyCode)) {
-                    MinecraftForge.EVENT_BUS.post(new MacroKeyEvent.MacroKeyPressEvent(macros));
+                    MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
                     this.pressedKeys.add(keyCode);
                 }
             } else {
@@ -67,7 +67,7 @@ public class KeyInputEvent {
                 an event, and remove it from the current index of pressed keys
                  */
                 if (this.pressedKeys.contains(keyCode)) {
-                    MinecraftForge.EVENT_BUS.post(new MacroKeyEvent.MacroKeyReleaseEvent(macros));
+                    MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
                     this.pressedKeys.remove(keyCode);
                 }
             }

@@ -1,6 +1,11 @@
 # Config Strings
 macrokey.config.title=MacroKey Keybinding Configuration
 
+text.display.layer=Layer: %s
+text.master=Master
+
+gui.modify.text.repeat=Hold to repeat
+gui.modify.text.enable=Enable command
 
 # 1.6 translations, please change
 chat.tag=§7[MacroKey]§f

@@ -1,7 +1,7 @@
 package com.mattsmeets.macrokey.event.handler;
 
 import com.mattsmeets.macrokey.event.LayerChangedEvent;
-import com.mattsmeets.macrokey.event.MacroChangedEvent;
+import com.mattsmeets.macrokey.event.MacroEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,8 +16,13 @@ public class ChangeHandler {
     public static class MacroChangeHandler {
 
         @SubscribeEvent
-        public void macroChangedEvent(MacroChangedEvent event) throws IOException {
+        public void macroChangedEvent(MacroEvent.MacroChangedEvent event) throws IOException {
             instance.bindingsRepository.updateMacro(event.getMacroChanged(), true);
+        }
+
+        @SubscribeEvent
+        public void macroAddedEvent(MacroEvent.MacroAddedEvent event) throws IOException {
+            instance.bindingsRepository.addMacro(event.getMacro(), true);
         }
     }
 

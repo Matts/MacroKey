@@ -1,6 +1,6 @@
 package com.mattsmeets.macrokey.gui;
 
-import com.mattsmeets.macrokey.event.MacroChangedEvent;
+import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.gui.fragment.MacroListFragment;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
@@ -10,26 +10,26 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
 public class GuiMacroManagement extends GuiScreen {
     private MacroListFragment keyBindingList;
 
-    private GuiScreen parentScreen;
-    private GameSettings settings;
+    private final GuiScreen parentScreen;
+    private final GameSettings settings;
 
     private GuiButton layerEditor;
     private GuiButton layerSwitcher;
 
     public MacroInterface macroModify;
 
-    private String screenTitle = I18n.format("gui.keybindings.screenTitle");
+    private final String screenTitle = I18n.format("gui.keybindings.screenTitle");
 
     private GuiButton buttonDone;
     private GuiButton buttonAdd;
@@ -45,7 +45,10 @@ public class GuiMacroManagement extends GuiScreen {
         this.currentSelectedLayer = -1;
 
         try {
-            this.layers = new ArrayList<>(instance.bindingsRepository.findAllLayers(false));
+            this.layers = instance.bindingsRepository.findAllLayers(true)
+                    .stream()
+                    .sorted()
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,12 +66,6 @@ public class GuiMacroManagement extends GuiScreen {
 
         layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
-        if (currentSelectedLayer == -1) {
-            layerSwitcher.displayString = "Layer: Master";
-        } else {
-            layerSwitcher.displayString = "Layer: " + this.layers.get(this.currentSelectedLayer).getDisplayName();
-        }
-
         layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
 
         this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
@@ -76,9 +73,12 @@ public class GuiMacroManagement extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        switch(button.id) {
+        switch (button.id) {
             case 0:
                 this.mc.displayGuiScreen(this.parentScreen);
+                break;
+            case 1:
+                this.mc.displayGuiScreen(new GuiModifyMacro(this));
                 break;
             case 3:
                 if (currentSelectedLayer < this.layers.size() - 1) {
@@ -87,13 +87,11 @@ public class GuiMacroManagement extends GuiScreen {
                     currentSelectedLayer = -1;
                 }
 
-                updateList = true;
-
+                this.updateList = true;
                 break;
         }
-        /*if (button.id == 1) {
-            this.mc.displayGuiScreen(new GuiCreateKeybinding(this));
-        }
+
+        /*
         if (button.id == 2) {
             this.mc.displayGuiScreen(new GuiManageLayers(this, mc.gameSettings));
         }*/
@@ -109,12 +107,7 @@ public class GuiMacroManagement extends GuiScreen {
         this.buttonList.add(layerEditor = new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, "Layer Editor"));
         this.buttonList.add(layerSwitcher = new GuiButton(3, this.width / 2 - 155, 40, 150, 20, "Switch Layer"));
 
-        if (currentSelectedLayer > this.layers.size() - 1 || currentSelectedLayer == -1) {
-            currentSelectedLayer = -1;
-            this.keyBindingList = new MacroListFragment(this, null);
-        } else {
-            this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
-        }
+        this.updateList = true;
     }
 
 
@@ -122,17 +115,21 @@ public class GuiMacroManagement extends GuiScreen {
     public void updateScreen() {
         super.updateScreen();
 
-        if (!updateList) {
+        if (!this.updateList) {
             return;
         }
 
-        if (currentSelectedLayer == -1) {
-            this.keyBindingList = new MacroListFragment(this, null);
-        } else {
-            this.keyBindingList = new MacroListFragment(this, this.layers.get(currentSelectedLayer));
+        LayerInterface currentLayer = currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
+
+        try {
+            this.keyBindingList = new MacroListFragment(this, currentLayer);
+            this.layerSwitcher.displayString = I18n.format("text.display.layer",
+                    currentLayer == null ? I18n.format("text.master") : currentLayer.getDisplayName());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        updateList = false;
+        this.updateList = false;
     }
 
     @Override
@@ -151,7 +148,7 @@ public class GuiMacroManagement extends GuiScreen {
             this.macroModify.setKeyCode(typedChar + 256);
         }
 
-        MinecraftForge.EVENT_BUS.post(new MacroChangedEvent(this.macroModify));
+        MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroChangedEvent(this.macroModify));
 
         this.macroModify = null;
     }
