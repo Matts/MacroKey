@@ -14,9 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientTickEvent {
 
     private int delta;
-    // retrieve the given delay within the config,
-    // this will by default be 20 ticks
-    private int delay = ModConfig.repeatDelay;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -31,13 +28,14 @@ public class ClientTickEvent {
 
         // rate-limiting so users can define
         // how fast a repeating command should execute
-        if (delta < delay) {
+        // retrieve the given delay within the config,
+        // this will by default be 20 ticks
+        if (delta < ModConfig.repeatDelay) {
             delta++;
             return;
         }
 
         MinecraftForge.EVENT_BUS.post(new InGameTickEvent.LimitedInGameTickEvent(player));
-
 
         // set delta back to zero
         delta = 0;

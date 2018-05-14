@@ -18,21 +18,38 @@ gui.manage.text.layer.switch=Layer Switch
 fragment.list.text.remove=X
 ####
 
-## GuiModifyMacro aka create/edit macro's ##
+## GuiModifyMacro ##
 gui.modify.text.title.new=Create Macro
 gui.modify.text.title.edit=Edit Macro
 
 gui.modify.text.command=Command
 gui.modify.text.key=Trigger
 
-gui.modify.text.repeat=Hold trigger to repeat
+gui.modify.text.repeat=Hold to repeat
 gui.modify.text.enable=Enable macro
 
 gui.modify.text.save=Save Macro
 ####
 
+## GuiLayerManagement ##
+gui.manage.layer.text.title=Layer Management
+
+gui.manage.text.layer.add=Add Layer
+####
+
+## GuiModifyLayer ##
+gui.modify.layer.text.title.new=Create Layer
+gui.modify.layer.text.title.edit=Edit Layer
+
+gui.modify.layer.text.save=Save Layer
+
 ## Generic Translations ##
 enabled=Enabled
 disabled=Disabled
 edit=Edit
+####
+
+## Vanilla Controls ##
+key.macrokey.category=MacroKey Keybinding
+key.macrokey.management.desc=Open Macro Management GUI
 ####

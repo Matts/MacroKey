@@ -11,10 +11,9 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuiModifyMacro extends GuiScreen {
     private final GuiScreen parentScreen;
@@ -34,6 +33,7 @@ public class GuiModifyMacro extends GuiScreen {
             cancelText = I18n.format("gui.cancel");
 
     private final boolean existing;
+    private final MacroInterface result;
 
     private GuiTextField command;
 
@@ -42,21 +42,12 @@ public class GuiModifyMacro extends GuiScreen {
     private GuiButton addButton, cancelButton;
 
     private boolean changingKey = false;
-    private MacroInterface result;
-
-    private boolean repeatEnabled = false;
-    private boolean isCommandActive = true;
 
     public GuiModifyMacro(GuiScreen guiScreen, MacroInterface key) {
         // does the macro already exist, if not create a new one
         this.result = key == null ? new Macro() : key;
         this.parentScreen = guiScreen;
         this.existing = key != null;
-
-        if (existing) {
-            this.repeatEnabled = key.willRepeat();
-            this.isCommandActive = key.isActive();
-        }
     }
 
     public GuiModifyMacro(GuiScreen guiScreen) {
@@ -81,8 +72,8 @@ public class GuiModifyMacro extends GuiScreen {
             this.command.setText(result.getCommand());
 
             this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(result.getKeyCode());
-            this.repeatCommand.displayString = repeatEnabled ? enabledText : disabledText;
-            this.commandActive.displayString = isCommandActive ? enabledText : disabledText;
+            this.repeatCommand.displayString = result.willRepeat() ? enabledText : disabledText;
+            this.commandActive.displayString = result.isActive() ? enabledText : disabledText;
         }
     }
 
@@ -102,10 +93,6 @@ public class GuiModifyMacro extends GuiScreen {
                 } else {
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroAddedEvent(this.result));
                 }
-
-                this.mc.displayGuiScreen(parentScreen);
-
-                break;
             case 1:
                 this.mc.displayGuiScreen(parentScreen);
                 break;
@@ -127,8 +114,8 @@ public class GuiModifyMacro extends GuiScreen {
         // draw keycode as keyboard key
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 
-        this.repeatCommand.displayString = repeatEnabled ? enabledText : disabledText;
-        this.commandActive.displayString = isCommandActive ? enabledText : disabledText;
+        this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
+        this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
 
         this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
@@ -137,8 +124,8 @@ public class GuiModifyMacro extends GuiScreen {
 
         this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
         this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
-        this.drawString(this.fontRenderer, commandBoxTitleText, this.width / 2 + 67 - mc.fontRenderer.getStringWidth(commandBoxTitleText), 37, -6250336);
-        this.drawString(this.fontRenderer, keyBoxTitleText, this.width / 2 + 67 - mc.fontRenderer.getStringWidth(keyBoxTitleText), 90, -6250336);
+        this.drawCenteredString(this.fontRenderer, commandBoxTitleText, this.width / 2, 37, -6250336);
+        this.drawCenteredString(this.fontRenderer, keyBoxTitleText, this.width / 2, 90, -6250336);
 
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 
@@ -165,7 +152,7 @@ public class GuiModifyMacro extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (this.changingKey) {
-            if (keyCode == 1) {
+            if (keyCode == Keyboard.KEY_ESCAPE) {
                 this.result.setKeyCode(0);
             } else if (keyCode != 0) {
                 this.result.setKeyCode(keyCode);
@@ -174,7 +161,14 @@ public class GuiModifyMacro extends GuiScreen {
             }
 
             this.changingKey = false;
-        } else if (this.command.isFocused()) {
+
+            return;
+        }
+
+        if (this.command.isFocused()) {
+            if(keyCode == Keyboard.KEY_ESCAPE)
+                this.command.setFocused(false);
+
             this.command.textboxKeyTyped(typedChar, keyCode);
         } else {
             super.keyTyped(typedChar, keyCode);
@@ -195,13 +189,11 @@ public class GuiModifyMacro extends GuiScreen {
         }
 
         if (this.repeatCommand.mousePressed(mc, mouseX, mouseY)) {
-            this.repeatEnabled = !repeatEnabled;
-            this.result.setRepeat(repeatEnabled);
+            this.result.setRepeat(!this.result.willRepeat());
         }
 
         if (this.commandActive.mousePressed(mc, mouseX, mouseY)) {
-            this.isCommandActive = !isCommandActive;
-            this.result.setActive(isCommandActive);
+            this.result.setActive(!this.result.isActive());
         }
     }
 

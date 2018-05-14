@@ -1,6 +1,6 @@
 package com.mattsmeets.macrokey.event.handler;
 
-import com.mattsmeets.macrokey.event.LayerChangedEvent;
+import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.event.MacroEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,7 +30,12 @@ public class ChangeHandler {
     public static class LayerChangeHandler {
 
         @SubscribeEvent
-        public void layerChangedEvent(LayerChangedEvent event) throws IOException {
+        public void layerAddedEvent(LayerEvent.LayerAddedEvent event) throws IOException {
+            instance.bindingsRepository.addLayer(event.getLayer(), true);
+        }
+
+        @SubscribeEvent
+        public void layerChangedEvent(LayerEvent.LayerChangedEvent event) throws IOException {
             instance.bindingsRepository.updateLayer(event.getLayerChanged(), true);
         }
     }

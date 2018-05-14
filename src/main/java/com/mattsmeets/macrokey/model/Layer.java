@@ -24,6 +24,10 @@ public class Layer implements LayerInterface {
         this(UUID.randomUUID(), displayName, new HashSet<>());
     }
 
+    public Layer() {
+        this("");
+    }
+
     public String getDisplayName() {
         return displayName;
     }

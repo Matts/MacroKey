@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
 
     private void registerHooks() {
         instance.forgeKeybindings = new KeyBinding[1];
-        instance.forgeKeybindings[0] = new KeyBinding("key.openmacrokey.desc", Keyboard.KEY_K, "key.macrokey.category");
+        instance.forgeKeybindings[0] = new KeyBinding("key.macrokey.management.desc", Keyboard.KEY_K, "key.macrokey.category");
 
         for (int i = 0; i < instance.forgeKeybindings.length; ++i)
         {

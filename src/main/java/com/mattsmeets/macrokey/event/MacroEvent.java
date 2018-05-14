@@ -15,7 +15,6 @@ public class MacroEvent {
         public MacroInterface getMacroChanged() {
             return macroChanged;
         }
-
     }
 
     public static class MacroAddedEvent extends Event {
