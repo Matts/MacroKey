@@ -27,11 +27,9 @@ public class MacroListFragment extends GuiListExtended {
     private final GuiMacroManagement guiMacroManagement;
     private final GuiListExtended.IGuiListEntry[] listEntries;
 
-    private int[] listLabelLengths;
+    private final int[] listLabelLengths;
 
     private final LayerInterface currentLayer;
-
-    private final List<MacroInterface> macros;
 
     public MacroListFragment(GuiMacroManagement guiMacroManagement, LayerInterface layer) throws IOException {
         super(guiMacroManagement.mc, guiMacroManagement.width + 45, guiMacroManagement.height, 63, guiMacroManagement.height - 32, 20);
@@ -39,7 +37,7 @@ public class MacroListFragment extends GuiListExtended {
         this.guiMacroManagement = guiMacroManagement;
         this.currentLayer = layer;
 
-        this.macros = instance.bindingsRepository.findAllMacros(true)
+        List<MacroInterface> macros = instance.bindingsRepository.findAllMacros(true)
                 .stream()
                 .sorted(Comparator.comparing(MacroInterface::getUMID))
                 .collect(Collectors.toList());
@@ -47,19 +45,17 @@ public class MacroListFragment extends GuiListExtended {
         this.listEntries = new GuiListExtended.IGuiListEntry[macros.size()];
         this.listLabelLengths = new int[macros.size()];
 
-        int i = 0;
+        for (int i = 0; i < macros.size(); i++) {
+            MacroInterface macro = macros.get(i);
 
-        for (MacroInterface macro : macros) {
             this.listEntries[i] = new MacroListFragment.KeyEntry(macro, i);
 
-            int j = this.mc.fontRenderer.getStringWidth(I18n.format(macro.getCommand()));
+            int j = this.mc.fontRenderer.getStringWidth(macro.getCommand());
 
             if (j > this.listLabelLengths[i]) {
                 this.listLabelLengths[i] = j;
             }
-            i++;
         }
-
     }
 
     @Override
@@ -78,25 +74,34 @@ public class MacroListFragment extends GuiListExtended {
 
         private final MacroInterface macro;
 
-        private final GuiButton btnChangeKeyBinding;
-        private final GuiButton btnRemoveKeyBinding;
-        private final GuiButton btnEdit;
+        private final GuiButton
+                btnChangeKeyBinding,
+                btnRemoveKeyBinding,
+                btnEdit,
+                btnEnabledInLayer;
 
-        private final GuiButton btnEnabledInLayer;
         private boolean enabledInLayer;
 
         private final int index;
 
         private boolean deleted = false;
 
-        public KeyEntry(MacroInterface macro, int index) {
+        private final String
+            removeMacroText = I18n.format("fragment.list.text.remove"),
+            editMacroText = I18n.format("edit");
+
+        private final String
+                enabledText = I18n.format("enabled"),
+                disabledText = I18n.format("disabled");
+
+        private KeyEntry(MacroInterface macro, int index) {
             this.index = index;
             this.macro = macro;
 
             this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, macro.getCommand());
-            this.btnRemoveKeyBinding = new GuiButton(1, 0, 0, 15, 20, "X");
-            this.btnEdit = new GuiButton(2, 0, 0, 30, 20, I18n.format("gui.keybindings.edit"));
-            this.btnEnabledInLayer = new GuiButton(3, 0, 0, 75, 20, "Disabled");
+            this.btnRemoveKeyBinding = new GuiButton(1, 0, 0, 15, 20, this.removeMacroText);
+            this.btnEdit = new GuiButton(2, 0, 0, 30, 20, this.editMacroText);
+            this.btnEnabledInLayer = new GuiButton(3, 0, 0, 75, 20, this.disabledText);
 
             if (currentLayer != null) {
                 enabledInLayer = instance.bindingsRepository.isMacroInLayer(this.macro, currentLayer);
@@ -120,7 +125,6 @@ public class MacroListFragment extends GuiListExtended {
 
                 this.btnEdit.x = x + 170;
                 this.btnEdit.y = y;
-                this.btnEdit.displayString = I18n.format("gui.keybindings.edit");
                 this.btnEdit.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);
 
                 this.btnRemoveKeyBinding.x = x + 200;
@@ -132,9 +136,9 @@ public class MacroListFragment extends GuiListExtended {
                 this.btnEnabledInLayer.y = y;
 
                 if (enabledInLayer) {
-                    this.btnEnabledInLayer.displayString = "Enabled";
+                    this.btnEnabledInLayer.displayString = this.enabledText;
                 } else {
-                    this.btnEnabledInLayer.displayString = "Disabled";
+                    this.btnEnabledInLayer.displayString = this.disabledText;
                 }
 
                 this.btnEnabledInLayer.drawButton(MacroListFragment.this.mc, mouseX, mouseY, 0.0f);

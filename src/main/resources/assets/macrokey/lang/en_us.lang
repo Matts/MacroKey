@@ -7,48 +7,32 @@ text.layer.display=Layer: %s
 text.layer.master=Master
 ####
 
-## GuiModifyMacro aka create/edit macro's ##
-gui.modify.text.title.new=Create Keybinding
-gui.modify.text.title.edit=Edit Keybinding
+## GuiMacroManagement ##
+gui.manage.text.title=MacroKey Keybinding
 
-gui.modify.text.command=Command to be executed
-gui.modify.text.key=Key to bind the command to
+gui.manage.text.macro.add=Add Macro
 
-gui.modify.text.repeat=Hold to repeat
-gui.modify.text.enable=Enable command
+gui.manage.text.layer.edit=Layer Editor
+gui.manage.text.layer.switch=Layer Switch
 
-gui.modify.text.save=Save Keybinding
+fragment.list.text.remove=X
 ####
 
+## GuiModifyMacro aka create/edit macro's ##
+gui.modify.text.title.new=Create Macro
+gui.modify.text.title.edit=Edit Macro
 
-# 1.6 translations, please change
-chat.tag=§7[MacroKey]§f
+gui.modify.text.command=Command
+gui.modify.text.key=Trigger
 
-chat.join=%tag% %loaded% bindings loaded.
+gui.modify.text.repeat=Hold trigger to repeat
+gui.modify.text.enable=Enable macro
 
-chat.keynotexist=%tag% That key does not exist.
+gui.modify.text.save=Save Macro
+####
 
-command.add.bindsuccessfull=%tag% '%exec%' has been bound to '%key%'.
-
-command.bind.usage=%tag% Command Usage: /bind add <key> <command> OR /bind list OR /bind help
-command.add.usage=%tag% Command Usage: /bind add <key> <command>
-command.bind.list=--- Showing key binding list ---
-
-key.macrokey.category=MacroKey
-key.openmacrokey.desc=Open MacroKey Gui
-
-key.macrokeybinding=MacroKey Keybindings
-
-gui.createkeybindings.screenTitle=Create New Keybinding
-gui.createkeybindings.editKeybinding=Edit Old Keybinding
-gui.createkeybindings.commandExecute=Command to be executed
-gui.createkeybindings.toBind=Key to bind the command to
-gui.createkeybindings.repeat=Repeat command while button pressed
-gui.createkeybindings.saveBind=Save Keybinding
-
-gui.keybindings.screenTitle=MacroKey Keybinding
-gui.keybindings.addkeybinding=Add Keybinding
-gui.keybindings.edit=Edit
-
+## Generic Translations ##
 enabled=Enabled
 disabled=Disabled
+edit=Edit
+####

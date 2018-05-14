@@ -22,8 +22,9 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == ModConfig.guiMacroManagementId) {
-            return new GuiMacroManagement(Minecraft.getMinecraft().currentScreen, Minecraft.getMinecraft().gameSettings);
+            return new GuiMacroManagement(Minecraft.getMinecraft().currentScreen);
         }
+
         return null;
     }
 }

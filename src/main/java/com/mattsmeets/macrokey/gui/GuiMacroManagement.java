@@ -22,26 +22,33 @@ public class GuiMacroManagement extends GuiScreen {
     private MacroListFragment keyBindingList;
 
     private final GuiScreen parentScreen;
-    private final GameSettings settings;
-
-    private GuiButton layerEditor;
-    private GuiButton layerSwitcher;
 
     public MacroInterface macroModify;
 
-    private final String screenTitle = I18n.format("gui.keybindings.screenTitle");
+    private final String
+            screenTitle = I18n.format("gui.manage.text.title"),
+            layerMasterText = I18n.format("text.layer.master"),
+            addMacroButtonText = I18n.format("gui.manage.text.macro.add"),
+            layerEditorButtonText = I18n.format("gui.manage.text.layer.edit"),
+            layerSwitcherButtonText = I18n.format("gui.manage.text.layer.switch");
 
-    private GuiButton buttonDone;
-    private GuiButton buttonAdd;
+
+    private final String
+            doneText = I18n.format("gui.done");
+
+    private GuiButton
+            buttonDone,
+            buttonAdd,
+            layerEditor,
+            layerSwitcher;
 
     private int currentSelectedLayer;
     private List<LayerInterface> layers;
 
-    private boolean updateList = false;
+    private volatile boolean updateList = false;
 
-    public GuiMacroManagement(GuiScreen screen, GameSettings settings) {
+    public GuiMacroManagement(GuiScreen screen) {
         this.parentScreen = screen;
-        this.settings = settings;
         this.currentSelectedLayer = -1;
 
         try {
@@ -59,7 +66,7 @@ public class GuiMacroManagement extends GuiScreen {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        if(this.updateList){
+        if (this.updateList) {
             this.updateScreen();
         }
 
@@ -105,11 +112,11 @@ public class GuiMacroManagement extends GuiScreen {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
-        this.buttonList.add(buttonDone = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, I18n.format("gui.done", new Object[0])));
-        this.buttonList.add(buttonAdd = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.format("gui.keybindings.addkeybinding", new Object[0])));
+        this.buttonList.add(buttonDone = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.doneText));
+        this.buttonList.add(buttonAdd = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.addMacroButtonText));
 
-        this.buttonList.add(layerEditor = new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, "Layer Editor"));
-        this.buttonList.add(layerSwitcher = new GuiButton(3, this.width / 2 - 155, 40, 150, 20, "Switch Layer"));
+        this.buttonList.add(layerEditor = new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, this.layerEditorButtonText));
+        this.buttonList.add(layerSwitcher = new GuiButton(3, this.width / 2 - 155, 40, 150, 20, this.layerSwitcherButtonText));
 
         this.updateList = true;
     }
@@ -123,12 +130,15 @@ public class GuiMacroManagement extends GuiScreen {
             return;
         }
 
-        LayerInterface currentLayer = currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
+        LayerInterface currentLayer =
+                currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
 
         try {
             this.keyBindingList = new MacroListFragment(this, currentLayer);
-            this.layerSwitcher.displayString = I18n.format("text.layer.display",
-                    currentLayer == null ? I18n.format("text.layer.master") : currentLayer.getDisplayName());
+            this.layerSwitcher.displayString =
+                    I18n.format("text.layer.display",
+                            currentLayer == null ? this.layerMasterText : currentLayer.getDisplayName()
+                    );
         } catch (IOException e) {
             e.printStackTrace();
         }

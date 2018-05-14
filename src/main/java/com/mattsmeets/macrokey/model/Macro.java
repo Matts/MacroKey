@@ -54,6 +54,8 @@ public class Macro implements MacroInterface {
 
     public Macro() {
         this.umid = UUID.randomUUID();
+        this.active = true;
+        this.repeat = false;
     }
 
     public UUID getUMID() {
