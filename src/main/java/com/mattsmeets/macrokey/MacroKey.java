@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey;
 
 import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
@@ -37,7 +38,7 @@ public class MacroKey {
 
     public BindingsRepository bindingsRepository;
 
-    public LayerInterface activeLayer;
+    public ModState modState;
 
     public KeyBinding[] forgeKeybindings;
 
@@ -75,6 +76,9 @@ public class MacroKey {
 
         // BindingsRepository has a dependency on the bindings.json file being created
         this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
+
+        // Initialize the mod's state
+        this.modState = new ModState(null);
     }
 
     @Mod.EventHandler

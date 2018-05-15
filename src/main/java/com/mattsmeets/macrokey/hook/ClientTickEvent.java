@@ -24,6 +24,8 @@ public class ClientTickEvent {
             return;
         }
 
+        // every tick post an event for the normal,
+        // non repeating commands to trigger
         MinecraftForge.EVENT_BUS.post(new InGameTickEvent(player, false));
 
         // rate-limiting so users can define
@@ -35,6 +37,8 @@ public class ClientTickEvent {
             return;
         }
 
+        // once the delta time has reached the delay,
+        // post a tick event for the repeating commands
         MinecraftForge.EVENT_BUS.post(new InGameTickEvent.LimitedInGameTickEvent(player));
 
         // set delta back to zero
