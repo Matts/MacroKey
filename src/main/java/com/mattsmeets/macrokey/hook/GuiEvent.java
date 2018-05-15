@@ -3,19 +3,15 @@ package com.mattsmeets.macrokey.hook;
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Mouse;
 
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,10 +35,10 @@ public class GuiEvent {
                 event.getButtonList().add(
                         new GuiButton(
                                 ModConfig.buttonLayerSwitcherId,
-                                gui.width / 2 + ModConfig.buttonLayerSwitchLocation[0],
-                                gui.height / 4 + ModConfig.buttonLayerSwitchLocation[1],
-                                150 / 3 * 2 - 1,
-                                20,
+                                gui.width / 2 + ModConfig.buttonLayerSwitchSettings[0],
+                                gui.height / 4 + ModConfig.buttonLayerSwitchSettings[1],
+                                ModConfig.buttonLayerSwitchSettings[2],
+                                ModConfig.buttonLayerSwitchSettings[3],
                                 I18n.format("text.layer.display",
                                         layer == null ? this.layerMasterText : layer.getDisplayName()
                                 )
