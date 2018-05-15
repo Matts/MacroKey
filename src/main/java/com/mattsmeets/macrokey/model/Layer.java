@@ -24,6 +24,10 @@ public class Layer implements LayerInterface {
         this(UUID.randomUUID(), displayName, new HashSet<>());
     }
 
+    public Layer() {
+        this("");
+    }
+
     public String getDisplayName() {
         return displayName;
     }
@@ -50,8 +54,18 @@ public class Layer implements LayerInterface {
         return this;
     }
 
-    public Layer addMacro(Macro macro) {
+    public Layer addMacro(MacroInterface macro) {
         return this.addMacro(macro.getUMID());
+    }
+
+    public Layer removeMacro(UUID macro) {
+        this.macros.remove(macro);
+
+        return this;
+    }
+
+    public Layer removeMacro(MacroInterface macro) {
+        return this.removeMacro(macro.getUMID());
     }
 
     public UUID getULID() {

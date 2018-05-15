@@ -14,8 +14,11 @@ public class ModConfig {
     @Config.Comment("How many ticks need to pass for the repeatable command cooldown timer to expire (default: 20 ticks -> 1 second)")
     public static int repeatDelay = 20;
 
-    @Config.Comment("What file should be used for saving the bindings and various other dynamic information")
+    @Config.Comment("What file should be used for saving the bindings and various other dynamic information (default: bindings.json)")
     public static String bindingFile = "bindings.json";
+
+    @Config.Comment("Customize the ID that is used when calling the macro management GUI (default: 423458971)")
+    public static int guiMacroManagementId = 423458971;
 
     @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
     public static class EventHandler {

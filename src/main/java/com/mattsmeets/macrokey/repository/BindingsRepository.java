@@ -81,7 +81,7 @@ public class BindingsRepository {
                 .stream()
                 .filter(
                         (layer) ->
-                                layer.getULID() == ulid
+                                layer.getULID().equals(ulid)
                 )
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
@@ -122,7 +122,7 @@ public class BindingsRepository {
                 this.bindingsFile
                         .getLayers()
                         .stream()
-                        .map(savedLayer -> layer.getULID() == savedLayer.getULID() ? layer : savedLayer)
+                        .map((savedLayer) -> layer.getULID().equals(savedLayer.getULID()) ? layer : savedLayer)
                         .collect(Collectors.toSet())
         );
 
@@ -185,7 +185,10 @@ public class BindingsRepository {
     }
 
     public boolean isMacroInLayer(MacroInterface macro, LayerInterface layer) {
-        return layer.getMacros().contains(macro.getUMID());
+        return this.bindingsFile
+                .getLayers()
+                .stream()
+                .filter(layerI -> layerI.getULID().equals(layer.getULID()) && layerI.getMacros().contains(macro.getUMID())).count() != 0;
     }
 
     /**
@@ -210,7 +213,8 @@ public class BindingsRepository {
                 .stream()
                 .filter(
                         (macro) ->
-                                macro.getUMID() == ulid
+                                macro.getUMID().equals(ulid)
+
                 )
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
@@ -282,7 +286,7 @@ public class BindingsRepository {
                 this.bindingsFile
                         .getMacros()
                         .stream()
-                        .map(savedMacro -> macro.getUMID() == savedMacro.getUMID() ? macro : savedMacro)
+                        .map(savedMacro -> macro.getUMID().equals(savedMacro.getUMID()) ? macro : savedMacro)
                         .collect(Collectors.toSet())
         );
 
@@ -295,11 +299,12 @@ public class BindingsRepository {
     /**
      * Remove Macro by UUID
      *
-     * @param umid the unique macro identifier of the affected macro
-     * @param sync update file after adding macro
+     * @param umid    the unique macro identifier of the affected macro
+     * @param sync    update file after adding macro
+     * @param persist persist changes to the layer
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacro(UUID umid, boolean sync) throws IOException {
+    public void deleteMacro(UUID umid, boolean sync, boolean persist) throws IOException {
         this.bindingsFile.setMacros(
                 // get all macro's and filter them
                 // when the umid of the macro matches
@@ -311,6 +316,36 @@ public class BindingsRepository {
                         .filter(savedMacro -> umid.compareTo(savedMacro.getUMID()) != 0)
                         .collect(Collectors.toSet())
         );
+
+        if (persist) {
+            deleteMacroFromLayer(umid, sync);
+        }
+
+        if (sync && !persist) {
+            // if specified to update configuration
+            saveConfiguration();
+        }
+    }
+
+    /**
+     * Remove macro from layer by UUID
+     *
+     * @param umid the unique macro identifier of the affected macro
+     * @param sync update file after adding macro
+     * @throws IOException
+     */
+    public void deleteMacroFromLayer(UUID umid, boolean sync) throws IOException {
+        // get all layers, and loop through them.
+        // for each layer get all macro's and filter them
+        // if they match the umid. Finally set the filtered
+        // result as the new set of macros
+        this.bindingsFile
+                .getLayers()
+                .forEach(layer ->
+                        layer.setMacros(layer.getMacros().stream()
+                                .filter(savedMacro -> umid.compareTo(savedMacro) != 0)
+                                .collect(Collectors.toSet())
+                        ));
 
         if (sync) {
             // if specified to update configuration
@@ -325,8 +360,19 @@ public class BindingsRepository {
      * @param sync  update file after adding macro
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacro(MacroInterface macro, boolean sync) throws IOException {
-        this.deleteMacro(macro.getUMID(), sync);
+    public void deleteMacroFromLayer(MacroInterface macro, boolean sync) throws IOException {
+        this.deleteMacroFromLayer(macro.getUMID(), sync);
+    }
+
+    /**
+     * Remove Macro by instance
+     *
+     * @param macro the affected macro
+     * @param sync  update file after adding macro
+     * @throws IOException when file can not be found or read
+     */
+    public void deleteMacro(MacroInterface macro, boolean sync, boolean persist) throws IOException {
+        this.deleteMacro(macro.getUMID(), sync, persist);
     }
 
     /**

@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,9 +37,9 @@ public class BindingsRepositoryTest {
     public BindingsRepository bindingsRepository;
 
     @Test
-    public void testfindLayerByUUIDWithSyncFalseGoodCase() throws IOException {
+    public void testFindLayerByUUIDWithSyncFalseGoodCase() throws IOException {
         BindingsFile file = mock(BindingsFile.class);
-        Layer layer = mock(Layer.class);
+        Layer layer = new Layer("test");
 
         Set<LayerInterface> input = new HashSet<>();
         input.add(layer);
@@ -55,9 +56,9 @@ public class BindingsRepositoryTest {
     }
 
     @Test
-    public void testfindLayerByUUIDWithSyncFalseBadCase() throws IOException {
+    public void testFindLayerByUUIDWithSyncFalseBadCase() throws IOException {
         BindingsFile file = mock(BindingsFile.class);
-        Layer layer = mock(Layer.class);
+        Layer layer = new Layer("test");
         Layer layer1 = new Layer("Hello World");
 
         Set<LayerInterface> input = new HashSet<>();
@@ -75,9 +76,9 @@ public class BindingsRepositoryTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testfindLayerByUUIDWithSyncFalseMultiple() throws IOException {
+    public void testFindLayerByUUIDWithSyncFalseMultiple() throws IOException {
         BindingsFile file = mock(BindingsFile.class);
-        Layer layer = mock(Layer.class);
+        Layer layer = new Layer("test");
         Layer layer1 = new Layer(layer.getULID(), "Hello World");
 
         Set<LayerInterface> input = new HashSet<>();
@@ -519,6 +520,34 @@ public class BindingsRepositoryTest {
     }
 
     @Test
+    public void testFindMacroByUUIDWithSyncFalseGoodCase() throws IOException {
+        BindingsFile file = mock(BindingsFile.class);
+
+        BindingsFile spyFile = spy(file);
+
+        Macro macro1 = new Macro(1, "testing", true);
+        Macro macro2 = new Macro(1, "testing", true);
+        Macro macro3 = new Macro(1, "testing", false);
+        Macro macro4 = new Macro(2, "testing", true);
+        Macro macro5 = new Macro(3, "testing", false);
+
+        Set<MacroInterface> input = new HashSet<>();
+        input.add(macro1);
+        input.add(macro2);
+        input.add(macro3);
+        input.add(macro4);
+        input.add(macro5);
+
+        this.bindingsRepository.setBindingsFile(spyFile);
+
+        when(spyFile.getMacros()).thenReturn(input);
+
+        MacroInterface result = this.bindingsRepository.findMacroByUUID(macro1.getUMID(), false);
+
+        assertEquals(macro1, result);
+    }
+
+    @Test
     public void testFindMacroByKeycodeWithSyncFalseAndLayerDependent() throws IOException {
         BindingsFile file = mock(BindingsFile.class);
 
@@ -534,6 +563,8 @@ public class BindingsRepositoryTest {
         layer.addMacro(macro2);
         layer.addMacro(macro3);
         layer.addMacro(macro4);
+
+        when(file.getLayers()).thenReturn(Collections.singleton(layer));
 
         Set<MacroInterface> expectedResult = new HashSet<>();
         expectedResult.add(macro1);
@@ -807,7 +838,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(3, this.bindingsRepository.findAllMacros(false).size());
 
-        this.bindingsRepository.deleteMacro(macro1.getUMID(), false);
+        this.bindingsRepository.deleteMacro(macro1.getUMID(), false, false);
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
         assertEquals(expectedResult, this.bindingsRepository.findAllMacros(false));
@@ -846,7 +877,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(3, this.bindingsRepository.findAllMacros(false).size());
 
-        this.bindingsRepository.deleteMacro(macro1.getUMID(), true);
+        this.bindingsRepository.deleteMacro(macro1.getUMID(), true, false);
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
         assertEquals(expectedResult, this.bindingsRepository.findAllMacros(false));
@@ -855,6 +886,63 @@ public class BindingsRepositoryTest {
         verify(macro2Spy).getUMID();
         verify(macro3Spy).getUMID();
         verify(fileSpy).setMacros(expectedResult);
+
+        verify(jsonConfig, times(1)).saveObjectToJson(fileSpy);
+    }
+
+    @Test
+    public void testDeleteMacroFromLayerWithSyncTrue() throws IOException {
+        Macro macro1 = new Macro(10, "test", false);
+        Macro macro2 = new Macro(10, "test", false);
+        Macro macro3 = new Macro(10, "test", false);
+
+        Layer layer1 = new Layer("testing layer");
+
+        Macro macro1Spy = spy(macro1);
+        Macro macro2Spy = spy(macro2);
+        Macro macro3Spy = spy(macro3);
+
+        Layer layer1Spy = spy(layer1);
+
+        Set<MacroInterface> macros = new HashSet<>();
+        macros.add(macro1Spy);
+        macros.add(macro2Spy);
+        macros.add(macro3Spy);
+
+        layer1Spy.addMacro(macro1Spy);
+        layer1Spy.addMacro(macro3Spy);
+
+        Set<MacroInterface> expectedResult = new HashSet<>();
+        expectedResult.add(macro1Spy);
+        expectedResult.add(macro2Spy);
+        expectedResult.add(macro3Spy);
+
+        BindingsFile file = new BindingsFile(2, macros);
+        BindingsFile fileSpy = spy(file);
+
+        when(fileSpy.getLayers()).thenReturn((Set) new HashSet<Layer>() {{
+            add(layer1Spy);
+        }});
+
+        this.bindingsRepository.setBindingsFile(fileSpy);
+
+        when(layer1Spy.getMacros()).thenCallRealMethod();
+
+        assertEquals(3, this.bindingsRepository.findAllMacros(false).size());
+        assertEquals(true, this.bindingsRepository.isMacroInLayer(macro1Spy, layer1Spy));
+        assertEquals(false, this.bindingsRepository.isMacroInLayer(macro2Spy, layer1Spy));
+        assertEquals(true, this.bindingsRepository.isMacroInLayer(macro3Spy, layer1Spy));
+
+        this.bindingsRepository.deleteMacroFromLayer(macro1Spy.getUMID(), true);
+
+        assertEquals(false, this.bindingsRepository.isMacroInLayer(macro1Spy, layer1Spy));
+        assertEquals(false, this.bindingsRepository.isMacroInLayer(macro2Spy, layer1Spy));
+        assertEquals(true, this.bindingsRepository.isMacroInLayer(macro3Spy, layer1Spy));
+        assertEquals(expectedResult, this.bindingsRepository.findAllMacros(false));
+
+        verify(macro1Spy, times(4)).getUMID();
+        verify(macro2Spy, times(2)).getUMID();
+        verify(macro3Spy, times(3)).getUMID();
 
         verify(jsonConfig, times(1)).saveObjectToJson(fileSpy);
     }
@@ -885,7 +973,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(3, this.bindingsRepository.findAllMacros(false).size());
 
-        this.bindingsRepository.deleteMacro(macro1, false);
+        this.bindingsRepository.deleteMacro(macro1, false, false);
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
         assertEquals(expectedResult, this.bindingsRepository.findAllMacros(false));
@@ -924,7 +1012,7 @@ public class BindingsRepositoryTest {
 
         assertEquals(3, this.bindingsRepository.findAllMacros(false).size());
 
-        this.bindingsRepository.deleteMacro(macro1, true);
+        this.bindingsRepository.deleteMacro(macro1, true, false);
 
         assertEquals(2, this.bindingsRepository.findAllMacros(false).size());
         assertEquals(expectedResult, this.bindingsRepository.findAllMacros(false));
