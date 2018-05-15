@@ -167,6 +167,9 @@ public class MacroListFragment extends GuiListExtended {
             }
             if (this.btnRemoveKeyBinding.mousePressed(mc, mouseX, mouseY)) {
                 try {
+                    if(instance.modState.getActiveLayer() == this.macro)
+                        instance.modState.setActiveLayer(null);
+
                     instance.bindingsRepository.deleteMacro(this.macro, true, true);
 
                     this.deleted = true;

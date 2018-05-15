@@ -122,10 +122,7 @@ public class GuiMacroManagement extends GuiScreen {
         }
 
         try {
-            this.layers = instance.bindingsRepository.findAllLayers(true)
-                    .stream()
-                    .sorted(Comparator.comparing(LayerInterface::getULID))
-                    .collect(Collectors.toList());
+            this.layers = instance.modState.getLayers(true);
 
             LayerInterface currentLayer =
                     currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);

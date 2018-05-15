@@ -27,10 +27,7 @@ public class LayerListFragment extends GuiListExtended {
 
         this.guiLayerManagement = guiLayerManagement;
 
-        List<LayerInterface> layers = instance.bindingsRepository.findAllLayers(true)
-                .stream()
-                .sorted(Comparator.comparing(LayerInterface::getULID))
-                .collect(Collectors.toList());
+        List<LayerInterface> layers = instance.modState.getLayers(true);
 
         this.listEntries = new GuiListExtended.IGuiListEntry[layers.size()];
 

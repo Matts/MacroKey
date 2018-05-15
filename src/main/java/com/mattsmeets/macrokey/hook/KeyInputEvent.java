@@ -47,7 +47,7 @@ public class KeyInputEvent {
 
         // find all macro's by the current key pressed, while not syncing
         Set<MacroInterface> macros =
-                instance.bindingsRepository.findMacroByKeycode(keyCode, instance.activeLayer, false);
+                instance.bindingsRepository.findMacroByKeycode(keyCode, instance.modState.getActiveLayer(), false);
 
         // if the list is not empty
         if (macros.size() > 0) {
