@@ -23,8 +23,8 @@ public class ModConfig {
     @Config.Comment("Customize the ID that is used when creating the button for switching layers (default: 823358142), (-1 = disabled)")
     public static int buttonLayerSwitcherId = 823358142;
 
-    @Config.Comment("Customize the position that the button for switching layer should use, expected is {x, y} (default: 2, 128)")
-    public static int[] buttonLayerSwitchLocation = {2,128};
+    @Config.Comment("Customize the position that the button for switching layer should use, expected is {x, y, width, height} (default: -100, 128, 200, 20)")
+    public static int[] buttonLayerSwitchSettings = {-100,128,200,20};
 
     @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
     public static class EventHandler {
