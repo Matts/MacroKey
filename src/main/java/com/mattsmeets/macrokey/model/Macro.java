@@ -40,6 +40,10 @@ public class Macro implements MacroInterface {
         this.repeat = repeat;
     }
 
+    public void sleep(int seconds) throws InterruptedException {
+        Thread.sleep(seconds * 1000);
+    }
+
     public Macro(int keyCode, String command, boolean active, boolean repeat) {
         this(UUID.randomUUID(), keyCode, command, active, repeat);
     }
