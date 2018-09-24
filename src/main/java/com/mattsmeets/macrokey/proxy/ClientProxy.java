@@ -1,11 +1,11 @@
 package com.mattsmeets.macrokey.proxy;
 
-import com.mattsmeets.macrokey.event.handler.ChangeHandler;
-import com.mattsmeets.macrokey.event.handler.GuiHandler;
-import com.mattsmeets.macrokey.event.handler.MacroKeyHandler;
-import com.mattsmeets.macrokey.hook.ClientTickEvent;
-import com.mattsmeets.macrokey.hook.GuiEvent;
-import com.mattsmeets.macrokey.hook.KeyInputEvent;
+import com.mattsmeets.macrokey.handler.ChangeHandler;
+import com.mattsmeets.macrokey.handler.GuiHandler;
+import com.mattsmeets.macrokey.handler.MacroKeyHandler;
+import com.mattsmeets.macrokey.handler.hook.ClientTickHandler;
+import com.mattsmeets.macrokey.handler.hook.GuiEventHandler;
+import com.mattsmeets.macrokey.handler.hook.KeyInputHandler;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -39,8 +39,8 @@ public class ClientProxy extends CommonProxy {
             ClientRegistry.registerKeyBinding(instance.forgeKeybindings[i]);
         }
 
-        MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
-        MinecraftForge.EVENT_BUS.register(new ClientTickEvent());
-        MinecraftForge.EVENT_BUS.register(new GuiEvent());
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+        MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+        MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
     }
 }

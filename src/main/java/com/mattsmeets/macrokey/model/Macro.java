@@ -101,4 +101,5 @@ public class Macro implements MacroInterface {
 
         return this;
     }
+
 }

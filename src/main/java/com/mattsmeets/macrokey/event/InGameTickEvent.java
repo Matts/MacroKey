@@ -4,8 +4,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class InGameTickEvent extends Event {
-    public static class LimitedInGameTickEvent extends InGameTickEvent {
 
+    public static class LimitedInGameTickEvent extends InGameTickEvent {
         public LimitedInGameTickEvent(EntityPlayerSP entityPlayerSP) {
             super(entityPlayerSP, true);
         }
@@ -38,4 +38,5 @@ public class InGameTickEvent extends Event {
     public boolean isLimitedTick() {
         return limitedTickEvent;
     }
+
 }

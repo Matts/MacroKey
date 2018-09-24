@@ -4,8 +4,8 @@ import com.mattsmeets.macrokey.model.MacroInterface;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MacroEvent {
-    public static class MacroChangedEvent extends Event {
 
+    public static class MacroChangedEvent extends Event {
         private final MacroInterface macroChanged;
 
         public MacroChangedEvent(MacroInterface macroChanged) {
@@ -18,7 +18,6 @@ public class MacroEvent {
     }
 
     public static class MacroAddedEvent extends Event {
-
         private final MacroInterface macro;
 
         public MacroAddedEvent(MacroInterface macro) {
@@ -29,4 +28,5 @@ public class MacroEvent {
             return macro;
         }
     }
+
 }

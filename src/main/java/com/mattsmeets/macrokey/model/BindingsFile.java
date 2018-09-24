@@ -2,12 +2,14 @@ package com.mattsmeets.macrokey.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class BindingsFile implements BindingsFileInterface {
 
     private int version;
     private Set<MacroInterface> macros;
     private Set<LayerInterface> layers;
+    private UUID activeLayer;
 
     public BindingsFile(int version, Set<MacroInterface> macros, Set<LayerInterface> layers) {
         this.version = version;
@@ -53,5 +55,13 @@ public class BindingsFile implements BindingsFileInterface {
 
     public void addLayer(LayerInterface layer) {
         this.layers.add(layer);
+    }
+
+    public UUID getActiveLayer() {
+        return activeLayer;
+    }
+
+    public void setActiveLayer(UUID activeLayer) {
+        this.activeLayer = activeLayer;
     }
 }

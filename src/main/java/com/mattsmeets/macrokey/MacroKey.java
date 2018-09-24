@@ -32,6 +32,7 @@ public class MacroKey {
     public static CommonProxy proxy;
 
     public final PropertyLoader referencePropLoader;
+
     public LogHelper logger;
 
     public JsonConfig bindingsJSONConfig;

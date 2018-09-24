@@ -22,8 +22,10 @@ public class ModState {
         return this.activeLayer;
     }
 
-    public ModState setActiveLayer(LayerInterface layer) {
+    public ModState setActiveLayer(LayerInterface layer) throws IOException {
         this.activeLayer = layer;
+
+        instance.bindingsRepository.setActiveLayer(layer == null ? null : layer.getULID(), true);
 
         return this;
     }

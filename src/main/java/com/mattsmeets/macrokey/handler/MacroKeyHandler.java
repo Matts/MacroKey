@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.event.handler;
+package com.mattsmeets.macrokey.handler;
 
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
@@ -46,4 +46,5 @@ public class MacroKeyHandler {
         // list if it is not to be re-executed
         this.macrosToRun.removeIf(macro -> !macro.willRepeat());
     }
+
 }

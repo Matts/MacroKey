@@ -1,14 +1,13 @@
 package com.mattsmeets.macrokey.event;
 
-import java.util.Set;
-
+import com.mattsmeets.macrokey.model.MacroInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.mattsmeets.macrokey.model.MacroInterface;
+import java.util.Set;
 
 @SideOnly(Side.CLIENT)
 public class MacroActivationEvent extends Event {
@@ -80,4 +79,5 @@ public class MacroActivationEvent extends Event {
     public MacroState getMacroState() {
         return pressed;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.model;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface BindingsFileInterface {
 
@@ -43,4 +44,14 @@ public interface BindingsFileInterface {
      * @param layer layer to add
      */
     public void addLayer(LayerInterface layer);
+
+    /**
+     * @return Active layer UUID
+     */
+    public UUID getActiveLayer();
+
+    /**
+     * @param activeLayer UUID of the new active layer
+     */
+    public void setActiveLayer(UUID activeLayer);
 }
