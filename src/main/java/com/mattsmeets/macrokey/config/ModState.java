@@ -1,6 +1,5 @@
 package com.mattsmeets.macrokey.config;
 
-import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
 
 import java.io.IOException;
@@ -22,8 +21,10 @@ public class ModState {
         return this.activeLayer;
     }
 
-    public ModState setActiveLayer(LayerInterface layer) {
+    public ModState setActiveLayer(LayerInterface layer) throws IOException {
         this.activeLayer = layer;
+
+        instance.bindingsRepository.setActiveLayer(layer == null ? null : layer.getULID(), true);
 
         return this;
     }

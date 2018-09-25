@@ -70,18 +70,14 @@ public class MacroListFragment extends GuiListExtended {
                 btnRemoveKeyBinding,
                 btnEdit,
                 btnEnabledInLayer;
-
-        private boolean enabledInLayer;
-
-        private boolean deleted = false;
-
         private final String
                 removeMacroText = I18n.format("fragment.list.text.remove"),
                 editMacroText = I18n.format("edit");
-
         private final String
                 enabledText = I18n.format("enabled"),
                 disabledText = I18n.format("disabled");
+        private boolean enabledInLayer;
+        private boolean deleted = false;
 
         private KeyEntry(MacroInterface macro) {
             this.macro = macro;

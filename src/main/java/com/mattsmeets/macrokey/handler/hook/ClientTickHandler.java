@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.hook;
+package com.mattsmeets.macrokey.handler.hook;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
@@ -11,8 +11,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientTickEvent {
+public class ClientTickHandler {
 
+    /**
+     * Amount of ticks since last limited tick
+     */
     private int delta;
 
     @SubscribeEvent

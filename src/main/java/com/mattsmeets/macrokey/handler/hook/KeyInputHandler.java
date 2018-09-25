@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.hook;
+package com.mattsmeets.macrokey.handler.hook;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
@@ -18,12 +18,12 @@ import java.util.Set;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
-public class KeyInputEvent {
+public class KeyInputHandler {
 
     // private stash of pressed keys
     private Set<Integer> pressedKeys;
 
-    public KeyInputEvent() {
+    public KeyInputHandler() {
         this.pressedKeys = new HashSet<>();
     }
 
@@ -50,31 +50,31 @@ public class KeyInputEvent {
                 instance.bindingsRepository.findMacroByKeycode(keyCode, instance.modState.getActiveLayer(), false);
 
         // if the list is not empty
-        if (macros.size() > 0) {
-            // is the button pressed, or being released
-            if (Keyboard.getEventKeyState()) {
+        if (macros.size() == 0) {
+            macros = null;
+            return;
+        }
+
+        // is the button pressed, or being released
+        if (Keyboard.getEventKeyState()) {
                 /*
                 if the key has not been pressed during last events, send
                 an event, and add it to the current index of pressed keys
                  */
-                if (!this.pressedKeys.contains(keyCode)) {
-                    MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
-                    this.pressedKeys.add(keyCode);
-                }
-            } else {
+            if (!this.pressedKeys.contains(keyCode)) {
+                MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
+                this.pressedKeys.add(keyCode);
+            }
+        } else {
                 /*
                 if the key has been pressed during last events, send
                 an event, and remove it from the current index of pressed keys
                  */
-                if (this.pressedKeys.contains(keyCode)) {
-                    MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
-                    this.pressedKeys.remove(keyCode);
-                }
+            if (this.pressedKeys.contains(keyCode)) {
+                MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
+                this.pressedKeys.remove(keyCode);
             }
         }
-
-        // un-set set for gc
-        macros = null;
     }
 
 }

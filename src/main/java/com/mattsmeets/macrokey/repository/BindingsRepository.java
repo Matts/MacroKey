@@ -1,13 +1,15 @@
 package com.mattsmeets.macrokey.repository;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.*;
 import com.mattsmeets.macrokey.service.JsonConfig;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Repository class for the bindings.json file
@@ -37,15 +39,6 @@ public class BindingsRepository {
         this.config = jsonConfig;
 
         loadConfiguration();
-    }
-
-    /**
-     * Set the used bindings file.
-     *
-     * @param bindingsFile instance of BindingsFile
-     */
-    public void setBindingsFile(BindingsFileInterface bindingsFile) {
-        this.bindingsFile = bindingsFile;
     }
 
     /**
@@ -151,6 +144,9 @@ public class BindingsRepository {
                         .filter(savedLayer -> ulid.compareTo(savedLayer.getULID()) != 0)
                         .collect(Collectors.toSet())
         );
+
+        if (this.isActiveLayer(ulid, false))
+            this.setActiveLayer((UUID) null, false);
 
         if (sync) {
             // if specified to update configuration
@@ -332,7 +328,7 @@ public class BindingsRepository {
      *
      * @param umid the unique macro identifier of the affected macro
      * @param sync update file after adding macro
-     * @throws IOException
+     * @throws IOException when file can not be found or read
      */
     public void deleteMacroFromLayer(UUID umid, boolean sync) throws IOException {
         // get all layers, and loop through them.
@@ -367,12 +363,81 @@ public class BindingsRepository {
     /**
      * Remove Macro by instance
      *
-     * @param macro the affected macro
-     * @param sync  update file after adding macro
+     * @param macro   the affected macro
+     * @param sync    update file after adding macro
+     * @param persist persist changes to the layer
      * @throws IOException when file can not be found or read
      */
     public void deleteMacro(MacroInterface macro, boolean sync, boolean persist) throws IOException {
         this.deleteMacro(macro.getUMID(), sync, persist);
+    }
+
+    /**
+     * Find active layer in file
+     *
+     * @param sync boolean update from file before retrieving
+     * @return the layer found, may be null
+     * @throws IOException when file can not be found or read
+     */
+    public LayerInterface findActiveLayer(boolean sync) throws IOException {
+        return this.findLayerByUUID(this.bindingsFile.getActiveLayer(), sync);
+    }
+
+    /**
+     * Set the active layer by ULID
+     *
+     * @param ulid unique layer id
+     * @param sync update file after setting active layer
+     * @throws IOException when file can not be found or read
+     */
+    public void setActiveLayer(UUID ulid, boolean sync) throws IOException {
+        this.bindingsFile.setActiveLayer(ulid);
+
+        if (sync) {
+            // if specified to update configuration
+            saveConfiguration();
+        }
+    }
+
+    /**
+     * Set the active layer by layer
+     *
+     * @param layer unique layer id
+     * @param sync  update file after setting active layer
+     * @throws IOException when file can not be found or read
+     */
+    public void setActiveLayer(LayerInterface layer, boolean sync) throws IOException {
+        this.setActiveLayer(layer.getULID(), sync);
+    }
+
+    /**
+     * Check if the given UUID is the active layer
+     *
+     * @param ulid UUID
+     * @param sync boolean update from file before retrieving
+     * @return true if the UUID given is the active layer
+     * @throws IOException when file can not be found or read
+     */
+    public boolean isActiveLayer(UUID ulid, boolean sync) throws IOException {
+        if (sync)
+            // if specified to update memory with latest changes
+            loadConfiguration();
+
+        UUID activeULID = this.bindingsFile.getActiveLayer();
+
+        return ulid != null && activeULID != null && ulid.equals(activeULID);
+    }
+
+    /**
+     * Check if the given UUID is the active layer
+     *
+     * @param layer Layer
+     * @param sync  boolean update from file before retrieving
+     * @return true if the Layer given is the active layer
+     * @throws IOException when file can not be found or read
+     */
+    public boolean isActiveLayer(Layer layer, boolean sync) throws IOException {
+        return this.isActiveLayer(layer.getULID(), sync);
     }
 
     /**
@@ -430,4 +495,14 @@ public class BindingsRepository {
             saveConfiguration();
         }
     }
+
+    /**
+     * Set the used bindings file.
+     *
+     * @param bindingsFile instance of BindingsFile
+     */
+    public void setBindingsFile(BindingsFileInterface bindingsFile) {
+        this.bindingsFile = bindingsFile;
+    }
+
 }

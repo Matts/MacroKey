@@ -1,12 +1,11 @@
 package com.mattsmeets.macrokey;
 
-import static org.junit.Assert.assertNotNull;
-
+import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MacroKeyTest {

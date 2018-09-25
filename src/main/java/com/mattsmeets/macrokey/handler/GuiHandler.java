@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.event.handler;
+package com.mattsmeets.macrokey.handler;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.gui.GuiMacroManagement;
@@ -7,22 +7,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-
 public class GuiHandler implements IGuiHandler {
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == ModConfig.guiMacroManagementId) {
+    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+        if (id == ModConfig.guiMacroManagementId) {
             return new GuiMacroManagement(Minecraft.getMinecraft().currentScreen);
         }
 
         return null;
     }
+
 }

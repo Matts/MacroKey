@@ -1,7 +1,6 @@
 package com.mattsmeets.macrokey.gui;
 
 import com.mattsmeets.macrokey.gui.fragment.LayerListFragment;
-import com.mattsmeets.macrokey.model.Layer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,17 +9,13 @@ import net.minecraft.client.resources.I18n;
 import java.io.IOException;
 
 public class GuiLayerManagement extends GuiScreen {
-    private LayerListFragment layerListFragment;
-
     private final GuiScreen parentScreen;
-
     private final String
             screenTitle = I18n.format("gui.manage.layer.text.title"),
             addLayerButtonText = I18n.format("gui.manage.text.layer.add");
-
     private final String
             doneText = I18n.format("gui.done");
-
+    private LayerListFragment layerListFragment;
     private GuiButton
             buttonDone,
             buttonAdd;

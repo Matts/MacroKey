@@ -1,8 +1,5 @@
 package com.mattsmeets.macrokey.service;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -10,6 +7,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogHelperTest {

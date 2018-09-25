@@ -78,4 +78,5 @@ public class Layer implements LayerInterface {
                 obj instanceof LayerInterface &&
                         this.ulid.equals(((LayerInterface) obj).getULID());
     }
+
 }

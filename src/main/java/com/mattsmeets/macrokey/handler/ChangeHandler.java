@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.event.handler;
+package com.mattsmeets.macrokey.handler;
 
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.event.MacroEvent;
@@ -39,4 +39,5 @@ public class ChangeHandler {
             instance.bindingsRepository.updateLayer(event.getLayerChanged(), true);
         }
     }
+
 }

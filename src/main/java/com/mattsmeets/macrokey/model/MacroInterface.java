@@ -6,7 +6,7 @@ public interface MacroInterface {
 
     /**
      * Get the identifier of the macro (used internally)
-     *
+     * <p>
      * *Should* be immutable after setup.
      *
      * @return UUID unique macro identifier
