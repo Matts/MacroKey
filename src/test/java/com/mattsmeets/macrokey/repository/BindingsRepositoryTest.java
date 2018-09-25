@@ -1595,10 +1595,12 @@ public class BindingsRepositoryTest {
 
         Macro[] macros = new Macro[]{mock(Macro.class)};
         Layer[] layers = new Layer[]{mock(Layer.class)};
+        UUID activeLayer = UUID.randomUUID();
 
         when(jsonConfig.getJSONObject()).thenReturn(object);
         when(jsonConfig.bindJsonElementToObject(eq(Macro[].class), any())).thenReturn(macros);
         when(jsonConfig.bindJsonElementToObject(eq(Layer[].class), any())).thenReturn(layers);
+        when(jsonConfig.bindJsonElementToObject(eq(UUID.class), any())).thenReturn(activeLayer);
 
         BindingsRepository bindingSpy = spy(bindingsRepository);
 
@@ -1618,10 +1620,12 @@ public class BindingsRepositoryTest {
 
         Macro[] macros = new Macro[]{mock(Macro.class)};
         Layer[] layers = new Layer[]{mock(Layer.class)};
+        UUID activeLayer = UUID.randomUUID();
 
         when(jsonConfig.getJSONObject()).thenReturn(object);
         when(jsonConfig.bindJsonElementToObject(eq(Macro[].class), any())).thenReturn(macros);
         when(jsonConfig.bindJsonElementToObject(eq(Layer[].class), any())).thenReturn(layers);
+        when(jsonConfig.bindJsonElementToObject(eq(UUID.class), any())).thenReturn(activeLayer);
 
         BindingsRepository bindingSpy = spy(bindingsRepository);
 
