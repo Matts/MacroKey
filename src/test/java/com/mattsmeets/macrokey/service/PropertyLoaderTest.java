@@ -1,15 +1,14 @@
 package com.mattsmeets.macrokey.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
-import java.util.Properties;
-
+import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyLoaderTest {

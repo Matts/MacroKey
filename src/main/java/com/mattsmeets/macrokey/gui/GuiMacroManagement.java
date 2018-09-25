@@ -8,36 +8,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
 public class GuiMacroManagement extends GuiScreen {
 
-    private MacroListFragment macroListFragment;
-
     private final GuiScreen parentScreen;
-
-    public MacroInterface macroModify;
-
     private final String
             screenTitle = I18n.format("gui.manage.text.title"),
             layerMasterText = I18n.format("text.layer.master"),
             addMacroButtonText = I18n.format("gui.manage.text.macro.add"),
             layerEditorButtonText = I18n.format("gui.manage.text.layer.edit"),
             layerSwitcherButtonText = I18n.format("gui.manage.text.layer.switch");
-
     private final String
             doneText = I18n.format("gui.done");
-
+    public MacroInterface macroModify;
+    private MacroListFragment macroListFragment;
     private GuiButton
             buttonDone,
             buttonAdd,

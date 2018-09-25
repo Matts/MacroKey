@@ -7,9 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-
 public class GuiHandler implements IGuiHandler {
 
     @Override

@@ -13,6 +13,38 @@ import java.util.Set;
 public class MacroActivationEvent extends Event {
 
     /**
+     * The macro('s) that have been activated
+     */
+    private Set<MacroInterface> macros;
+    /**
+     * Current player / sender
+     */
+    private EntityPlayerSP currentPlayer;
+    /**
+     * Current state of the button
+     */
+    private MacroState pressed;
+
+    public MacroActivationEvent(Set<MacroInterface> macros, MacroState pressed) {
+        this.macros = macros;
+        this.pressed = pressed;
+
+        this.currentPlayer = Minecraft.getMinecraft().player;
+    }
+
+    public Set<MacroInterface> getMacros() {
+        return this.macros;
+    }
+
+    public EntityPlayerSP getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public MacroState getMacroState() {
+        return pressed;
+    }
+
+    /**
      * States the key pressed event can be in
      */
     public static enum MacroState {
@@ -34,36 +66,6 @@ public class MacroActivationEvent extends Event {
         }
     }
 
-    /**
-     * The macro('s) that have been activated
-     */
-    private Set<MacroInterface> macros;
-
-    /**
-     * Current player / sender
-     */
-    private EntityPlayerSP currentPlayer;
-
-    /**
-     * Current state of the button
-     */
-    private MacroState pressed;
-
-    public MacroActivationEvent(Set<MacroInterface> macros, MacroState pressed) {
-        this.macros = macros;
-        this.pressed = pressed;
-
-        this.currentPlayer = Minecraft.getMinecraft().player;
-    }
-
-    public Set<MacroInterface> getMacros() {
-        return this.macros;
-    }
-
-    public EntityPlayerSP getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public static class MacroActivationPressEvent extends MacroActivationEvent {
         public MacroActivationPressEvent(Set<MacroInterface> macros) {
             super(macros, MacroState.KEY_DOWN);
@@ -74,10 +76,6 @@ public class MacroActivationEvent extends Event {
         public MacroActivationReleaseEvent(Set<MacroInterface> macros) {
             super(macros, MacroState.KEY_UP);
         }
-    }
-
-    public MacroState getMacroState() {
-        return pressed;
     }
 
 }

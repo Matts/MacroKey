@@ -1,10 +1,10 @@
 package com.mattsmeets.macrokey.service;
 
-import java.io.InputStream;
-import java.util.Properties;
-
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
+
+import java.io.InputStream;
+import java.util.Properties;
 
 public class PropertyLoader {
 
@@ -53,7 +53,7 @@ public class PropertyLoader {
      * @return property value
      */
     public String getProperty(String key) {
-         return this.properties.getProperty(key);
+        return this.properties.getProperty(key);
     }
 
 }

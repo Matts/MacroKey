@@ -10,9 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
@@ -78,7 +76,7 @@ public class LayerListFragment extends GuiListExtended {
             if (deleted) {
                 return;
             }
-            
+
             mc.fontRenderer.drawString(this.keyDesc, x + 90 - mc.fontRenderer.getStringWidth(layer.getDisplayName()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
 
             this.btnEdit.x = x + 140;
@@ -95,15 +93,15 @@ public class LayerListFragment extends GuiListExtended {
 
         @Override
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
-            if(this.btnEdit.mousePressed(mc, mouseX, mouseY)){
+            if (this.btnEdit.mousePressed(mc, mouseX, mouseY)) {
                 mc.displayGuiScreen(new GuiModifyLayer(guiLayerManagement, layer));
 
                 return true;
             }
 
-            if(this.btnRemove.mousePressed(mc, mouseX, mouseY)){
+            if (this.btnRemove.mousePressed(mc, mouseX, mouseY)) {
                 try {
-                    if(instance.modState.getActiveLayer().equals(this.layer))
+                    if (instance.modState.getActiveLayer().equals(this.layer))
                         instance.modState.setActiveLayer(null);
 
                     instance.bindingsRepository.deleteLayer(this.layer, true);

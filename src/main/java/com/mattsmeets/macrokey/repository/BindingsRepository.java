@@ -1,13 +1,15 @@
 package com.mattsmeets.macrokey.repository;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.*;
 import com.mattsmeets.macrokey.service.JsonConfig;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Repository class for the bindings.json file

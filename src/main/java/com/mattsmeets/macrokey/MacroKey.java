@@ -3,9 +3,6 @@ package com.mattsmeets.macrokey;
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
-import com.mattsmeets.macrokey.model.Layer;
-import com.mattsmeets.macrokey.model.LayerInterface;
-import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
@@ -20,7 +17,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
-import java.util.Set;
 
 @Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public class MacroKey {
@@ -47,7 +43,7 @@ public class MacroKey {
      * Any pre-preInitialization stuff that has to occur...
      *
      * @throws PropertyInitalizationException whenever the reference.properties file is not
-     * found, an exception will be thrown
+     *                                        found, an exception will be thrown
      */
     public MacroKey() throws PropertyInitalizationException {
         this.referencePropLoader = new PropertyLoader("reference.properties");

@@ -1,6 +1,5 @@
 package com.mattsmeets.macrokey.config;
 
-import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
 
 import java.io.IOException;

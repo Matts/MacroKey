@@ -166,7 +166,7 @@ public class GuiModifyMacro extends GuiScreen {
         }
 
         if (this.command.isFocused()) {
-            if(keyCode == Keyboard.KEY_ESCAPE)
+            if (keyCode == Keyboard.KEY_ESCAPE)
                 this.command.setFocused(false);
 
             this.command.textboxKeyTyped(typedChar, keyCode);

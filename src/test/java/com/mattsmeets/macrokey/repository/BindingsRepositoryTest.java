@@ -1,15 +1,13 @@
 package com.mattsmeets.macrokey.repository;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import com.google.gson.JsonObject;
+import com.mattsmeets.macrokey.model.*;
+import com.mattsmeets.macrokey.service.JsonConfig;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,16 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.mattsmeets.macrokey.model.*;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.service.JsonConfig;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BindingsRepositoryTest {
@@ -1382,7 +1374,7 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.setActiveLayer(layer1Spy.getULID(), false);
 
-        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy,false));
+        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy, false));
     }
 
     @Test
@@ -1409,7 +1401,7 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.setActiveLayer(layer1Spy, false);
 
-        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy,false));
+        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy, false));
     }
 
     @Test
@@ -1472,9 +1464,9 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.setBindingsFile(file);
 
-        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy,false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy, false));
 
         verify(layer1Spy).getULID();
         verify(layer2Spy).getULID();
@@ -1507,27 +1499,27 @@ public class BindingsRepositoryTest {
 
         this.bindingsRepository.setBindingsFile(file);
 
-        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy,false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy, false));
 
         this.bindingsRepository.setActiveLayer(layer1Spy, false);
 
-        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy,false));
+        assertTrue(this.bindingsRepository.isActiveLayer(layer1Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy, false));
 
         this.bindingsRepository.setActiveLayer(layer2Spy, false);
 
-        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy,false));
-        assertTrue(this.bindingsRepository.isActiveLayer(layer2Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy,false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy, false));
+        assertTrue(this.bindingsRepository.isActiveLayer(layer2Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer3Spy, false));
 
         this.bindingsRepository.setActiveLayer(layer3Spy, false);
 
-        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy,false));
-        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy,false));
-        assertTrue(this.bindingsRepository.isActiveLayer(layer3Spy,false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer1Spy, false));
+        assertFalse(this.bindingsRepository.isActiveLayer(layer2Spy, false));
+        assertTrue(this.bindingsRepository.isActiveLayer(layer3Spy, false));
 
         verify(layer1Spy, times(5)).getULID();
         verify(layer2Spy, times(5)).getULID();

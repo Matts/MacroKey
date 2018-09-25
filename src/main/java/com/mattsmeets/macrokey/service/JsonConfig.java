@@ -1,12 +1,11 @@
 package com.mattsmeets.macrokey.service;
 
-import java.io.File;
-import java.io.IOException;
-
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.io.File;
+import java.io.IOException;
 
 public class JsonConfig {
 
@@ -22,11 +21,11 @@ public class JsonConfig {
     public void initializeFile() throws IOException {
         File parentFolder = new File(this.file.getParent());
 
-        if(!parentFolder.exists()) {
+        if (!parentFolder.exists()) {
             parentFolder.mkdirs();
         }
 
-        if(!this.file.exists()) {
+        if (!this.file.exists()) {
             this.file.createNewFile();
         }
     }
@@ -38,7 +37,7 @@ public class JsonConfig {
     public JsonObject getJSONObject() throws IOException {
         JsonElement jsonElement = getJSONElement();
 
-        if(jsonElement.isJsonObject()) {
+        if (jsonElement.isJsonObject()) {
             return jsonElement.getAsJsonObject();
         }
 

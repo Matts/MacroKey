@@ -28,7 +28,7 @@ public class LogHelper {
         log(Level.WARN, object);
     }
 
-    public void debug(Object object){
+    public void debug(Object object) {
         log(Level.DEBUG, object);
     }
 
