@@ -423,7 +423,7 @@ public class BindingsRepository {
 
         UUID activeULID = this.bindingsFile.getActiveLayer();
 
-        return ulid != null && activeULID != null && ulid.compareTo(activeULID) != 0;
+        return ulid != null && activeULID != null && ulid.equals(activeULID);
     }
 
     /**
