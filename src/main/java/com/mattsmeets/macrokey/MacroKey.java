@@ -73,9 +73,8 @@ public class MacroKey {
 
         // BindingsRepository has a dependency on the bindings.json file being created
         this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
-
         // Initialize the mod's state
-        this.modState = new ModState(null);
+        this.modState = new ModState(this.bindingsRepository.findActiveLayer(true));
     }
 
     @Mod.EventHandler

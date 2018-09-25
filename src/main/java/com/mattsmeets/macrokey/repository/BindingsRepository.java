@@ -486,6 +486,10 @@ public class BindingsRepository {
                     .setLayers(Arrays
                             .stream(layerArray)
                             .collect(Collectors.toSet()));
+
+            UUID activeLayer = this.config.bindJsonElementToObject(UUID.class, jsonObject.get("activeLayer"));
+            this.bindingsFile
+                    .setActiveLayer(activeLayer);
         } else {
             // the bindings.json has just been created, or
             // has been corrupted. We will just create a fresh
