@@ -4,8 +4,17 @@ import net.minecraft.client.entity.EntityPlayerSP;
 
 public interface CommandInterface {
 
+    /**
+     * toString to save into file
+     *
+     * @return stringified command
+     */
     String toString();
 
+    /**
+     * Run Command
+     * @param player the player
+     */
     void execute(EntityPlayerSP player);
 
 }
