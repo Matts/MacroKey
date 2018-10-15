@@ -2,8 +2,14 @@ package com.mattsmeets.macrokey.model;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 
+/**
+ * Old vanilla macrokey command execution
+ */
 public final class StringCommand implements CommandInterface {
 
+    /**
+     * Command to execute
+     */
     private final String command;
 
     public StringCommand(String command) {
