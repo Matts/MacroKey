@@ -23,7 +23,7 @@ public class Macro implements MacroInterface {
     private boolean repeat;
 
     /**
-     * Command in string form
+     * StringCommand in string form
      */
     private String command;
 
