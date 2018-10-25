@@ -896,7 +896,7 @@ public class BindingsRepositoryTest {
 
         Macro macro = new Macro(10, "test", false);
         Macro macro1 = new Macro(50, "testing", true);
-        Macro newMacro = new Macro(macro.getUMID(), 20, "test2", true, false);
+        Macro newMacro = new Macro(macro.getUMID(), 20, new StringCommand("test2"), true, false);
 
         Macro macroSpy = spy(macro);
         Macro macro1Spy = spy(macro1);
@@ -936,7 +936,7 @@ public class BindingsRepositoryTest {
 
         Macro macro = new Macro(10, "test", false);
         Macro macro1 = new Macro(50, "testing", true);
-        Macro newMacro = new Macro(macro.getUMID(), 20, "test2", true, false);
+        Macro newMacro = new Macro(macro.getUMID(), 20, new StringCommand("test2"), true, false);
 
         Macro macroSpy = spy(macro);
         Macro macro1Spy = spy(macro1);

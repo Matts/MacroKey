@@ -33,7 +33,7 @@ public interface MacroInterface {
      *
      * @return String command
      */
-    public String getCommand();
+    public CommandInterface getCommand();
 
     /**
      * Set the actual command that will can run
@@ -41,7 +41,7 @@ public interface MacroInterface {
      * @param command the command
      * @return the current Macro instance
      */
-    public Macro setCommand(String command);
+    public Macro setCommand(CommandInterface command);
 
     /**
      * Is the Macro active?

@@ -25,14 +25,14 @@ public class Macro implements MacroInterface {
     /**
      * Command in string form
      */
-    private String command;
+    private CommandInterface command;
 
     /**
      * If the macro is active (default: true)
      */
     private boolean active;
 
-    public Macro(UUID umid, int keyCode, String command, boolean active, boolean repeat) {
+    public Macro(UUID umid, int keyCode, CommandInterface command, boolean active, boolean repeat) {
         this.umid = umid;
         this.keyCode = keyCode;
         this.command = command;
@@ -40,16 +40,20 @@ public class Macro implements MacroInterface {
         this.repeat = repeat;
     }
 
-    public Macro(int keyCode, String command, boolean active, boolean repeat) {
+    public Macro(int keyCode, CommandInterface command, boolean active, boolean repeat) {
         this(UUID.randomUUID(), keyCode, command, active, repeat);
     }
 
-    public Macro(int keyCode, String command, boolean active) {
+    public Macro(int keyCode, CommandInterface command, boolean active) {
         this(UUID.randomUUID(), keyCode, command, active, false);
     }
 
-    public Macro(int keyCode, String command) {
+    public Macro(int keyCode, CommandInterface command) {
         this(keyCode, command, true);
+    }
+
+    public Macro(int keyCode, String command, boolean active) {
+        this(keyCode, new StringCommand(command), active);
     }
 
     public Macro() {
@@ -72,11 +76,11 @@ public class Macro implements MacroInterface {
         return this;
     }
 
-    public String getCommand() {
+    public CommandInterface getCommand() {
         return command;
     }
 
-    public Macro setCommand(String command) {
+    public Macro setCommand(CommandInterface command) {
         this.command = command;
 
         return this;

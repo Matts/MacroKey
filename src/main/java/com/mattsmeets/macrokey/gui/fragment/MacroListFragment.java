@@ -82,7 +82,7 @@ public class MacroListFragment extends GuiListExtended {
         private KeyEntry(MacroInterface macro) {
             this.macro = macro;
 
-            this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, macro.getCommand());
+            this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, macro.getCommand().toString());
             this.btnRemoveKeyBinding = new GuiButton(1, 0, 0, 15, 20, this.removeMacroText);
             this.btnEdit = new GuiButton(2, 0, 0, 30, 20, this.editMacroText);
             this.btnEnabledInLayer = new GuiButton(3, 0, 0, 75, 20, this.disabledText);
@@ -100,7 +100,7 @@ public class MacroListFragment extends GuiListExtended {
 
             boolean macroKeyCodeModifyFlag = this.macro.equals(guiMacroManagement.macroModify);
 
-            mc.fontRenderer.drawString(this.macro.getCommand(), x + 90 - mc.fontRenderer.getStringWidth(macro.getCommand()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
+            mc.fontRenderer.drawString(this.macro.getCommand().toString(), x + 90 - mc.fontRenderer.getStringWidth(macro.getCommand().toString()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
 
             if (currentLayer == null) {
                 this.btnChangeKeyBinding.x = x + 95;

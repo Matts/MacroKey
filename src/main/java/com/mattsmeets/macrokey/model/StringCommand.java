@@ -5,7 +5,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 /**
  * Old vanilla macrokey command execution
  */
-public final class StringCommand implements CommandInterface {
+public class StringCommand extends AbstractCommand implements CommandInterface {
 
     /**
      * Command to execute
@@ -13,6 +13,8 @@ public final class StringCommand implements CommandInterface {
     private final String command;
 
     public StringCommand(String command) {
+        super("string");
+
         this.command = command;
     }
 

@@ -17,4 +17,10 @@ public interface CommandInterface {
      */
     void execute(EntityPlayerSP player);
 
+    /**
+     * Type identifier used for (de)serialization
+     * @return String
+     */
+    String getCommandType();
+
 }
