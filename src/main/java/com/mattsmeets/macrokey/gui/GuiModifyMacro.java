@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.gui;
 import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
+import com.mattsmeets.macrokey.model.StringCommand;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -69,7 +70,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.command.setMaxStringLength(Integer.MAX_VALUE);
 
         if (this.existing) {
-            this.command.setText(result.getCommand());
+            this.command.setText(result.getCommand().toString());
 
             this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(result.getKeyCode());
             this.repeatCommand.displayString = result.willRepeat() ? enabledText : disabledText;
@@ -86,7 +87,7 @@ public class GuiModifyMacro extends GuiScreen {
                     break;
                 }
 
-                this.result.setCommand(command.getText());
+                this.result.setCommand(new StringCommand(command.getText()));
 
                 if (this.existing) {
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroChangedEvent(this.result));

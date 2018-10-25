@@ -40,7 +40,7 @@ public class MacroKeyHandler {
         this.macrosToRun
                 .stream()
                 .filter(macro -> !macro.willRepeat() || event.isLimitedTick())
-                .forEach(macro -> event.getCurrentPlayer().sendChatMessage(macro.getCommand()));
+                .forEach(macro -> macro.getCommand().execute(event.getCurrentPlayer()));
 
         // remove the command from the pending
         // list if it is not to be re-executed
