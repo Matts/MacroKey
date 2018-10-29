@@ -8,7 +8,12 @@ buildscript {
     }
 }
 
+plugins {
+    id 'de.fuerstenau.buildconfig' version '1.1.8'
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'idea'
 
 ext.configFile = file "build.properties"
 
@@ -26,6 +31,7 @@ if (System.getenv().BUILD_NUMBER)
 	version = "${config.mod_version}.b${System.getenv().BUILD_NUMBER}"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -48,24 +54,32 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.7.22'
 }
 
+buildConfig {
+    sourceSets{
+        appName = config.mod_name
+        main {
+            buildConfigField "String", "updateJSON", config.update_url + '?mod_version=' + project.version + '&mc_version=' + project.minecraft.version
+            buildConfigField "String", "acceptedVersions", config.accepted_versions
+        }
+    }
+}
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "mod_version", project.version
-    inputs.property "mod_name", project.name
+    inputs.property "mod_name", config.mod_name
     inputs.property "mc_version", project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        include '**/reference.properties'
 
         // replace variable
-        expand 'mod_name':project.name, 'mod_version':project.version, 'mc_version':project.minecraft.version
+        expand 'mod_name':config.mod_name, 'mod_version':project.version, 'mc_version':project.minecraft.version
     }
 
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-        exclude '**/reference.properties'
     }
 }

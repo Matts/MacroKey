@@ -2,13 +2,13 @@ package com.mattsmeets.macrokey;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
-import com.mattsmeets.macrokey.exception.PropertyInitalizationException;
 import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
-import com.mattsmeets.macrokey.service.PropertyLoader;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -18,7 +18,15 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
 
-@Mod(modid = ModReference.MOD_ID, clientSideOnly = true, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.12.2]")
+@Mod(
+        modid = ModReference.MOD_ID,
+        name = BuildConfig.NAME,
+        version = BuildConfig.VERSION,
+        clientSideOnly = true,
+        useMetadata = true,
+        acceptedMinecraftVersions = BuildConfig.acceptedVersions,
+        updateJSON = BuildConfig.updateJSON
+)
 public class MacroKey {
 
     @Mod.Instance
@@ -26,8 +34,6 @@ public class MacroKey {
 
     @SidedProxy(clientSide = ModReference.CLIENT_PROXY)
     public static CommonProxy proxy;
-
-    public final PropertyLoader referencePropLoader;
 
     public LogHelper logger;
 
@@ -39,26 +45,9 @@ public class MacroKey {
 
     public KeyBinding[] forgeKeybindings;
 
-    /**
-     * Any pre-preInitialization stuff that has to occur...
-     *
-     * @throws PropertyInitalizationException whenever the reference.properties file is not
-     *                                        found, an exception will be thrown
-     */
-    public MacroKey() throws PropertyInitalizationException {
-        this.referencePropLoader = new PropertyLoader("reference.properties");
-    }
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
-
-        // setting the version from reference
-        ModMetadata modMetadata = event.getModMetadata();
-        modMetadata.version = ModReference.MOD_VERSION;
-        modMetadata.name = ModReference.MOD_NAME;
-        modMetadata.updateJSON = ModReference.UPDATE_URL;
-
         // MacroKey is a client side only mod, so we never want a server to run it
         if (event.getSide() == Side.SERVER) {
             this.logger.warn("Whoops! It seems you are trying to run MacroKey on a server... No worries, we will just disable.");
@@ -82,6 +71,8 @@ public class MacroKey {
         this.logger.info("Getting ready to take over the world!");
         this.logger.debug("PreInitialization");
 
+        ForgeVersion.CheckResult result = ForgeVersion.getResult(Loader.instance().activeModContainer());
+        System.out.println(result.status);
         proxy.init();
     }
 
