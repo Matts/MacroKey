@@ -71,8 +71,6 @@ public class MacroKey {
         this.logger.info("Getting ready to take over the world!");
         this.logger.debug("PreInitialization");
 
-        ForgeVersion.CheckResult result = ForgeVersion.getResult(Loader.instance().activeModContainer());
-        System.out.println(result.status);
         proxy.init();
     }
 
