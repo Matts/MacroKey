@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.service;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LogHelper {
@@ -14,6 +15,10 @@ public class LogHelper {
      */
     public LogHelper(Logger logger) {
         this.logger = logger;
+    }
+
+    public LogHelper(String modid) {
+        this(LogManager.getLogger(modid));
     }
 
     public void log(Level logLevel, Object object) {
