@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +27,7 @@ import java.io.IOException;
         useMetadata = true,
         acceptedMinecraftVersions = BuildConfig.acceptedVersions,
         updateJSON = BuildConfig.updateJSON,
-        certificateFingerprint = "70f66ec745a90c2c65d71135b8929bcb4bb87e3c"
+        certificateFingerprint = BuildConfig.fingerprint
 )
 public class MacroKey {
 
@@ -73,6 +74,14 @@ public class MacroKey {
         this.logger.debug("PreInitialization");
 
         proxy.init();
+    }
+
+    @Mod.EventHandler
+    public void invalidFingerprint(FMLFingerprintViolationEvent event) {
+        this.logger = new LogHelper(ModReference.MOD_ID);
+
+        this.logger.warn("Invalid fingerprint detected! The version of the mod is most likely modified or an unofficial release.");
+        this.logger.warn("Please download the latest version from http://curse.com/project/243479");
     }
 
 }

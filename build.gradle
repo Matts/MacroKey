@@ -58,8 +58,21 @@ buildConfig {
     sourceSets{
         appName = config.mod_name
         main {
-            buildConfigField "String", "updateJSON", config.update_url + '?mod_version=' + project.version + '&mc_version=' + project.minecraft.version
             buildConfigField "String", "acceptedVersions", config.accepted_versions
+            if (project.hasProperty('signingKeystore')) {
+                buildConfigField "String", "fingerprint", signingFingerprint
+                buildConfigField "String", "updateJSON",
+                        config.update_url +
+                                '?mod_version=' + project.version +
+                                '&mc_version=' + project.minecraft.version +
+                                '&signature=' + signingFingerprint
+            } else {
+                buildConfigField "String", "updateJSON",
+                        config.update_url +
+                                '?mod_version=' + project.version +
+                                '&mc_version=' + project.minecraft.version
+                buildConfigField "String", "fingerprint", "unsigned"
+            }
         }
     }
 }
