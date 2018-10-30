@@ -25,7 +25,8 @@ import java.io.IOException;
         clientSideOnly = true,
         useMetadata = true,
         acceptedMinecraftVersions = BuildConfig.acceptedVersions,
-        updateJSON = BuildConfig.updateJSON
+        updateJSON = BuildConfig.updateJSON,
+        certificateFingerprint = "70f66ec745a90c2c65d71135b8929bcb4bb87e3c"
 )
 public class MacroKey {
 
