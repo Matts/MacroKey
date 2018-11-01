@@ -10,10 +10,9 @@ buildscript {
 
 plugins {
     id 'de.fuerstenau.buildconfig' version '1.1.8'
+    id 'idea'
+    id 'net.minecraftforge.gradle.forge' version '2.0.2'
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'idea'
 
 ext.configFile = file "build.properties"
 
@@ -23,12 +22,17 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = config.mod_version
+version = config.mc_version + '-' + config.mod_version
 group = config.mod_group
 archivesBaseName = config.mod_name
 
 if (System.getenv().BUILD_NUMBER)
-	version = "${config.mod_version}.b${System.getenv().BUILD_NUMBER}"
+	version = "${version}.${System.getenv().BUILD_NUMBER}"
+
+if (!project.hasProperty('signingKeystore')) {
+    project.properties.put('signingFingerprint', 'unsigned')
+    version = version + '-unsigned'
+}
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -59,20 +63,13 @@ buildConfig {
         appName = config.mod_name
         main {
             buildConfigField "String", "acceptedVersions", config.accepted_versions
-            if (project.hasProperty('signingKeystore')) {
-                buildConfigField "String", "fingerprint", signingFingerprint
+                buildConfigField "String", "fingerprint", project.findProperty('signingFingerprint')
                 buildConfigField "String", "updateJSON",
                         config.update_url +
-                                '?mod_version=' + project.version +
-                                '&mc_version=' + project.minecraft.version +
-                                '&signature=' + signingFingerprint
-            } else {
-                buildConfigField "String", "updateJSON",
-                        config.update_url +
-                                '?mod_version=' + project.version +
-                                '&mc_version=' + project.minecraft.version
-                buildConfigField "String", "fingerprint", "unsigned"
-            }
+                                '?mkver=' + config.mod_version +
+                                '&mcver=' + config.mc_version +
+                                '&fmver=' + config.forge_version +
+                                '&fngpt=' + project.findProperty('signingFingerprint')
         }
     }
 }
