@@ -1,5 +1,7 @@
 package com.mattsmeets.macrokey.handler;
 
+import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
@@ -11,15 +13,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SideOnly(Side.CLIENT)
-public class MacroKeyHandler {
+public class GameTickHandler {
 
     /**
      * private stash of macro's to run
      */
     private Set<MacroInterface> macrosToRun;
 
-    public MacroKeyHandler() {
+    /**
+     * private stash of executor's to run
+     */
+    private Set<ExecuteOnTickInterface> executorsToRun;
+
+    public GameTickHandler() {
         this.macrosToRun = new HashSet<>();
+        this.executorsToRun = new HashSet<>();
     }
 
     @SubscribeEvent
@@ -29,6 +37,11 @@ public class MacroKeyHandler {
         } else {
             this.macrosToRun.removeAll(event.getMacros());
         }
+    }
+
+    @SubscribeEvent
+    public void onExecutorEvent(ExecuteOnTickEvent event) {
+        executorsToRun.add(event.getExecutor());
     }
 
     @SubscribeEvent
@@ -42,9 +55,14 @@ public class MacroKeyHandler {
                 .filter(macro -> !macro.willRepeat() || event.isLimitedTick())
                 .forEach(macro -> macro.getCommand().execute(event.getCurrentPlayer()));
 
+        // loop through all executors and run them.
+        this.executorsToRun
+                .forEach(executor -> executor.execute(event.isLimitedTick()));
+
         // remove the command from the pending
         // list if it is not to be re-executed
         this.macrosToRun.removeIf(macro -> !macro.willRepeat());
+        this.executorsToRun.clear();
     }
 
 }
