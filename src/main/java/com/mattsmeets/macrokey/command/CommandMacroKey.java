@@ -1,17 +1,19 @@
 package com.mattsmeets.macrokey.command;
 
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommandMacroKey implements ICommand {
+public class CommandMacroKey extends CommandBase implements ICommand {
 
     private HashMap<String, ICommand> subCommands;
 
@@ -19,7 +21,7 @@ public class CommandMacroKey implements ICommand {
         this.subCommands = new HashMap<>();
 
         subCommands.put("open", new CommandOpenGUI());
-        subCommands.put("layer", new CommandOpenGUI());
+        subCommands.put("layer", new CommandLayer());
     }
 
     @Override
@@ -29,12 +31,7 @@ public class CommandMacroKey implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/macrokey";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Arrays.asList(new String[]{"macrokey"});
+        return "/macrokey <open/layer/config>";
     }
 
     @Override
@@ -47,7 +44,11 @@ public class CommandMacroKey implements ICommand {
 
         if (this.subCommands.containsKey(args[0].toLowerCase())) {
             this.subCommands.get(args[0].toLowerCase()).execute(server, sender, args);
+
+            return;
         }
+
+        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
     }
 
     @Override
@@ -62,15 +63,5 @@ public class CommandMacroKey implements ICommand {
         }
 
         return Arrays.asList(this.subCommands.keySet().toArray());
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] args, int index) {
-        return false;
-    }
-
-    @Override
-    public int compareTo(ICommand o) {
-        return 0;
     }
 }

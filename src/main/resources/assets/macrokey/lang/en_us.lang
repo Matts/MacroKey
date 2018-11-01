@@ -43,6 +43,9 @@ gui.modify.layer.text.title.edit=Edit Layer
 
 gui.modify.layer.text.save=Save Layer
 
+## CommandLayer ##
+command.layer.information=Layer %s, %s macro's active.
+
 ## Generic Translations ##
 enabled=Enabled
 disabled=Disabled

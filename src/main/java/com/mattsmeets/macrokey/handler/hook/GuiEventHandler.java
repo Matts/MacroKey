@@ -54,20 +54,8 @@ public class GuiEventHandler {
             return;
         }
 
-        List<LayerInterface> layers = MacroKey.instance.modState.getLayers(true);
-        LayerInterface layer = null;
+        LayerInterface layer = MacroKey.instance.modState.nextLayer();
 
-        // get the index within all the
-        // layers for the one currently active
-        int indexOfCurrent = layers.indexOf(MacroKey.instance.modState.getActiveLayer());
-
-        // if there are more layers than the next
-        // layer being selected, then select the next one
-        if (layers.size() > indexOfCurrent + 1) {
-            layer = layers.get(indexOfCurrent + 1);
-        }
-
-        MacroKey.instance.modState.setActiveLayer(layer);
         event.getButton().displayString =
                 I18n.format("text.layer.display",
                         layer == null ? this.layerMasterText : layer.getDisplayName()

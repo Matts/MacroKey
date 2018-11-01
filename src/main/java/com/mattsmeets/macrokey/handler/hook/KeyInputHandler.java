@@ -1,8 +1,10 @@
 package com.mattsmeets.macrokey.handler.hook;
 
 import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
+import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -35,14 +37,7 @@ public class KeyInputHandler {
         // find if the current key being pressed is the dedicated
         // MacroKey gui button. If so, open its GUI
         if (instance.forgeKeybindings[0].isPressed()) {
-            Minecraft.getMinecraft().player.openGui(
-                    instance,
-                    ModConfig.guiMacroManagementId,
-                    Minecraft.getMinecraft().world,
-                    (int) Minecraft.getMinecraft().player.posX,
-                    (int) Minecraft.getMinecraft().player.posY,
-                    (int) Minecraft.getMinecraft().player.posZ
-            );
+            MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
         }
 
         // find all macro's by the current key pressed, while not syncing

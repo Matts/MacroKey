@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.config;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.LayerInterface;
 
 import java.io.IOException;
@@ -34,5 +35,24 @@ public class ModState {
                 .stream()
                 .sorted(Comparator.comparing(LayerInterface::getULID))
                 .collect(Collectors.toList());
+    }
+
+    public LayerInterface nextLayer() throws IOException {
+        List<LayerInterface> layers = this.getLayers(true);
+        LayerInterface layer = null;
+
+        // get the index within all the
+        // layers for the one currently active
+        int indexOfCurrent = layers.indexOf(this.getActiveLayer());
+
+        // if there are more layers than the next
+        // layer being selected, then select the next one
+        if (layers.size() > indexOfCurrent + 1) {
+            layer = layers.get(indexOfCurrent + 1);
+        }
+
+        this.setActiveLayer(layer);
+
+        return layer;
     }
 }

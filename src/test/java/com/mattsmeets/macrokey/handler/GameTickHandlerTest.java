@@ -8,11 +8,8 @@ import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -79,7 +76,8 @@ public class GameTickHandlerTest {
 
         GameTickHandler handler = new GameTickHandler(null, spySet);
 
-        ExecuteOnTickInterface executor = (boolean delay) -> {};
+        ExecuteOnTickInterface executor = (boolean delay) -> {
+        };
 
         when(event.getExecutor()).thenReturn(executor);
 
