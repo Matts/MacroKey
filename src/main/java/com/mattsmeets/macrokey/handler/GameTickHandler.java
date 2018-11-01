@@ -25,9 +25,9 @@ public class GameTickHandler {
      */
     private Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler() {
-        this.macrosToRun = new HashSet<>();
-        this.executorsToRun = new HashSet<>();
+    public GameTickHandler(HashSet macrosToRun, HashSet executorsToRun) {
+        this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
+        this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
     }
 
     @SubscribeEvent

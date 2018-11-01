@@ -20,7 +20,6 @@ public class CommandMacroKey implements ICommand {
 
         subCommands.put("open", new CommandOpenGUI());
         subCommands.put("layer", new CommandOpenGUI());
-        subCommands.put("config", new CommandConfig());
     }
 
     @Override

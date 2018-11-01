@@ -24,7 +24,7 @@ public class ClientProxy extends CommonProxy {
         this.registerHooks();
 
         // register MacroKey event handlers
-        MinecraftForge.EVENT_BUS.register(new GameTickHandler());
+        MinecraftForge.EVENT_BUS.register(new GameTickHandler(null, null));
         MinecraftForge.EVENT_BUS.register(new ChangeHandler.LayerChangeHandler());
         MinecraftForge.EVENT_BUS.register(new ChangeHandler.MacroChangeHandler());
 
