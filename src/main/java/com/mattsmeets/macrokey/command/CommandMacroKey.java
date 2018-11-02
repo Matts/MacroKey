@@ -31,7 +31,7 @@ public class CommandMacroKey extends CommandBase implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "Usage: /macrokey [open / layer / config]";
+        return "Usage: /macrokey [open / layer]";
     }
 
     @Override
