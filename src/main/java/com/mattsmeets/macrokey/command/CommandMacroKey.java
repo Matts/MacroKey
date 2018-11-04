@@ -7,9 +7,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,6 +63,10 @@ public class CommandMacroKey extends CommandBase implements ICommand {
             return this.subCommands.get(args[0].toLowerCase()).getTabCompletions(server, sender, args, targetPos);
         }
 
-        return Arrays.asList(this.subCommands.keySet().toArray());
+        List<String> list = new ArrayList<String>();
+        list.add("open");
+        list.add("layer");
+
+        return list;
     }
 }

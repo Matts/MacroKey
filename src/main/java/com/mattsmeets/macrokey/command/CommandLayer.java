@@ -14,6 +14,8 @@ import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandLayer extends StrippedCommand {
@@ -33,7 +35,7 @@ public class CommandLayer extends StrippedCommand {
         }
 
         if (args[1].equals("toggle")) {
-            this.printLayerInformation(sender);
+            this.nextLayer(server, sender, new String[] {args[0]});
 
             return;
         }
@@ -43,7 +45,10 @@ public class CommandLayer extends StrippedCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return Arrays.asList(new String[] {"toggle"});
+        List<String> list = new ArrayList<String>();
+        list.add("toggle");
+
+        return list;
     }
 
     @Override
@@ -81,7 +86,7 @@ public class CommandLayer extends StrippedCommand {
         try {
             MacroKey.instance.modState.nextLayer();
 
-            this.execute(server, sender, new String[] {args[0]});
+            this.execute(server, sender, args);
         } catch (IOException e) {
             e.printStackTrace();
         }
