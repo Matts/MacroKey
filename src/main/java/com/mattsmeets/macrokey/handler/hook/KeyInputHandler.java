@@ -1,9 +1,9 @@
 package com.mattsmeets.macrokey.handler.hook;
 
-import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraft.client.Minecraft;
+import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -35,14 +35,7 @@ public class KeyInputHandler {
         // find if the current key being pressed is the dedicated
         // MacroKey gui button. If so, open its GUI
         if (instance.forgeKeybindings[0].isPressed()) {
-            Minecraft.getMinecraft().player.openGui(
-                    instance,
-                    ModConfig.guiMacroManagementId,
-                    Minecraft.getMinecraft().world,
-                    (int) Minecraft.getMinecraft().player.posX,
-                    (int) Minecraft.getMinecraft().player.posY,
-                    (int) Minecraft.getMinecraft().player.posZ
-            );
+            MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
         }
 
         // find all macro's by the current key pressed, while not syncing
@@ -55,25 +48,20 @@ public class KeyInputHandler {
             return;
         }
 
-        // is the button pressed, or being released
-        if (Keyboard.getEventKeyState()) {
-                /*
-                if the key has not been pressed during last events, send
-                an event, and add it to the current index of pressed keys
-                 */
-            if (!this.pressedKeys.contains(keyCode)) {
-                MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
-                this.pressedKeys.add(keyCode);
-            }
-        } else {
-                /*
-                if the key has been pressed during last events, send
-                an event, and remove it from the current index of pressed keys
-                 */
-            if (this.pressedKeys.contains(keyCode)) {
-                MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
-                this.pressedKeys.remove(keyCode);
-            }
+        if (Keyboard.getEventKeyState() && !this.pressedKeys.contains(keyCode)) {
+            /*
+             * if the key has not been pressed during last events, send
+             * an event, and add it to the current index of pressed keys
+             */
+            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
+            this.pressedKeys.add(keyCode);
+        } else if (!Keyboard.getEventKeyState() && this.pressedKeys.contains(keyCode)) {
+            /*
+             * if the key has been pressed during last events, send
+             * an event, and remove it from the current index of pressed keys
+             */
+            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
+            this.pressedKeys.remove(keyCode);
         }
     }
 

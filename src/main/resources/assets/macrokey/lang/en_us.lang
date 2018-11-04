@@ -4,6 +4,7 @@ macrokey.config.title=MacroKey Keybinding Configuration
 
 ## Layer translations ##
 text.layer.display=Layer: %s
+text.layer.hover.right_click=Right-click to open the MacroKey GUI
 text.layer.master=Master
 ####
 
@@ -42,6 +43,9 @@ gui.modify.layer.text.title.new=Create Layer
 gui.modify.layer.text.title.edit=Edit Layer
 
 gui.modify.layer.text.save=Save Layer
+
+## CommandLayer ##
+command.layer.information=Layer %s - %s macro's active.
 
 ## Generic Translations ##
 enabled=Enabled
