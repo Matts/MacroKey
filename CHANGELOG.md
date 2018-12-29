@@ -5,6 +5,10 @@
 Changelog
 =======
 
+v2.0.1
+-----
+- [BUG] Game crashes when deleting layer while on master (\#48) 
+
 v2.0.0
 -----
 - Right click layers
