@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = ModReference.MOD_ID)
-@Config.LangKey("macrokey.config.title")
 public class ModConfig {
 
     @Config.Comment("How many ticks need to pass for the repeatable command cooldown timer to expire (default: 20 ticks -> 1 second)")
@@ -31,7 +30,7 @@ public class ModConfig {
         @SubscribeEvent
         public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(ModReference.MOD_ID)) {
-                ConfigManager.sync(ModReference.MOD_ID, Config.Type.INSTANCE);
+                ConfigManager.load(ModReference.MOD_ID, Config.Type.INSTANCE);
             }
         }
     }

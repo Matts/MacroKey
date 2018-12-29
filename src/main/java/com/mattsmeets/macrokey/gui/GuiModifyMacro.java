@@ -109,8 +109,8 @@ public class GuiModifyMacro extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, existing ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 16777215);
 
         // render add and cancel buttons
-        this.addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        this.cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.addButton.drawButton(parentScreen.mc, mouseX, mouseY);
+        this.cancelButton.drawButton(parentScreen.mc, mouseX, mouseY);
 
         // draw keycode as keyboard key
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
@@ -118,8 +118,8 @@ public class GuiModifyMacro extends GuiScreen {
         this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
         this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
 
-        this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY);
+        this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY);
 
         this.command.drawTextBox();
 
@@ -147,7 +147,7 @@ public class GuiModifyMacro extends GuiScreen {
             this.btnKeyBinding.displayString = TextFormatting.GOLD + this.btnKeyBinding.displayString;
         }
 
-        this.btnKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
+        this.btnKeyBinding.drawButton(mc, mouseX, mouseY);
     }
 
     @Override

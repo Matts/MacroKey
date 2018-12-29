@@ -47,8 +47,8 @@ public class GuiModifyLayer extends GuiScreen {
 
         this.drawCenteredString(this.fontRenderer, !existing ? this.defaultScreenTitleText : this.editScreenTitleText, this.width / 2, 8, 16777215);
 
-        addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        addButton.drawButton(parentScreen.mc, mouseX, mouseY);
+        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY);
 
         this.textFieldName.drawTextBox();
     }

@@ -5,18 +5,21 @@ import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
@@ -95,11 +98,13 @@ public class GuiEventHandler {
         }
 
         GuiScreen screen = event.getGui();
+        GuiUtils.drawHoveringText(Collections.singletonList(I18n.format("text.layer.hover.right_click")), Mouse.getEventX() / 2, screen.height - (Mouse.getY() / 2), screen.width, screen.height, -1, Minecraft.getMinecraft().fontRenderer);
 
-        screen.drawHoveringText(
-                I18n.format("text.layer.hover.right_click"),
-                Mouse.getEventX() / 2,
-                screen.height - (Mouse.getY() / 2)
-        );
+// TODO: fix
+//        screen.drawHoveringText(
+//                I18n.format("text.layer.hover.right_click"),
+//                Mouse.getEventX() / 2,
+//                screen.height - (Mouse.getY() / 2)
+//        );
     }
 }

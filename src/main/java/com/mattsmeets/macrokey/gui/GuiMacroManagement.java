@@ -59,12 +59,12 @@ public class GuiMacroManagement extends GuiScreen {
 
         this.macroListFragment.drawScreen(mouseX, mouseY, partialTicks);
 
-        this.buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-        this.buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        this.buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 
-        this.layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 
-        this.layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 
         this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
     }

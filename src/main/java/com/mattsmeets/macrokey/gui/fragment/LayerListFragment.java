@@ -72,7 +72,7 @@ public class LayerListFragment extends GuiListExtended {
         }
 
         @Override
-        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
+        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
             if (deleted) {
                 return;
             }
@@ -83,12 +83,16 @@ public class LayerListFragment extends GuiListExtended {
             this.btnEdit.y = y;
             this.btnEdit.displayString = this.editLayerText;
 
-            this.btnEdit.drawButton(mc, mouseX, mouseY, 0.0f);
+            this.btnEdit.drawButton(mc, mouseX, mouseY);
 
             this.btnRemove.x = x + 200;
             this.btnRemove.y = y;
             this.btnRemove.enabled = true;
-            this.btnRemove.drawButton(mc, mouseX, mouseY, 0.0f);
+            this.btnRemove.drawButton(mc, mouseX, mouseY);
+        }
+
+        @Override
+        public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
         }
 
         @Override
@@ -122,10 +126,6 @@ public class LayerListFragment extends GuiListExtended {
         @Override
         public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
             this.btnEdit.mouseReleased(x, y);
-        }
-
-        @Override
-        public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
         }
     }
 

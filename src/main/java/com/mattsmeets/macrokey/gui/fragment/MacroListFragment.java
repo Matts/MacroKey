@@ -93,7 +93,7 @@ public class MacroListFragment extends GuiListExtended {
         }
 
         @Override
-        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
+        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
             if (this.deleted) {
                 return;
             }
@@ -109,12 +109,12 @@ public class MacroListFragment extends GuiListExtended {
 
                 this.btnEdit.x = x + 170;
                 this.btnEdit.y = y;
-                this.btnEdit.drawButton(mc, mouseX, mouseY, 0.0f);
+                this.btnEdit.drawButton(mc, mouseX, mouseY);
 
                 this.btnRemoveKeyBinding.x = x + 200;
                 this.btnRemoveKeyBinding.y = y;
                 this.btnRemoveKeyBinding.enabled = true;
-                this.btnRemoveKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
+                this.btnRemoveKeyBinding.drawButton(mc, mouseX, mouseY);
             } else {
                 this.btnEnabledInLayer.x = x + 95;
                 this.btnEnabledInLayer.y = y;
@@ -125,7 +125,7 @@ public class MacroListFragment extends GuiListExtended {
                     this.btnEnabledInLayer.displayString = this.disabledText;
                 }
 
-                this.btnEnabledInLayer.drawButton(mc, mouseX, mouseY, 0.0f);
+                this.btnEnabledInLayer.drawButton(mc, mouseX, mouseY);
             }
 
             boolean currentKeyAlreadyUsedFlag = false;
@@ -145,9 +145,13 @@ public class MacroListFragment extends GuiListExtended {
                 this.btnChangeKeyBinding.displayString = TextFormatting.GOLD + this.btnChangeKeyBinding.displayString;
             }
 
-            this.btnChangeKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
+            this.btnChangeKeyBinding.drawButton(mc, mouseX, mouseY);
         }
 
+
+        @Override
+        public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
+        }
 
         @Override
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
@@ -195,10 +199,5 @@ public class MacroListFragment extends GuiListExtended {
             this.btnChangeKeyBinding.mouseReleased(x, y);
             this.btnEdit.mouseReleased(x, y);
         }
-
-        @Override
-        public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
-        }
-
     }
 }

@@ -31,8 +31,8 @@ public class GuiLayerManagement extends GuiScreen {
 
         this.layerListFragment.drawScreen(mouseX, mouseY, partialTicks);
 
-        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 
         this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
     }
