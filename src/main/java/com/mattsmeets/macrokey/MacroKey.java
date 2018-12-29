@@ -58,6 +58,8 @@ public class MacroKey {
         this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
         this.logger.debug("PreInitialization");
 
+        ModConfig.configure(event.getSuggestedConfigurationFile());
+
         // set-up the bindings.json service & files
         this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), ModConfig.bindingFile);
         this.bindingsJSONConfig.initializeFile();
