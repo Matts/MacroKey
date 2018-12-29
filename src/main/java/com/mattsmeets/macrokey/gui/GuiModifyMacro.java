@@ -4,6 +4,8 @@ import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.StringCommand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -65,7 +67,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
         this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
 
-        this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
+        this.command = new GuiTextField(9, Minecraft.getMinecraft().fontRendererObj, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
         this.command.setMaxStringLength(Integer.MAX_VALUE);
 
@@ -105,8 +107,10 @@ public class GuiModifyMacro extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.drawDefaultBackground();
 
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+        
         // draw title
-        this.drawCenteredString(this.fontRenderer, existing ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 16777215);
+        this.drawCenteredString(fontRenderer, existing ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 16777215);
 
         // render add and cancel buttons
         this.addButton.drawButton(parentScreen.mc, mouseX, mouseY);
@@ -123,10 +127,10 @@ public class GuiModifyMacro extends GuiScreen {
 
         this.command.drawTextBox();
 
-        this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
-        this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
-        this.drawCenteredString(this.fontRenderer, commandBoxTitleText, this.width / 2, 37, -6250336);
-        this.drawCenteredString(this.fontRenderer, keyBoxTitleText, this.width / 2, 90, -6250336);
+        this.drawString(fontRenderer, repeatOnHoldText, this.width / 2 + 50 - fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
+        this.drawString(fontRenderer, enableCommandText, this.width / 2 + 50 - fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
+        this.drawCenteredString(fontRenderer, commandBoxTitleText, this.width / 2, 37, -6250336);
+        this.drawCenteredString(fontRenderer, keyBoxTitleText, this.width / 2, 90, -6250336);
 
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
 

@@ -98,7 +98,7 @@ public class GuiEventHandler {
         }
 
         GuiScreen screen = event.getGui();
-        GuiUtils.drawHoveringText(Collections.singletonList(I18n.format("text.layer.hover.right_click")), Mouse.getEventX() / 2, screen.height - (Mouse.getY() / 2), screen.width, screen.height, -1, Minecraft.getMinecraft().fontRenderer);
+        GuiUtils.drawHoveringText(Collections.singletonList(I18n.format("text.layer.hover.right_click")), Mouse.getEventX() / 2, screen.height - (Mouse.getY() / 2), screen.width, screen.height, -1, Minecraft.getMinecraft().fontRendererObj);
 
 // TODO: fix
 //        screen.drawHoveringText(

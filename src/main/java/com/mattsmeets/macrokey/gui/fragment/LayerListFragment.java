@@ -3,6 +3,8 @@ package com.mattsmeets.macrokey.gui.fragment;
 import com.mattsmeets.macrokey.gui.GuiLayerManagement;
 import com.mattsmeets.macrokey.gui.GuiModifyLayer;
 import com.mattsmeets.macrokey.model.LayerInterface;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
@@ -77,16 +79,18 @@ public class LayerListFragment extends GuiListExtended {
                 return;
             }
 
-            mc.fontRenderer.drawString(this.keyDesc, x + 90 - mc.fontRenderer.getStringWidth(layer.getDisplayName()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
+            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 
-            this.btnEdit.x = x + 140;
-            this.btnEdit.y = y;
+            fontRenderer.drawString(this.keyDesc, x + 90 - fontRenderer.getStringWidth(layer.getDisplayName()), y + slotHeight / 2 - fontRenderer.FONT_HEIGHT / 2, 16777215);
+
+            this.btnEdit.xPosition = x + 140;
+            this.btnEdit.yPosition = y;
             this.btnEdit.displayString = this.editLayerText;
 
             this.btnEdit.drawButton(mc, mouseX, mouseY);
 
-            this.btnRemove.x = x + 200;
-            this.btnRemove.y = y;
+            this.btnRemove.xPosition = x + 200;
+            this.btnRemove.yPosition = y;
             this.btnRemove.enabled = true;
             this.btnRemove.drawButton(mc, mouseX, mouseY);
         }

@@ -5,6 +5,8 @@ import com.mattsmeets.macrokey.gui.GuiMacroManagement;
 import com.mattsmeets.macrokey.gui.GuiModifyMacro;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
@@ -100,24 +102,26 @@ public class MacroListFragment extends GuiListExtended {
 
             boolean macroKeyCodeModifyFlag = this.macro.equals(guiMacroManagement.macroModify);
 
-            mc.fontRenderer.drawString(this.macro.getCommand().toString(), x + 90 - mc.fontRenderer.getStringWidth(macro.getCommand().toString()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
+            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+
+            fontRenderer.drawString(this.macro.getCommand().toString(), x + 90 - fontRenderer.getStringWidth(macro.getCommand().toString()), y + slotHeight / 2 - fontRenderer.FONT_HEIGHT / 2, 16777215);
 
             if (currentLayer == null) {
-                this.btnChangeKeyBinding.x = x + 95;
-                this.btnChangeKeyBinding.y = y;
+                this.btnChangeKeyBinding.xPosition = x + 95;
+                this.btnChangeKeyBinding.yPosition = y;
                 this.btnChangeKeyBinding.displayString = GameSettings.getKeyDisplayString(this.macro.getKeyCode());
 
-                this.btnEdit.x = x + 170;
-                this.btnEdit.y = y;
+                this.btnEdit.xPosition = x + 170;
+                this.btnEdit.yPosition = y;
                 this.btnEdit.drawButton(mc, mouseX, mouseY);
 
-                this.btnRemoveKeyBinding.x = x + 200;
-                this.btnRemoveKeyBinding.y = y;
+                this.btnRemoveKeyBinding.xPosition = x + 200;
+                this.btnRemoveKeyBinding.yPosition = y;
                 this.btnRemoveKeyBinding.enabled = true;
                 this.btnRemoveKeyBinding.drawButton(mc, mouseX, mouseY);
             } else {
-                this.btnEnabledInLayer.x = x + 95;
-                this.btnEnabledInLayer.y = y;
+                this.btnEnabledInLayer.xPosition = x + 95;
+                this.btnEnabledInLayer.yPosition = y;
 
                 if (enabledInLayer) {
                     this.btnEnabledInLayer.displayString = this.enabledText;

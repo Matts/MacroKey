@@ -50,7 +50,7 @@ minecraft {
 	version = "${config.mc_version}-${config.forge_version}"
     runDir = "run"
 
-    mappings = 'stable_32'
+    mappings = 'stable_29'
     makeObfSourceJar = false
 }
 
