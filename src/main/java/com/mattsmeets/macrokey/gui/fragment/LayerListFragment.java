@@ -101,7 +101,7 @@ public class LayerListFragment extends GuiListExtended {
 
             if (this.btnRemove.mousePressed(mc, mouseX, mouseY)) {
                 try {
-                    if (instance.modState.getActiveLayer().equals(this.layer))
+                    if (this.layer.equals(instance.modState.getActiveLayer()))
                         instance.modState.setActiveLayer(null);
 
                     instance.bindingsRepository.deleteLayer(this.layer, true);
