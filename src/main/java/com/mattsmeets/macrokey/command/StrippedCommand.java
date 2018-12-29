@@ -14,22 +14,22 @@ public abstract class StrippedCommand implements ICommand {
     public abstract void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException;
 
     @Override
-    public abstract List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos);
-
-    @Override
-    public String getName() {
+    public String getCommandName() {
         return null;
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return null;
     }
 
     @Override
-    public List<String> getAliases() {
+    public List<String> getCommandAliases() {
         return null;
     }
+
+    @Override
+    public abstract List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos);
 
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {

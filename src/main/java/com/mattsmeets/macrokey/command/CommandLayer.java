@@ -40,11 +40,11 @@ public class CommandLayer extends StrippedCommand {
             return;
         }
 
-        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
+        sender.addChatMessage(new TextComponentString(this.getCommandUsage(sender)));
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         List<String> list = new ArrayList<String>();
         list.add("toggle");
 
@@ -52,7 +52,7 @@ public class CommandLayer extends StrippedCommand {
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return "Usage: /macrokey layer [toggle]";
     }
 
@@ -73,7 +73,7 @@ public class CommandLayer extends StrippedCommand {
             }
         }
 
-        sender.sendMessage(
+        sender.addChatMessage(
                 new TextComponentTranslation(
                         "command.layer.information",
                         layerDisplayName,

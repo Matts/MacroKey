@@ -10,12 +10,12 @@ public interface ExecuteOnTickInterface {
 
     public ExecuteOnTickInterface openMacroKeyGUI =
             (boolean delayed) ->
-                    Minecraft.getMinecraft().player.openGui(
+                    Minecraft.getMinecraft().thePlayer.openGui(
                             instance,
                             ModConfig.guiMacroManagementId,
-                            Minecraft.getMinecraft().world,
-                            (int) Minecraft.getMinecraft().player.posX,
-                            (int) Minecraft.getMinecraft().player.posY,
-                            (int) Minecraft.getMinecraft().player.posZ
+                            Minecraft.getMinecraft().theWorld,
+                            (int) Minecraft.getMinecraft().thePlayer.posX,
+                            (int) Minecraft.getMinecraft().thePlayer.posY,
+                            (int) Minecraft.getMinecraft().thePlayer.posZ
                     );
 }

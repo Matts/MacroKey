@@ -20,7 +20,7 @@ public class ClientTickHandler {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
         // check if we are in-game
         if (player == null) {

@@ -4,7 +4,7 @@ buildscript {
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
@@ -50,7 +50,7 @@ minecraft {
 	version = "${config.mc_version}-${config.forge_version}"
     runDir = "run"
 
-    mappings = 'stable_29'
+    mappings = 'stable_24'
     makeObfSourceJar = false
 }
 

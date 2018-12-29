@@ -29,7 +29,7 @@ public class MacroActivationEvent extends Event {
         this.macros = macros;
         this.pressed = pressed;
 
-        this.currentPlayer = Minecraft.getMinecraft().player;
+        this.currentPlayer = Minecraft.getMinecraft().thePlayer;
     }
 
     public Set<MacroInterface> getMacros() {

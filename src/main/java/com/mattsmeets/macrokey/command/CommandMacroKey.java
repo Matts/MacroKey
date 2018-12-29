@@ -26,12 +26,12 @@ public class CommandMacroKey extends CommandBase implements ICommand {
     }
 
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "macrokey";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getCommandUsage(ICommandSender sender) {
         return "Usage: /macrokey [open / layer]";
     }
 
@@ -49,7 +49,7 @@ public class CommandMacroKey extends CommandBase implements ICommand {
             return;
         }
 
-        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
+        sender.addChatMessage(new TextComponentString(this.getCommandUsage(sender)));
     }
 
     @Override
@@ -58,9 +58,9 @@ public class CommandMacroKey extends CommandBase implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length >= 1 && this.subCommands.containsKey(args[0].toLowerCase())) {
-            return this.subCommands.get(args[0].toLowerCase()).getTabCompletions(server, sender, args, targetPos);
+            return this.subCommands.get(args[0].toLowerCase()).getTabCompletionOptions(server, sender, args, pos);
         }
 
         List<String> list = new ArrayList<String>();
