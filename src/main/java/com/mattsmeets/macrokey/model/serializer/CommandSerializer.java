@@ -29,6 +29,6 @@ public class CommandSerializer<T extends CommandInterface> implements JsonSerial
 
     @Override
     public JsonElement serialize(CommandInterface src, Type typeOfSrc, JsonSerializationContext context) {
-        return context.serialize(src.toString());
+        return context.serialize(src);
     }
 }

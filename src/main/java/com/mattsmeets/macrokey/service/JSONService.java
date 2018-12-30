@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mattsmeets.macrokey.model.CommandInterface;
+import com.mattsmeets.macrokey.model.exclusion.CommandExclusion;
 import com.mattsmeets.macrokey.model.serializer.CommandSerializer;
 
 import java.io.*;
@@ -32,11 +33,12 @@ public class JSONService {
     }
 
     public <T> void saveObjectsToFile(T element, File file) throws IOException {
-        System.out.println("saveObjToFile");
         Writer writer = new FileWriter(file);
 
         Gson gson = new GsonBuilder()
+                .setExclusionStrategies(new CommandExclusion())
                 .create();
+
         gson.toJson(element, writer);
         writer.close();
     }
