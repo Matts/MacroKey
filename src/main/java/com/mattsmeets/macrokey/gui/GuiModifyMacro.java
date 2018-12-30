@@ -5,6 +5,7 @@ import com.mattsmeets.macrokey.factory.CommandFactory;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.StringCommand;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -15,6 +16,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +46,7 @@ public class GuiModifyMacro extends GuiScreen {
     private GuiTextField command;
 
     private GuiButton btnKeyBinding;
-    private GuiButton repeatCommand, commandActive, commandType;
+    private GuiButton repeatCommand, commandActive, commandType, openEditor;
     private GuiButton addButton, cancelButton;
 
     private boolean changingKey = false;
@@ -72,6 +75,9 @@ public class GuiModifyMacro extends GuiScreen {
         this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
         this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
         this.buttonList.add(this.commandType = new GuiButton(5, this.width /2, 140, 75, 20, disabledText));
+        this.buttonList.add(this.openEditor = new GuiButton(5, this.width / 2, 163, 75, 20, disabledText));
+
+        this.openEditor.enabled = this.currentType == CommandFactory.CommandType.JAVASCRIPT;
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
@@ -130,12 +136,22 @@ public class GuiModifyMacro extends GuiScreen {
         this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
         this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
         this.commandType.displayString = I18n.format("text.command.type." + currentType.getId());
+        this.openEditor.displayString = "Open in Editor";
 
         this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.commandType.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.openEditor.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
 
         this.command.drawTextBox();
+
+        if (this.currentType == CommandFactory.CommandType.JAVASCRIPT) {
+            this.openEditor.enabled = true;
+            this.command.setEnabled(false);
+        } else {
+            this.openEditor.enabled = false;
+            this.command.setEnabled(true);
+        }
 
         this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
         this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
@@ -223,7 +239,18 @@ public class GuiModifyMacro extends GuiScreen {
             }
 
             this.currentType = list.get(index);
+        }
 
+        if (this.openEditor.mousePressed(mc, mouseX, mouseY)) {
+            File file = new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey");
+            file.createNewFile();
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                String cmd = "rundll32 url.dll,FileProtocolHandler " + file.getCanonicalPath();
+                Runtime.getRuntime().exec(cmd);
+            }
+            else {
+                Desktop.getDesktop().edit(file);
+            }
         }
     }
 
