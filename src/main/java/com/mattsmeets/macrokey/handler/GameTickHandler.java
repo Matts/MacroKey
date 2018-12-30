@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
 public class GameTickHandler {
@@ -55,14 +56,11 @@ public class GameTickHandler {
                 .filter(macro -> !macro.willRepeat() || event.isLimitedTick())
                 .forEach(macro -> macro.getCommand().execute(event.getCurrentPlayer()));
 
-        // loop through all executors and run them.
-        this.executorsToRun
-                .forEach(executor -> executor.execute(event.isLimitedTick()));
+       this.executorsToRun.removeIf(executor -> executor.execute(event.isLimitedTick()));
 
         // remove the command from the pending
         // list if it is not to be re-executed
         this.macrosToRun.removeIf(macro -> !macro.willRepeat());
-        this.executorsToRun.clear();
     }
 
 }

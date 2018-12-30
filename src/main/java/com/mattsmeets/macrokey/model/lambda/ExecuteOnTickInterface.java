@@ -6,10 +6,10 @@ import net.minecraft.client.Minecraft;
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
 public interface ExecuteOnTickInterface {
-    public void execute(boolean delayed);
+    public boolean execute(boolean delayed);
 
     public ExecuteOnTickInterface openMacroKeyGUI =
-            (boolean delayed) ->
+            (boolean delayed) -> {
                     Minecraft.getMinecraft().player.openGui(
                             instance,
                             ModConfig.guiMacroManagementId,
@@ -18,4 +18,7 @@ public interface ExecuteOnTickInterface {
                             (int) Minecraft.getMinecraft().player.posY,
                             (int) Minecraft.getMinecraft().player.posZ
                     );
+
+                    return true;
+            };
 }

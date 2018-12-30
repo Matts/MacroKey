@@ -48,7 +48,7 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("JavaScript");
 
-        engine.put("PlayerAPI", new PlayerAPI());
+        engine.put("Player", new PlayerAPI());
 
         try {
             engine.eval(command);
