@@ -1,6 +1,9 @@
 package com.mattsmeets.macrokey.model;
 
+import com.mattsmeets.macrokey.api.ChatAPI;
 import com.mattsmeets.macrokey.api.PlayerAPI;
+import com.sun.javafx.application.PlatformImpl;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +14,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.io.*;
 
 public class JSCommand extends AbstractCommand implements CommandInterface {
 
@@ -39,7 +43,11 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
             ICommandSender sender = player.getCommandSenderEntity();
             if(sender != null) {
                 sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing command"));
-                sender.sendMessage(new TextComponentString(e.getMessage()));
+                sender.sendMessage(
+                        new TextComponentString(
+                                e.getMessage() + ""
+                        )
+                );
             }
         }
     }
@@ -50,12 +58,15 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
         ScriptEngine engine = manager.getEngineByName("JavaScript");
 
         engine.put("Player", new PlayerAPI());
+        engine.put("Chat", new ChatAPI());
 
         try {
-            engine.eval(command);
+            PlatformImpl.startup(() -> {});
+            engine.eval(new FileReader(new File(command)));
+
 
             inv = (Invocable) engine;
-        } catch (ScriptException e) {
+        } catch (ScriptException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -239,10 +239,12 @@ public class GuiModifyMacro extends GuiScreen {
             }
 
             this.currentType = list.get(index);
+            this.command.setText("");
         }
 
         if (this.openEditor.mousePressed(mc, mouseX, mouseY)) {
-            File file = new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey");
+            File file = getMacroFile();
+            this.command.setText(file.getAbsolutePath());
             file.createNewFile();
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 String cmd = "rundll32 url.dll,FileProtocolHandler " + file.getCanonicalPath();
@@ -252,6 +254,10 @@ public class GuiModifyMacro extends GuiScreen {
                 Desktop.getDesktop().edit(file);
             }
         }
+    }
+
+    private File getMacroFile() {
+        return new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey");
     }
 
     public void updateScreen() {
