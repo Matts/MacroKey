@@ -8,6 +8,10 @@ text.layer.hover.right_click=Right-click to open the MacroKey GUI
 text.layer.master=Master
 ####
 
+## Command type translations ##
+text.command.type.string=Simple
+text.command.type.javascript=Advanced
+
 ## GuiMacroManagement ##
 gui.manage.text.title=MacroKey Keybinding
 
@@ -28,6 +32,7 @@ gui.modify.text.key=Trigger
 
 gui.modify.text.repeat=Hold to repeat
 gui.modify.text.enable=Enable macro
+gui.modify.text.type=Command type
 
 gui.modify.text.save=Save Macro
 ####

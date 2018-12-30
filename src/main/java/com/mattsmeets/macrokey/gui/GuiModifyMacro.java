@@ -27,7 +27,7 @@ public class GuiModifyMacro extends GuiScreen {
             editScreenTitleText = I18n.format("gui.modify.text.title.edit"),
             repeatOnHoldText = I18n.format("gui.modify.text.repeat"),
             enableCommandText = I18n.format("gui.modify.text.enable"),
-            typeCommandText = "Command type",
+            typeCommandText = I18n.format("gui.modify.text.type"),
             commandBoxTitleText = I18n.format("gui.modify.text.command"),
             keyBoxTitleText = I18n.format("gui.modify.text.key"),
             saveButtonText = I18n.format("gui.modify.text.save");
@@ -129,7 +129,7 @@ public class GuiModifyMacro extends GuiScreen {
 
         this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
         this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
-        this.commandType.displayString = currentType.getId();
+        this.commandType.displayString = I18n.format("text.command.type." + currentType.getId());
 
         this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
