@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.model;
 
+import com.mattsmeets.macrokey.api.PlayerAPI;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +32,7 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
     @Override
     public void execute(EntityPlayerSP player) {
         try {
-            inv.invokeFunction("hello", "Scripting!!");
+            inv.invokeFunction("main");
         } catch (ScriptException | NoSuchMethodException | NullPointerException e) {
             e.printStackTrace();
 
@@ -47,11 +48,12 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("JavaScript");
 
+        engine.put("PlayerAPI", new PlayerAPI());
+
         try {
             engine.eval(command);
 
             inv = (Invocable) engine;
-            System.out.println("setup");
         } catch (ScriptException e) {
             e.printStackTrace();
         }

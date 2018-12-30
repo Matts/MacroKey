@@ -21,21 +21,14 @@ public class CommandFactory {
     }
 
     public static CommandInterface create(String type, String arg) {
-        // todo: genericify
-        switch(type) {
-            case "string":
-                return new StringCommand(arg);
-            case "javascript":
-                return new JSCommand(arg);
+        try {
+            Constructor cons = supportedTypes.get(type).getDeclaredConstructor(String.class);
+            cons.setAccessible(true);
+            return (CommandInterface) cons.newInstance(arg);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
         }
-//        try {
-//            Constructor cons = supportedTypes.get(type).getDeclaredConstructor(String.class);
-//            cons.setAccessible(true);
-//            return (CommandInterface) cons.newInstance(arg);
-//        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
 
-        return new StringCommand(arg);
+        return null;
     }
 }
