@@ -77,6 +77,7 @@ public class GameTickHandlerTest {
         GameTickHandler handler = new GameTickHandler(null, spySet);
 
         ExecuteOnTickInterface executor = (boolean delay) -> {
+            return true;
         };
 
         when(event.getExecutor()).thenReturn(executor);

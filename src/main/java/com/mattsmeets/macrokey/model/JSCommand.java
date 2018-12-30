@@ -37,9 +37,10 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
             e.printStackTrace();
 
             ICommandSender sender = player.getCommandSenderEntity();
-            assert sender != null;
-            sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing command"));
-            sender.sendMessage(new TextComponentString(e.getMessage()));
+            if(sender != null) {
+                sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing command"));
+                sender.sendMessage(new TextComponentString(e.getMessage()));
+            }
         }
     }
 

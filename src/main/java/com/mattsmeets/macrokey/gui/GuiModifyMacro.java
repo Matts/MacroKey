@@ -16,6 +16,8 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class GuiModifyMacro extends GuiScreen {
     private final GuiScreen parentScreen;
@@ -25,6 +27,7 @@ public class GuiModifyMacro extends GuiScreen {
             editScreenTitleText = I18n.format("gui.modify.text.title.edit"),
             repeatOnHoldText = I18n.format("gui.modify.text.repeat"),
             enableCommandText = I18n.format("gui.modify.text.enable"),
+            typeCommandText = "Command type",
             commandBoxTitleText = I18n.format("gui.modify.text.command"),
             keyBoxTitleText = I18n.format("gui.modify.text.key"),
             saveButtonText = I18n.format("gui.modify.text.save");
@@ -40,14 +43,17 @@ public class GuiModifyMacro extends GuiScreen {
     private GuiTextField command;
 
     private GuiButton btnKeyBinding;
-    private GuiButton repeatCommand, commandActive;
+    private GuiButton repeatCommand, commandActive, commandType;
     private GuiButton addButton, cancelButton;
 
     private boolean changingKey = false;
 
+    private CommandFactory.CommandType currentType;
+
     public GuiModifyMacro(GuiScreen guiScreen, MacroInterface key) {
         // does the macro already exist, if not create a new one
         this.result = key == null ? new Macro() : key;
+        this.currentType = key == null || key.getCommand() == null ? CommandFactory.CommandType.STRING : CommandFactory.CommandType.valueOfId(key.getCommand().getCommandType());
         this.parentScreen = guiScreen;
         this.existing = key != null;
     }
@@ -65,6 +71,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.buttonList.add(this.btnKeyBinding = new GuiButton(3, this.width / 2 - 75, 100, 150, 20, GameSettings.getKeyDisplayString(0)));
         this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
         this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
+        this.buttonList.add(this.commandType = new GuiButton(5, this.width /2, 140, 75, 20, disabledText));
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
@@ -76,6 +83,7 @@ public class GuiModifyMacro extends GuiScreen {
             this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(result.getKeyCode());
             this.repeatCommand.displayString = result.willRepeat() ? enabledText : disabledText;
             this.commandActive.displayString = result.isActive() ? enabledText : disabledText;
+            this.commandType.displayString = currentType.getId();
         }
     }
 
@@ -88,14 +96,14 @@ public class GuiModifyMacro extends GuiScreen {
                     break;
                 }
 
+                this.result.setCommand(CommandFactory.create(
+                        this.currentType.getId(),
+                        command.getText())
+                );
+
                 if (this.existing) {
-                    this.result.setCommand(CommandFactory.create(
-                            this.result.getCommand().getCommandType(),
-                            command.getText())
-                    );
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroChangedEvent(this.result));
                 } else {
-                    this.result.setCommand(new StringCommand(command.getText()));
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroAddedEvent(this.result));
                 }
             case 1:
@@ -121,14 +129,18 @@ public class GuiModifyMacro extends GuiScreen {
 
         this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
         this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
+        this.commandType.displayString = currentType.getId();
 
         this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
         this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.commandType.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
 
         this.command.drawTextBox();
 
         this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
         this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
+        this.drawString(this.fontRenderer, typeCommandText, this.width / 2 - (mc.fontRenderer.getStringWidth(typeCommandText) / 2) + 120, 145, -6250336);
+
         this.drawCenteredString(this.fontRenderer, commandBoxTitleText, this.width / 2, 37, -6250336);
         this.drawCenteredString(this.fontRenderer, keyBoxTitleText, this.width / 2, 90, -6250336);
 
@@ -199,6 +211,19 @@ public class GuiModifyMacro extends GuiScreen {
 
         if (this.commandActive.mousePressed(mc, mouseX, mouseY)) {
             this.result.setActive(!this.result.isActive());
+        }
+
+        if (this.commandType.mousePressed(mc, mouseX, mouseY)) {
+            List<CommandFactory.CommandType> list = Arrays.asList(CommandFactory.CommandType.values());
+            int index = list.indexOf(this.currentType);
+            index++;
+
+            if(index >= list.size()) {
+                index = 0;
+            }
+
+            this.currentType = list.get(index);
+
         }
     }
 

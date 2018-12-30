@@ -2,7 +2,7 @@ package com.mattsmeets.macrokey.model;
 
 public abstract class AbstractCommand implements CommandInterface {
 
-    private final String type;
+    private String type;
 
     AbstractCommand(String type) {
         this.type = type;
@@ -15,4 +15,8 @@ public abstract class AbstractCommand implements CommandInterface {
 
     @Override
     public void setup() {}
+
+    public void setCommandType(String type) {
+        this.type = type;
+    }
 }
