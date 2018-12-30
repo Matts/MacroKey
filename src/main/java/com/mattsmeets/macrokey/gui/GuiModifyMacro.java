@@ -257,7 +257,7 @@ public class GuiModifyMacro extends GuiScreen {
     }
 
     private File getMacroFile() {
-        return new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey");
+        return new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey.js");
     }
 
     public void updateScreen() {

@@ -3,6 +3,9 @@ package com.mattsmeets.macrokey.model;
 import com.mattsmeets.macrokey.api.ChatAPI;
 import com.mattsmeets.macrokey.api.PlayerAPI;
 import com.sun.javafx.application.PlatformImpl;
+import jdk.nashorn.api.scripting.ClassFilter;
+import jdk.nashorn.api.scripting.NashornScriptEngine;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.ICommandSender;
@@ -15,6 +18,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
+import java.util.Arrays;
 
 public class JSCommand extends AbstractCommand implements CommandInterface {
 
@@ -54,8 +58,10 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
 
     @Override
     public void setup() {
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
+        String[] allowedFiles = {"javafx.application.Platform","java.util.Timer"};
+        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine((ClassFilter) s -> {
+            return Arrays.stream(allowedFiles).filter(i -> i.equalsIgnoreCase(s)).count() >= 1;
+        });
 
         engine.put("Player", new PlayerAPI());
         engine.put("Chat", new ChatAPI());
@@ -66,7 +72,7 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
 
 
             inv = (Invocable) engine;
-        } catch (ScriptException | FileNotFoundException e) {
+        } catch (ScriptException | FileNotFoundException | RuntimeException e) {
             e.printStackTrace();
         }
     }
