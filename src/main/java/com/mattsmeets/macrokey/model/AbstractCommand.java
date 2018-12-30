@@ -12,4 +12,7 @@ public abstract class AbstractCommand implements CommandInterface {
     public String getCommandType() {
         return this.type;
     }
+
+    @Override
+    public void setup() {}
 }

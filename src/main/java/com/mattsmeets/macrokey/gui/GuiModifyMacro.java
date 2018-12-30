@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.gui;
 
 import com.mattsmeets.macrokey.event.MacroEvent;
+import com.mattsmeets.macrokey.factory.CommandFactory;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.StringCommand;
@@ -87,11 +88,14 @@ public class GuiModifyMacro extends GuiScreen {
                     break;
                 }
 
-                this.result.setCommand(new StringCommand(command.getText()));
-
                 if (this.existing) {
+                    this.result.setCommand(CommandFactory.create(
+                            this.result.getCommand().getCommandType(),
+                            command.getText())
+                    );
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroChangedEvent(this.result));
                 } else {
+                    this.result.setCommand(new StringCommand(command.getText()));
                     MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroAddedEvent(this.result));
                 }
             case 1:

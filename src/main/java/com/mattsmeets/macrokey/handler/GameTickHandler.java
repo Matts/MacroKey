@@ -53,7 +53,10 @@ public class GameTickHandler {
         this.macrosToRun
                 .stream()
                 .filter(macro -> !macro.willRepeat() || event.isLimitedTick())
-                .forEach(macro -> macro.getCommand().execute(event.getCurrentPlayer()));
+                .forEach(macro -> {
+                    System.out.println(macro.getCommand());
+                    macro.getCommand().execute(event.getCurrentPlayer());
+                });
 
         // loop through all executors and run them.
         this.executorsToRun

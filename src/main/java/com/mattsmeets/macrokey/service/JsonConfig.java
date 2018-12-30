@@ -58,6 +58,7 @@ public class JsonConfig {
     }
 
     public <T> void saveObjectToJson(T object) throws IOException {
+        System.out.println("save obj");
         this.jsonService.saveObjectsToFile(object, this.file);
     }
 }

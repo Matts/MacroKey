@@ -18,6 +18,11 @@ public interface CommandInterface {
     void execute(EntityPlayerSP player);
 
     /**
+     * Set up command (run after deserialization)
+     */
+    void setup();
+
+    /**
      * Type identifier used for (de)serialization
      * @return String
      */

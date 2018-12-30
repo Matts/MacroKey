@@ -273,6 +273,7 @@ public class BindingsRepository {
      * @throws IOException when file can not be found or read
      */
     public void updateMacro(MacroInterface macro, boolean sync) throws IOException {
+        System.out.println("updateMacro");
         this.bindingsFile.setMacros(
                 // get all macro's and go through all of them
                 // when the UMID matches with the given macro
@@ -455,6 +456,7 @@ public class BindingsRepository {
      * @throws IOException when file can not be found or read
      */
     public void saveConfiguration() throws IOException {
+        System.out.println("saveConfig");
         this.config.saveObjectToJson(this.bindingsFile);
     }
 
