@@ -1,11 +1,10 @@
 package com.mattsmeets.macrokey.gui;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.factory.CommandFactory;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import com.mattsmeets.macrokey.model.StringCommand;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -243,7 +242,7 @@ public class GuiModifyMacro extends GuiScreen {
         }
 
         if (this.openEditor.mousePressed(mc, mouseX, mouseY)) {
-            File file = getMacroFile();
+            File file = MacroKey.instance.javascriptFileHelper.getMacroFile(this.result.getUMID());
             this.command.setText(file.getAbsolutePath());
             file.createNewFile();
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
@@ -254,10 +253,6 @@ public class GuiModifyMacro extends GuiScreen {
                 Desktop.getDesktop().edit(file);
             }
         }
-    }
-
-    private File getMacroFile() {
-        return new File(Minecraft.getMinecraft().gameDir.getAbsolutePath() + "/config/macrokey/javascript" + this.result.getUMID() + ".macrokey.js");
     }
 
     public void updateScreen() {

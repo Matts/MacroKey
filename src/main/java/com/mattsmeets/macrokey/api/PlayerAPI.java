@@ -4,6 +4,10 @@ import net.minecraft.client.Minecraft;
 
 public class PlayerAPI extends AbstractAPI {
 
+    public String DisplayName() {
+        return Minecraft.getMinecraft().player.getDisplayName().getUnformattedText();
+    }
+
     public void Jump() {
         // only jump if player is on ground
         if (Minecraft.getMinecraft().player.onGround) {

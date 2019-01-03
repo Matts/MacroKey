@@ -33,6 +33,10 @@ public class LogHelper {
         log(Level.WARN, object);
     }
 
+    public void err(Object object) {
+        log(Level.ERROR, object);
+    }
+
     public void debug(Object object) {
         log(Level.DEBUG, object);
     }

@@ -2,15 +2,16 @@ package com.mattsmeets.macrokey;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
+import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
+import com.mattsmeets.macrokey.service.JavascriptHelper;
+import com.mattsmeets.macrokey.service.JavascriptInterpreter;
 import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
+import com.sun.javafx.application.PlatformImpl;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -47,6 +48,10 @@ public class MacroKey {
 
     public KeyBinding[] forgeKeybindings;
 
+    public JavascriptHelper javascriptFileHelper;
+
+    public JavascriptInterpreter javascriptInterpreter;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
@@ -58,9 +63,14 @@ public class MacroKey {
         this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
         this.logger.debug("PreInitialization");
 
+        // bypass to allow setTimeout to work in javascript.
+        PlatformImpl.startup(() -> {});
+
+        this.javascriptFileHelper = new JavascriptHelper(event.getModConfigurationDirectory().getAbsolutePath());
+        this.javascriptInterpreter = new JavascriptInterpreter(this.javascriptFileHelper.getAllowedClasses());
+
         // set-up the bindings.json service & files
-        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), ModConfig.bindingFile);
-        this.bindingsJSONConfig.initializeFile();
+        this.bindingsJSONConfig = new JsonConfig(ModConfig.bindingFile);
 
         // BindingsRepository has a dependency on the bindings.json file being created
         this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);

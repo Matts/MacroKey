@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.service;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.CommandInterface;
 import com.mattsmeets.macrokey.model.serializer.CommandSerializer;
 
@@ -14,22 +15,10 @@ public class JsonConfig {
     private File file;
     private JSONService jsonService;
 
-    public JsonConfig(String parentFolder, String fileName) {
-        this.file = new File(parentFolder + "/macrokey/" + fileName);
+    public JsonConfig(String fileName) throws IOException {
+        this.file = MacroKey.instance.javascriptFileHelper.initializeFile("/" + fileName);
 
         this.jsonService = new JSONService();
-    }
-
-    public void initializeFile() throws IOException {
-        File parentFolder = new File(this.file.getParent());
-
-        if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
-        }
-
-        if (!this.file.exists()) {
-            this.file.createNewFile();
-        }
     }
 
     private JsonElement getJSONElement() throws IOException {

@@ -26,6 +26,9 @@ public class ModConfig {
     @Config.Comment("Customize the position that the button for switching layer should use, expected is {x, y, width, height} (default: -100, 128, 200, 20)")
     public static int[] buttonLayerSwitchSettings = {-100, 128, 200, 20};
 
+    @Config.Comment("Customize the entrypoint that will be called when running custom macro's")
+    public static String javascriptMain = "main";
+
     @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
     public static class EventHandler {
         @SubscribeEvent

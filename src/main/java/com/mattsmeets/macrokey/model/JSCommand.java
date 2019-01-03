@@ -1,24 +1,16 @@
 package com.mattsmeets.macrokey.model;
 
-import com.mattsmeets.macrokey.api.ChatAPI;
-import com.mattsmeets.macrokey.api.PlayerAPI;
-import com.sun.javafx.application.PlatformImpl;
-import jdk.nashorn.api.scripting.ClassFilter;
-import jdk.nashorn.api.scripting.NashornScriptEngine;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import net.minecraft.client.Minecraft;
+import com.mattsmeets.macrokey.MacroKey;
+import com.mattsmeets.macrokey.config.ModConfig;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.*;
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class JSCommand extends AbstractCommand implements CommandInterface {
 
@@ -33,20 +25,22 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
         super("javascript");
 
         this.command = command;
-
-        setup();
     }
 
     @Override
     public void execute(EntityPlayerSP player) {
+        if (inv == null) {
+            setup();
+        }
+
         try {
-            inv.invokeFunction("main");
+            inv.invokeFunction(ModConfig.javascriptMain);
         } catch (ScriptException | NoSuchMethodException | NullPointerException e) {
             e.printStackTrace();
 
             ICommandSender sender = player.getCommandSenderEntity();
             if(sender != null) {
-                sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing command"));
+                sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing the command"));
                 sender.sendMessage(
                         new TextComponentString(
                                 e.getMessage() + ""
@@ -58,21 +52,11 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
 
     @Override
     public void setup() {
-        String[] allowedFiles = {"javafx.application.Platform","java.util.Timer"};
-        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine((ClassFilter) s -> {
-            return Arrays.stream(allowedFiles).filter(i -> i.equalsIgnoreCase(s)).count() >= 1;
-        });
-
-        engine.put("Player", new PlayerAPI());
-        engine.put("Chat", new ChatAPI());
-
         try {
-            PlatformImpl.startup(() -> {});
-            engine.eval(new FileReader(new File(command)));
-
-
-            inv = (Invocable) engine;
-        } catch (ScriptException | FileNotFoundException | RuntimeException e) {
+            inv = MacroKey.instance.javascriptInterpreter.eval(new File(command));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ScriptException e) {
             e.printStackTrace();
         }
     }
