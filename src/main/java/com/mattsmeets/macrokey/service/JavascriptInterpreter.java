@@ -34,8 +34,6 @@ public class JavascriptInterpreter {
         engine.put("Player", new PlayerAPI());
         engine.put("Chat", new ChatAPI());
         engine.put("Text", new TextAPI());
-        engine.put("TextColor", new TextAPI.Color());
-        engine.put("TextFormat", new TextAPI.Format());
         engine.put("State", new StateAPI());
     }
 

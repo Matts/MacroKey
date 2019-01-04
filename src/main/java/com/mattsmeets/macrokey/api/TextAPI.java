@@ -6,6 +6,14 @@ public class TextAPI extends AbstractAPI {
 
     public String SECTION_SIGN = "\u00a7";
 
+    public String getFormatByName(String name) {
+        return getFormat(name);
+    }
+
+    public Color Color = new Color();
+
+    public Format Format = new Format();
+
     public static class Color {
         public String BLACK = getFormat("BLACK");
         public String DARK_BLUE = getFormat("DARK_BLUE");
@@ -33,10 +41,6 @@ public class TextAPI extends AbstractAPI {
         public String ITALIC = getFormat("ITALIC");
         public String RESET = getFormat("RESET");
 
-    }
-
-    public String getFormatByName(String name) {
-        return getFormat(name);
     }
     
     public static String getFormat(String name) {

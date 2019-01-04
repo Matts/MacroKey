@@ -7,6 +7,10 @@ public class StateAPI extends AbstractAPI {
 
     public Map<String, Object> State = new HashMap<>();
 
+    public boolean Has(String key) {
+        return this.State.containsKey(key);
+    }
+
     public Object Load(String key) {
         return this.State.get(key);
     }
