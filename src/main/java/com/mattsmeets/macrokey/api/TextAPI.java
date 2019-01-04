@@ -2,7 +2,7 @@ package com.mattsmeets.macrokey.api;
 
 import net.minecraft.util.text.TextFormatting;
 
-public class TextAPI {
+public class TextAPI extends AbstractAPI {
 
     public String SECTION_SIGN = "\u00a7";
 

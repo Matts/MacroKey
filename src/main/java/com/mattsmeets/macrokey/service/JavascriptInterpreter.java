@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.service;
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.api.ChatAPI;
 import com.mattsmeets.macrokey.api.PlayerAPI;
+import com.mattsmeets.macrokey.api.StateAPI;
 import com.mattsmeets.macrokey.api.TextAPI;
 import jdk.nashorn.api.scripting.ClassFilter;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
@@ -35,6 +36,7 @@ public class JavascriptInterpreter {
         engine.put("Text", new TextAPI());
         engine.put("TextColor", new TextAPI.Color());
         engine.put("TextFormat", new TextAPI.Format());
+        engine.put("State", new StateAPI());
     }
 
     public Invocable eval(File file) throws FileNotFoundException, ScriptException {
