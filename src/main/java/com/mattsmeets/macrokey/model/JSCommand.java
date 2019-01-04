@@ -2,8 +2,9 @@ package com.mattsmeets.macrokey.model;
 
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.config.ModConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
@@ -33,21 +34,14 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
             setup();
         }
 
+
         try {
             inv.invokeFunction(ModConfig.javascriptMain);
-        } catch (ScriptException | NoSuchMethodException | NullPointerException e) {
+        } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
 
-            ICommandSender sender = player.getCommandSenderEntity();
-            if(sender != null) {
-                sender.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while parsing the command"));
-                sender.sendMessage(
-                        new TextComponentString(
-                                e.getMessage() + ""
-                        )
-                );
-            }
-        }
+            sendErrorToPlayer(player, e);
+        } catch (NullPointerException ignored){}
     }
 
     @Override
@@ -56,9 +50,25 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
             inv = MacroKey.instance.javascriptInterpreter.eval(new File(command));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            MacroKey.instance.logger.err("Could not find/read file on system " + e.getMessage());
         } catch (ScriptException e) {
             e.printStackTrace();
+            MacroKey.instance.logger.err("An error occurred while interpreting the script " + e.getMessage());
+
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            if (player != null) {
+                sendErrorToPlayer(player, e);
+            }
         }
+    }
+
+    private void sendErrorToPlayer(EntityPlayer player, Exception e) {
+        player.sendMessage(new TextComponentString(TextFormatting.RED + "[MacroKey] Something went wrong while executing the script"));
+        player.sendMessage(
+                new TextComponentString(
+                        e.getMessage().replaceAll("\\r", "") + ""
+                )
+        );
     }
 
     @Override
