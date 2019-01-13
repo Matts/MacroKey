@@ -1,17 +1,11 @@
 package com.mattsmeets.macrokey.command;
 
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class StrippedCommand implements ICommand {
-    @Override
-    public abstract void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException;
 
     @Override
     public String getCommandName() {
@@ -26,14 +20,6 @@ public abstract class StrippedCommand implements ICommand {
     @Override
     public List<String> getCommandAliases() {
         return null;
-    }
-
-    @Override
-    public abstract List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos);
-
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        return false;
     }
 
     @Override

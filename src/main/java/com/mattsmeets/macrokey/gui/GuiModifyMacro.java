@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
@@ -146,9 +146,9 @@ public class GuiModifyMacro extends GuiScreen {
         }
 
         if (this.changingKey) {
-            this.btnKeyBinding.displayString = TextFormatting.WHITE + "> " + TextFormatting.YELLOW + this.btnKeyBinding.displayString + TextFormatting.WHITE + " <";
+            this.btnKeyBinding.displayString = EnumChatFormatting.WHITE + "> " + EnumChatFormatting.YELLOW + this.btnKeyBinding.displayString + EnumChatFormatting.WHITE + " <";
         } else if (macroKeyCodeModifyFlag) {
-            this.btnKeyBinding.displayString = TextFormatting.GOLD + this.btnKeyBinding.displayString;
+            this.btnKeyBinding.displayString = EnumChatFormatting.GOLD + this.btnKeyBinding.displayString;
         }
 
         this.btnKeyBinding.drawButton(mc, mouseX, mouseY);

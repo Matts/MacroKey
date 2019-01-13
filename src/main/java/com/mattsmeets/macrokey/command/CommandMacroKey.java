@@ -4,13 +4,10 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,31 +33,26 @@ public class CommandMacroKey extends CommandBase implements ICommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length == 0) {
-            this.subCommands.get("open").execute(server, sender, args);
+            this.subCommands.get("open").processCommand(sender, args);
 
             return;
         }
 
         if (this.subCommands.containsKey(args[0].toLowerCase())) {
-            this.subCommands.get(args[0].toLowerCase()).execute(server, sender, args);
+            this.subCommands.get(args[0].toLowerCase()).processCommand(sender, args);
 
             return;
         }
 
-        sender.addChatMessage(new TextComponentString(this.getCommandUsage(sender)));
+        sender.addChatMessage(new ChatComponentText(this.getCommandUsage(sender)));
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        return true;
-    }
-
-    @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length >= 1 && this.subCommands.containsKey(args[0].toLowerCase())) {
-            return this.subCommands.get(args[0].toLowerCase()).getTabCompletionOptions(server, sender, args, pos);
+            return this.subCommands.get(args[0].toLowerCase()).addTabCompletionOptions(sender, args, pos);
         }
 
         List<String> list = new ArrayList<String>();
