@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.handler.hook;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
