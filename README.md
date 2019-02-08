@@ -16,7 +16,7 @@ One of the biggest complaints I have found about macro mods in the past is that 
 | 1.1.5.*     | June 2016        | June 2016       | 1.8.9                 |
 | 1.1.6.1     | 12 July 2016     | March 2017      | 1.9.\*, 1.10.\*       |
 | 1.1.6.3     | 24 July 2016     | January 2018    | 1.11.\*, 1.12.\*      |
-| 2.0         | *TBA*            | *TBA*           | *TBA* (based on 1.12) |
+| 2.0         | 04 November 2018 | *TBA*           | 1.12.\*, 1.11.\*, 1.10.\*, 1.9.\*, 1.8.\* |
 | 2.1         | *TBA*            | *TBA*           | *TBA*                 |
 
 ### Useful Links
