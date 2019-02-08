@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.model;
 
+import com.mattsmeets.macrokey.MacroKey;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 /**

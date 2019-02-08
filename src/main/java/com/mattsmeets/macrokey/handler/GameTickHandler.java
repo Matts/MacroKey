@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.handler;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
@@ -35,7 +36,7 @@ public class GameTickHandler {
         if (event.getMacroState().isKeyDown()) {
             this.macrosToRun.addAll(event.getMacros());
         } else {
-            this.macrosToRun.removeAll(event.getMacros());
+            this.macrosToRun.removeIf(macro -> event.getMacros().contains(macro) && macro.willRepeat());
         }
     }
 
