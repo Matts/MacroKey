@@ -36,7 +36,7 @@ public class GameTickHandler {
         if (event.getMacroState().isKeyDown()) {
             this.macrosToRun.addAll(event.getMacros());
         } else {
-            this.macrosToRun.removeIf(macro -> event.getMacros().contains(macro) && !macro.willRepeat());
+            this.macrosToRun.removeIf(macro -> event.getMacros().contains(macro) && macro.willRepeat());
         }
     }
 
