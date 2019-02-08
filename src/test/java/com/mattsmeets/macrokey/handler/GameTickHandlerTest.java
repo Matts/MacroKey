@@ -53,16 +53,13 @@ public class GameTickHandlerTest {
         Macro macro = mock(Macro.class);
 
         when(event.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_UP);
-        Set<MacroInterface> macros = Collections.singleton(macro);
-        when(event.getMacros()).thenReturn(macros);
 
         GameTickHandler handler = new GameTickHandler(spySet, null);
 
         handler.onKeyEvent(event);
 
-        verify(event).getMacros();
         verify(event).getMacroState();
-        verify(spySet).removeAll(macros);
+        verify(spySet).removeIf(any());
     }
 
     @Test
