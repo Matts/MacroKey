@@ -60,9 +60,8 @@ public class GameTickHandlerTest {
 
         handler.onKeyEvent(event);
 
-        verify(event).getMacros();
         verify(event).getMacroState();
-        verify(spySet).removeAll(macros);
+        verify(spySet).removeIf(any());
     }
 
     @Test
