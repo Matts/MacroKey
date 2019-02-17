@@ -35,6 +35,9 @@ public class MacroAPI {
             MacroKey.instance.bindingsRepository.deleteMacro(uuid, true, true);
         }
 
+        /**
+         * not yet implemented
+         */
         public void Edit() {
             notYetImplemented();
         }
@@ -59,14 +62,23 @@ public class MacroAPI {
             MacroKey.instance.bindingsRepository.addLayer(new com.mattsmeets.macrokey.model.Layer(displayName), true);
         }
 
+        /**
+         * not yet implemented
+         */
         public void Delete() {
             notYetImplemented();
         }
 
+        /**
+         * not yet implemented
+         */
         public void Toggle() {
             notYetImplemented();
         }
 
+        /**
+         * not yet implemented
+         */
         public void Select() {
             notYetImplemented();
         }

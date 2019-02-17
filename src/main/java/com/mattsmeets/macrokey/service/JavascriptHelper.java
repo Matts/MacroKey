@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.service;
 
 import jdk.nashorn.api.scripting.ClassFilter;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class JavascriptHelper {
         File file = new File(modConfigDir + filename);
         if (!file.exists()) {
             file.createNewFile();
+
+            FileUtils.writeStringToFile(file, "function main() { /** TODO: Implement Macro **/ }");
         }
 
         return file;

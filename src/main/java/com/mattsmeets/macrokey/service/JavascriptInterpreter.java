@@ -1,10 +1,7 @@
 package com.mattsmeets.macrokey.service;
 
 import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.api.ChatAPI;
-import com.mattsmeets.macrokey.api.PlayerAPI;
-import com.mattsmeets.macrokey.api.StateAPI;
-import com.mattsmeets.macrokey.api.TextAPI;
+import com.mattsmeets.macrokey.api.*;
 import jdk.nashorn.api.scripting.ClassFilter;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.minecraft.util.text.TextFormatting;
@@ -35,6 +32,8 @@ public class JavascriptInterpreter {
         engine.put("Chat", new ChatAPI());
         engine.put("Text", new TextAPI());
         engine.put("State", new StateAPI());
+        engine.put("MacroKey", new MacroAPI());
+        engine.put("Keyboard", new KeyboardAPI());
     }
 
     public Invocable eval(File file) throws FileNotFoundException, ScriptException {
