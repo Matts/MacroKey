@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.gui;
 
 import com.mattsmeets.macrokey.MacroKey;
+import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.factory.CommandFactory;
 import com.mattsmeets.macrokey.model.Macro;
@@ -77,6 +78,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.buttonList.add(this.openEditor = new GuiButton(5, this.width / 2, 163, 75, 20, disabledText));
 
         this.openEditor.enabled = this.currentType == CommandFactory.CommandType.JAVASCRIPT;
+        this.repeatCommand.enabled = this.currentType != CommandFactory.CommandType.JAVASCRIPT;
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
@@ -244,12 +246,10 @@ public class GuiModifyMacro extends GuiScreen {
         if (this.openEditor.mousePressed(mc, mouseX, mouseY)) {
             File file = MacroKey.instance.javascriptFileHelper.getMacroFile(this.result.getUMID());
             this.command.setText(file.getAbsolutePath());
-            file.createNewFile();
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                String cmd = "rundll32 url.dll,FileProtocolHandler " + file.getCanonicalPath();
-                Runtime.getRuntime().exec(cmd);
-            }
-            else {
+
+            try {
+                Runtime.getRuntime().exec(ModConfig.editor + " " + file.getCanonicalPath());
+            } catch (IOException e) {
                 Desktop.getDesktop().edit(file);
             }
         }

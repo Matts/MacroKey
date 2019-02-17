@@ -33,7 +33,7 @@ public class JavascriptHelper {
     }
 
     public File getMacroFile(UUID uuid) throws IOException {
-        return this.initializeFile("/javascript-" + uuid + ".macrokey");
+        return this.initializeFile("/javascript-" + uuid + ".macrokey.js");
     }
 
     public ClassFilter getAllowedClasses() {
