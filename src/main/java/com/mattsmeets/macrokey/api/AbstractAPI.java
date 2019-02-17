@@ -1,7 +1,9 @@
 package com.mattsmeets.macrokey.api;
 
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 
 public abstract class AbstractAPI {
@@ -25,5 +27,9 @@ public abstract class AbstractAPI {
                 })
         );
 
+    }
+
+    public static void notYetImplemented() {
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString("PSST: This function has not yet been implemented."));
     }
 }
