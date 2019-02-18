@@ -57,6 +57,7 @@ minecraft {
 dependencies {
 	testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-core:2.7.22'
+    compile 'org.graalvm:graal-sdk:1.0.0-rc2'
 }
 
 buildConfig {
