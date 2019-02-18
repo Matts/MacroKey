@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class JavascriptHelper {
         if (!file.exists()) {
             file.createNewFile();
 
-            FileUtils.writeStringToFile(file, "function main() { /** TODO: Implement Macro **/ }");
+            FileUtils.writeStringToFile(file, "const main = () => { /** TODO: Implement Macro **/ }", Charset.defaultCharset());
         }
 
         return file;

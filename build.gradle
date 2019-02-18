@@ -57,7 +57,13 @@ minecraft {
 dependencies {
 	testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-core:2.7.22'
-    compile 'org.graalvm:graal-sdk:1.0.0-rc2'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile 'org.graalvm.js:js:1.0.0-rc12'
+//    compile 'org.graalvm.truffle:truffle-api:1.0.0-rc12'
+//    provided 'org.graalvm.truffle:truffle-dsl-processor:1.0.0-rc8'
+    compile group: 'org.graalvm', name: 'graal-sdk', version: '0.33'
+    compile group: 'com.oracle.truffle', name: 'truffle-api', version: '0.33'
+//    compile 'org.ow2.asm:asm-debug-all:5.2:'
 }
 
 buildConfig {

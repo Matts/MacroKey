@@ -1,14 +1,15 @@
 package com.mattsmeets.macrokey.model;
 
 import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.config.ModConfig;
+import com.mattsmeets.macrokey.service.JavascriptInterpreter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.PolyglotException;
 
-import javax.script.Invocable;
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,7 +21,7 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
      */
     private final String command;
 
-    private Invocable inv;
+    private JavascriptInterpreter inv;
 
     public JSCommand(String command) {
         super("javascript");
@@ -33,11 +34,11 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
         if (inv == null) {
             setup();
         }
-
-
+//
+//
         try {
-            inv.invokeFunction(ModConfig.javascriptMain);
-        } catch (ScriptException | NoSuchMethodException e) {
+            inv.eval("main()");
+        } catch (ScriptException | PolyglotException | FileNotFoundException e) {
             e.printStackTrace();
 
             sendErrorToPlayer(player, e);
@@ -46,20 +47,20 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
 
     @Override
     public void setup() {
-        try {
-            inv = MacroKey.instance.javascriptInterpreter.eval(new File(command));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            MacroKey.instance.logger.err("Could not find/read file on system " + e.getMessage());
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            MacroKey.instance.logger.err("An error occurred while interpreting the script " + e.getMessage());
-
-            EntityPlayer player = Minecraft.getMinecraft().player;
-            if (player != null) {
-                sendErrorToPlayer(player, e);
-            }
-        }
+//        try {
+            inv = new JavascriptInterpreter(new File(command));
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            MacroKey.instance.logger.err("Could not find/read file on system " + e.getMessage());
+//        } catch (ScriptException e) {
+//            e.printStackTrace();
+//            MacroKey.instance.logger.err("An error occurred while interpreting the script " + e.getMessage());
+//
+//            EntityPlayer player = Minecraft.getMinecraft().player;
+//            if (player != null) {
+//                sendErrorToPlayer(player, e);
+//            }
+//        }
     }
 
     private void sendErrorToPlayer(EntityPlayer player, Exception e) {

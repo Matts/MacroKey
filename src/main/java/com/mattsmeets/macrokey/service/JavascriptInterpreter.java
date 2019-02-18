@@ -1,34 +1,56 @@
 package com.mattsmeets.macrokey.service;
 
 import com.mattsmeets.macrokey.api.*;
-import jdk.nashorn.api.scripting.ClassFilter;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 public class JavascriptInterpreter {
 
     private Context engine;
 
-    public JavascriptInterpreter(ClassFilter allowedClasses) {
+    public JavascriptInterpreter(File file) {
         engine = Context.create("js");
-        Value bindings = engine.getBindings("js");
 
-        bindings.putMember("Player", new PlayerAPI());
-        bindings.putMember("Chat", new ChatAPI());
-        bindings.putMember("Text", new TextAPI());
-        bindings.putMember("State", new StateAPI());
-        bindings.putMember("MacroKey", new MacroAPI());
-        bindings.putMember("Keyboard", new KeyboardAPI());
+        Value value = engine.getBindings("js");
+        value.putMember("Player", new PlayerAPI());
+        value.putMember("Chat", new ChatAPI());
+        value.putMember("Text", new TextAPI());
+        value.putMember("State", new StateAPI());
+        value.putMember("MacroKey", new MacroAPI());
+        value.putMember("Keyboard", new KeyboardAPI());
+
+        BufferedReader reader = null;
+        StringBuilder builder = new StringBuilder("");
+        try {
+            reader = new BufferedReader(new FileReader(file));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            engine.eval("js", builder.toString());
+        } catch (PolyglotException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public Context eval(File file) throws FileNotFoundException, ScriptException {
-        engine.eval("js", new FileReader(file).toString());
-
-        return engine;
+    public Value eval(String code) throws FileNotFoundException, ScriptException {
+        return engine.eval("js", code);
     }
 }

@@ -50,8 +50,6 @@ public class MacroKey {
 
     public JavascriptHelper javascriptFileHelper;
 
-    public JavascriptInterpreter javascriptInterpreter;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
@@ -64,10 +62,9 @@ public class MacroKey {
         this.logger.debug("PreInitialization");
 
         // bypass to allow setTimeout to work in javascript.
-        PlatformImpl.startup(() -> {});
+//        PlatformImpl.startup(() -> {});
 
         this.javascriptFileHelper = new JavascriptHelper(event.getModConfigurationDirectory().getAbsolutePath());
-        this.javascriptInterpreter = new JavascriptInterpreter(this.javascriptFileHelper.getAllowedClasses());
 
         // set-up the bindings.json service & files
         this.bindingsJSONConfig = new JsonConfig(ModConfig.bindingFile);

@@ -78,7 +78,6 @@ public class GuiModifyMacro extends GuiScreen {
         this.buttonList.add(this.openEditor = new GuiButton(5, this.width / 2, 163, 75, 20, disabledText));
 
         this.openEditor.enabled = this.currentType == CommandFactory.CommandType.JAVASCRIPT;
-        this.repeatCommand.enabled = this.currentType != CommandFactory.CommandType.JAVASCRIPT;
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
