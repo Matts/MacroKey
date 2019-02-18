@@ -63,6 +63,8 @@ dependencies {
 //    provided 'org.graalvm.truffle:truffle-dsl-processor:1.0.0-rc8'
     compile group: 'org.graalvm', name: 'graal-sdk', version: '0.33'
     compile group: 'com.oracle.truffle', name: 'truffle-api', version: '0.33'
+
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 //    compile 'org.ow2.asm:asm-debug-all:5.2:'
 }
 
@@ -119,4 +121,10 @@ task signJar(dependsOn: ['jar']){
         }
     }
 }
+task fatJar(type: Jar) {
+    classifier = 'all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+build.dependsOn fatJar
 build.dependsOn signJar
