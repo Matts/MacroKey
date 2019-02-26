@@ -12,7 +12,7 @@ public class JavascriptInterpreter {
 
     private Context engine;
 
-    public JavascriptInterpreter(File file) {
+    public JavascriptInterpreter(File file) throws IOException {
         engine = Context.create("js");
 
         Value value = engine.getBindings("js");
@@ -32,13 +32,10 @@ public class JavascriptInterpreter {
             while ((line = reader.readLine()) != null) {
                 builder.append(line);
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             try {
                 reader.close();
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
         }

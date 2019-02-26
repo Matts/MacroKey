@@ -13,6 +13,7 @@ import org.graalvm.polyglot.PolyglotException;
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class JSCommand extends AbstractCommand implements CommandInterface {
 
@@ -20,6 +21,7 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
      * File to parse
      */
     private final String command;
+
 
     private JavascriptInterpreter inv;
 
@@ -47,11 +49,12 @@ public class JSCommand extends AbstractCommand implements CommandInterface {
 
     @Override
     public void setup() {
-//        try {
+        try {
             inv = new JavascriptInterpreter(new File(command));
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            MacroKey.instance.logger.err("Could not find/read file on system " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            MacroKey.instance.logger.err("Could not find/read file on system " + e.getMessage());
+        }
 //        } catch (ScriptException e) {
 //            e.printStackTrace();
 //            MacroKey.instance.logger.err("An error occurred while interpreting the script " + e.getMessage());

@@ -10,13 +10,16 @@ import com.mattsmeets.macrokey.model.serializer.CommandSerializer;
 import java.io.File;
 import java.io.IOException;
 
+import static com.mattsmeets.macrokey.MacroKey.instance;
+
 public class JsonConfig {
 
     private File file;
     private JSONService jsonService;
 
     public JsonConfig(String fileName) throws IOException {
-        this.file = MacroKey.instance.javascriptFileHelper.initializeFile("/" + fileName);
+        this.file = instance.javascriptFileHelper.getFile("/" + fileName);
+        instance.javascriptFileHelper.makeFile(this.file);
 
         this.jsonService = new JSONService();
     }

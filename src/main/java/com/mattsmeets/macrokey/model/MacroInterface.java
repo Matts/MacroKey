@@ -73,4 +73,19 @@ public interface MacroInterface {
      */
     public Macro setRepeat(boolean repeat);
 
+    /**
+     * Get the 'name' / 'description' of a macro
+     *
+     * @return name
+     */
+    public String getName();
+
+    /**
+     * Set the 'name' / 'description' on a macro.
+     *
+     * @param name description
+     * @return the current Macro instance
+     */
+    public Macro setName(String name);
+
 }

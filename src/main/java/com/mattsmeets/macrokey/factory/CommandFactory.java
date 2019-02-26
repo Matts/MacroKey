@@ -38,11 +38,11 @@ public class CommandFactory {
         supportedTypes.put(CommandType.JAVASCRIPT.id, JSCommand.class);
     }
 
-    public static CommandInterface create(String type, String arg) {
+    public static CommandInterface create(String type, String command) {
         try {
             Constructor cons = supportedTypes.get(type).getDeclaredConstructor(String.class);
             cons.setAccessible(true);
-            return (CommandInterface) cons.newInstance(arg);
+            return (CommandInterface) cons.newInstance(command);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }

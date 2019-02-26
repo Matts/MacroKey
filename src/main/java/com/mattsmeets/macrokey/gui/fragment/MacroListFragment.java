@@ -99,8 +99,8 @@ public class MacroListFragment extends GuiListExtended {
             }
 
             boolean macroKeyCodeModifyFlag = this.macro.equals(guiMacroManagement.macroModify);
-
-            mc.fontRenderer.drawString(this.macro.getCommand().toString(), x + 90 - mc.fontRenderer.getStringWidth(macro.getCommand().toString()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
+            String displayString = this.macro.getName().equals("") ? this.macro.getCommand().toString() : this.macro.getName();
+            mc.fontRenderer.drawString(displayString, x + 90 - mc.fontRenderer.getStringWidth(displayString), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
 
             if (currentLayer == null) {
                 this.btnChangeKeyBinding.x = x + 95;

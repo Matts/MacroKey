@@ -29,12 +29,17 @@ gui.modify.text.title.edit=Edit Macro
 
 gui.modify.text.command=Command
 gui.modify.text.key=Trigger
+gui.modify.text.options=Options
+gui.modify.text.name=Description
 
-gui.modify.text.repeat=Hold to repeat
-gui.modify.text.enable=Enable macro
-gui.modify.text.type=Command type
+gui.modify.text.options.type=Type: %s
+gui.modify.text.options.active=Active: %s
+gui.modify.text.options.repeat=Repeat: %s
+
+gui.modify.text.options.openInEditor=Open in Editor
 
 gui.modify.text.save=Save Macro
+
 ####
 
 ## GuiLayerManagement ##
@@ -56,6 +61,10 @@ command.layer.information=Layer %s - %s macro's active.
 enabled=Enabled
 disabled=Disabled
 edit=Edit
+simple=Simple
+advanced=JavaScript
+yes=Yes
+no=No
 ####
 
 ## Vanilla Controls ##

@@ -1,19 +1,15 @@
 package com.mattsmeets.macrokey.service;
 
-import jdk.nashorn.api.scripting.ClassFilter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class JavascriptHelper {
 
     public final File modConfigDir;
-
-    private final String[] allowedClasses = {"javafx.application.Platform","java.util.Timer"};
 
     public JavascriptHelper(String parentDir) {
         this.modConfigDir = new File(parentDir + "/macrokey/");
@@ -23,24 +19,28 @@ public class JavascriptHelper {
         this.modConfigDir.mkdirs();
     }
 
-    public File initializeFile(String filename) throws IOException {
+    public File getFile(String filename) throws IOException {
         initializeFolder();
 
-        File file = new File(modConfigDir + filename);
-        if (!file.exists()) {
+        return new File(modConfigDir + filename);
+    }
+
+    public boolean makeFile(File file) throws IOException {
+        if(!file.exists()) {
             file.createNewFile();
 
+            return true;
+        }
+
+        return false;
+    }
+
+    public File getMacroFile(UUID uuid) throws IOException {
+        File file = this.getFile("/javascript-" + uuid + ".macrokey.js");
+        if(makeFile(file)) {
             FileUtils.writeStringToFile(file, "const main = () => { /** TODO: Implement Macro **/ }", Charset.defaultCharset());
         }
 
         return file;
-    }
-
-    public File getMacroFile(UUID uuid) throws IOException {
-        return this.initializeFile("/javascript-" + uuid + ".macrokey.js");
-    }
-
-    public ClassFilter getAllowedClasses() {
-        return (ClassFilter) s -> Arrays.stream(allowedClasses).filter(i -> i.equalsIgnoreCase(s)).count() >= 1;
     }
 }

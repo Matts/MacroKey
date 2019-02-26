@@ -18,6 +18,11 @@ public class Macro implements MacroInterface {
     private int keyCode;
 
     /**
+     * Name of macro
+     */
+    private String name;
+
+    /**
      * Hold key to repeat command
      */
     private boolean repeat;
@@ -60,6 +65,7 @@ public class Macro implements MacroInterface {
         this.umid = UUID.randomUUID();
         this.active = true;
         this.repeat = false;
+        this.name = "";
     }
 
     public UUID getUMID() {
@@ -106,4 +112,13 @@ public class Macro implements MacroInterface {
         return this;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Macro setName(String name) {
+        this.name = name;
+
+        return this;
+    }
 }
