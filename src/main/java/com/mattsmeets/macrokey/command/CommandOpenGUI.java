@@ -3,6 +3,7 @@ package com.mattsmeets.macrokey.command;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -20,12 +21,12 @@ public class CommandOpenGUI extends StrippedCommand {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, CommandSource sender, String[] args) throws CommandException {
         MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletions(MinecraftServer server, CommandSource sender, String[] args, @Nullable BlockPos targetPos) {
         List<String> list = new ArrayList<String>();
 
         return list;

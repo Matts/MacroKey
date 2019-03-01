@@ -1,12 +1,11 @@
 package com.mattsmeets.macrokey.handler;
 
-import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

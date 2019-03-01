@@ -2,20 +2,17 @@ package com.mattsmeets.macrokey.command;
 
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.ICommandSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CommandLayer extends StrippedCommand {
@@ -23,7 +20,7 @@ public class CommandLayer extends StrippedCommand {
             layerMasterText = I18n.format("text.layer.master");
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSource sender, String[] args) throws CommandException {
         if (args.length < 1) {
             return;
         }
@@ -44,7 +41,7 @@ public class CommandLayer extends StrippedCommand {
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSource sender, String[] args, @Nullable BlockPos targetPos) {
         List<String> list = new ArrayList<String>();
         list.add("toggle");
 
@@ -52,11 +49,11 @@ public class CommandLayer extends StrippedCommand {
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getUsage(ICommandSource sender) {
         return "Usage: /macrokey layer [toggle]";
     }
 
-    private void printLayerInformation(ICommandSender sender) {
+    private void printLayerInformation(ICommandSource sender) {
         LayerInterface activeLayer = MacroKey.instance.modState.getActiveLayer();
 
         String layerDisplayName = layerMasterText;
@@ -82,7 +79,7 @@ public class CommandLayer extends StrippedCommand {
         );
     }
 
-    private void nextLayer(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    private void nextLayer(MinecraftServer server, ICommandSource sender, String[] args) throws CommandException {
         try {
             MacroKey.instance.modState.nextLayer();
 

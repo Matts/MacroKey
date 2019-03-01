@@ -25,9 +25,9 @@ public class GuiLayerManagement extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
 
         this.layerListFragment.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -51,24 +51,14 @@ public class GuiLayerManagement extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.buttonList.add(buttonDone = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.doneText));
-        this.buttonList.add(buttonAdd = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.addLayerButtonText));
+        this.buttons.add(buttonDone = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.doneText));
+        this.buttons.add(buttonAdd = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.addLayerButtonText));
 
         try {
             this.layerListFragment = new LayerListFragment(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-    }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
     }
 
     @Override

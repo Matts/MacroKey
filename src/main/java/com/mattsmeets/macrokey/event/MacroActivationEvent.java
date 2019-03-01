@@ -3,7 +3,7 @@ package com.mattsmeets.macrokey.event;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +29,7 @@ public class MacroActivationEvent extends Event {
         this.macros = macros;
         this.pressed = pressed;
 
-        this.currentPlayer = Minecraft.getMinecraft().player;
+        this.currentPlayer = Minecraft.getInstance().player;
     }
 
     public Set<MacroInterface> getMacros() {

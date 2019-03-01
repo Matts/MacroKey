@@ -1,7 +1,7 @@
 package com.mattsmeets.macrokey.event;
 
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class InGameTickEvent extends Event {
 

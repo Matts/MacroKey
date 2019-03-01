@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.mattsmeets.macrokey.MacroKey.instance;
 
-public class LayerListFragment extends GuiListExtended {
+public class LayerListFragment extends GuiListExtended<LayerListFragment.KeyEntry> {
 
     private final GuiLayerManagement guiLayerManagement;
 
@@ -36,19 +36,15 @@ public class LayerListFragment extends GuiListExtended {
         }
     }
 
-    @Override
-    public IGuiListEntry getListEntry(int index) {
-        return this.listEntries[index];
-    }
 
     @Override
-    protected int getSize() {
-        return this.listEntries.length;
+    private KeyEntry getListEntry(int index) {
+        return this.listEntries[index];
     }
 
 
     @SideOnly(Side.CLIENT)
-    public class KeyEntry implements GuiListExtended.IGuiListEntry {
+    public class KeyEntry extends IGuiListEntry {
         private final LayerInterface layer;
 
         private final String keyDesc;

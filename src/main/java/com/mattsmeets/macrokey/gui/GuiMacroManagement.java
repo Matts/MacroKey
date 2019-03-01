@@ -49,9 +49,9 @@ public class GuiMacroManagement extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
 
         if (this.updateList) {
             this.updateScreen();
@@ -59,12 +59,12 @@ public class GuiMacroManagement extends GuiScreen {
 
         this.macroListFragment.drawScreen(mouseX, mouseY, partialTicks);
 
-        this.buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-        this.buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.buttonDone.drawButtonForegroundLayer(mouseX, mouseY);
+        this.buttonAdd.drawButtonForegroundLayer(mouseX, mouseY);
 
-        this.layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.layerEditor.drawButtonForegroundLayer(mouseX, mouseY);
 
-        this.layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        this.layerSwitcher.drawButtonForegroundLayer(mouseX, mouseY);
 
         this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
     }
@@ -108,8 +108,8 @@ public class GuiMacroManagement extends GuiScreen {
 
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
 
         if (!this.updateList) {
             return;

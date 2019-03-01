@@ -41,28 +41,29 @@ public class GuiModifyLayer extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         this.drawDefaultBackground();
 
         this.drawCenteredString(this.fontRenderer, !existing ? this.defaultScreenTitleText : this.editScreenTitleText, this.width / 2, 8, 16777215);
 
-        addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        addButton.drawButtonForegroundLayer(mouseX, mouseY);
+        cancelButton.drawButtonForegroundLayer(mouseX, mouseY);
 
-        this.textFieldName.drawTextBox();
+        this.textFieldName.drawTextField(mouseX, mouseY, partialTicks);
     }
 
-    public void updateScreen() {
-        this.textFieldName.updateCursorCounter();
+    @Override
+    public void tick() {
+        this.textFieldName.tick();
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        this.buttonList.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.saveLayerButtonText));
-        this.buttonList.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.cancelText));
+        this.buttons.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.saveLayerButtonText));
+        this.buttons.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.cancelText));
 
         this.textFieldName = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.textFieldName.setFocused(true);
@@ -99,7 +100,7 @@ public class GuiModifyLayer extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (this.textFieldName.isFocused()) {
-            this.textFieldName.textboxKeyTyped(typedChar, keyCode);
+            this.textFieldName.charTyped(typedChar, keyCode);
 
             return;
         }

@@ -4,6 +4,7 @@ import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.StringCommand;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -58,12 +59,12 @@ public class GuiModifyMacro extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(this.addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, saveButtonText));
-        this.buttonList.add(this.cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, cancelText));
+        this.buttons.add(this.addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, saveButtonText));
+        this.buttons.add(this.cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, cancelText));
 
-        this.buttonList.add(this.btnKeyBinding = new GuiButton(3, this.width / 2 - 75, 100, 150, 20, GameSettings.getKeyDisplayString(0)));
-        this.buttonList.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
-        this.buttonList.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
+        this.buttons.add(this.btnKeyBinding = new GuiButton(3, this.width / 2 - 75, 100, 150, 20, GameSettings.getKeyDisplayString(0)));
+        this.buttons.add(this.repeatCommand = new GuiButton(4, this.width / 2 - 75, 140, 75, 20, disabledText));
+        this.buttons.add(this.commandActive = new GuiButton(5, this.width / 2 - 75, 163, 75, 20, disabledText));
 
         this.command = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
         this.command.setFocused(true);
@@ -101,16 +102,16 @@ public class GuiModifyMacro extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         this.drawDefaultBackground();
 
         // draw title
         this.drawCenteredString(this.fontRenderer, existing ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 16777215);
 
         // render add and cancel buttons
-        this.addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        this.cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.addButton.drawButtonForegroundLayer(mouseX, mouseY);
+        this.cancelButton.drawButtonForegroundLayer(mouseX, mouseY);
 
         // draw keycode as keyboard key
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
@@ -118,10 +119,10 @@ public class GuiModifyMacro extends GuiScreen {
         this.repeatCommand.displayString = this.result.willRepeat() ? enabledText : disabledText;
         this.commandActive.displayString = this.result.isActive() ? enabledText : disabledText;
 
-        this.repeatCommand.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        this.commandActive.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
+        this.repeatCommand.drawButtonForegroundLayer(mouseX, mouseY);
+        this.commandActive.drawButtonForegroundLayer(mouseX, mouseY);
 
-        this.command.drawTextBox();
+        this.command.drawTextField(mouseX, mouseY, partialTicks);
 
         this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, -6250336);
         this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, -6250336);
@@ -129,12 +130,11 @@ public class GuiModifyMacro extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, keyBoxTitleText, this.width / 2, 90, -6250336);
 
         this.btnKeyBinding.displayString = GameSettings.getKeyDisplayString(this.result.getKeyCode());
-
         boolean macroKeyCodeModifyFlag = false;
 
         if (this.result.getKeyCode() != 0) {
             for (KeyBinding keybinding : mc.gameSettings.keyBindings) {
-                if (keybinding.getKeyCode() == this.result.getKeyCode()) {
+                if (keybinding.getKey().getKeyCode() == this.result.getKeyCode()) {
                     macroKeyCodeModifyFlag = true;
                     break;
                 }
@@ -147,11 +147,11 @@ public class GuiModifyMacro extends GuiScreen {
             this.btnKeyBinding.displayString = TextFormatting.GOLD + this.btnKeyBinding.displayString;
         }
 
-        this.btnKeyBinding.drawButton(mc, mouseX, mouseY, 0.0f);
+        this.btnKeyBinding.drawButtonForegroundLayer(mouseX, mouseY);
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    public boolean charTyped(char typedChar, int keyCode) {
         if (this.changingKey) {
             if (keyCode == Keyboard.KEY_ESCAPE) {
                 this.result.setKeyCode(0);
@@ -163,17 +163,19 @@ public class GuiModifyMacro extends GuiScreen {
 
             this.changingKey = false;
 
-            return;
+            return true;
         }
 
         if (this.command.isFocused()) {
             if (keyCode == Keyboard.KEY_ESCAPE)
                 this.command.setFocused(false);
 
-            this.command.textboxKeyTyped(typedChar, keyCode);
+            this.command.charTyped(typedChar, keyCode);
         } else {
-            super.keyTyped(typedChar, keyCode);
+            return super.charTyped(typedChar, keyCode);
         }
+
+        return true;
     }
 
     @Override
@@ -199,6 +201,6 @@ public class GuiModifyMacro extends GuiScreen {
     }
 
     public void updateScreen() {
-        this.command.updateCursorCounter();
+        this.command.tick();
     }
 }

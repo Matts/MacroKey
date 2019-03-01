@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -69,7 +70,7 @@ public class GuiEventHandler {
 
     @SubscribeEvent(receiveCanceled = true)
     @SideOnly(Side.CLIENT)
-    public void mouseInputEvent(GuiScreenEvent.MouseInputEvent.Post event) {
+    public void mouseInputEvent(GuiScreenEvent.MouseInputEvent event) {
         if (!(event.getGui() instanceof GuiIngameMenu) ||
                 ModConfig.buttonLayerSwitcherId == -1 ||
                 switchButton == null ||

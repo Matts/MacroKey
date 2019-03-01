@@ -1,19 +1,20 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://files.minecraftforge.net/maven' }
+		jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
 // setup plugins to use
 plugins {
     id 'de.fuerstenau.buildconfig' version '1.1.8'
-    id 'idea'
-    id 'net.minecraftforge.gradle.forge' version '2.0.2'
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
 
 // setup external properties file
 ext.configFile = file "build.properties"
@@ -47,16 +48,72 @@ compileJava {
 }
 
 minecraft {
-	version = "${config.mc_version}-${config.forge_version}"
-    runDir = "run"
+    // The mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   Snapshot are built nightly.
+    // stable_#            Stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'snapshot', version: '20180921-1.13'
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    
+    // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
 
-    mappings = 'stable_39'
-    makeObfSourceJar = false
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies {
 	testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-core:2.7.22'
+	minecraft 'net.minecraftforge:forge:1.13.2-25.0.64'
+}
+
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "examplemod",
+            "Specification-Vendor": "examplemodsareus",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
 buildConfig {
@@ -79,14 +136,14 @@ processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "mod_version", project.version
     inputs.property "mod_name", config.mod_name
-    inputs.property "mc_version", project.minecraft.version
+    inputs.property "mc_version", project.version
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
         // replace variable
-        expand 'mod_name':config.mod_name, 'mod_version':project.version, 'mc_version':project.minecraft.version
+        expand 'mod_name':config.mod_name, 'mod_version':project.version, 'mc_version':project.version
     }
 
     // copy everything else except the mcmod.info

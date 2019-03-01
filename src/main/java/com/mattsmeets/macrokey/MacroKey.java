@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class MacroKey {
     public KeyBinding[] forgeKeybindings;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) throws IOException {
+    public void preInit(FMLClientSetupEvent event) throws IOException {
         this.logger = new LogHelper(event.getModLog());
         // MacroKey is a client side only mod, so we never want a server to run it
         if (event.getSide() == Side.SERVER) {

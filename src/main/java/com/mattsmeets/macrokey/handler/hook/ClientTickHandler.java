@@ -5,7 +5,7 @@ import com.mattsmeets.macrokey.event.InGameTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ public class ClientTickHandler {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayerSP player = Minecraft.getInstance().player;
 
         // check if we are in-game
         if (player == null) {

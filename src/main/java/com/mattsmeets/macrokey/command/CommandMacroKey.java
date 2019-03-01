@@ -4,6 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.ICommandSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -31,12 +32,12 @@ public class CommandMacroKey extends CommandBase implements ICommand {
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getUsage(ICommandSource sender) {
         return "Usage: /macrokey [open / layer]";
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSource sender, String[] args) throws CommandException {
         if (args.length == 0) {
             this.subCommands.get("open").execute(server, sender, args);
 
@@ -53,12 +54,12 @@ public class CommandMacroKey extends CommandBase implements ICommand {
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+    public boolean checkPermission(MinecraftServer server, ICommandSource sender) {
         return true;
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSource sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length >= 1 && this.subCommands.containsKey(args[0].toLowerCase())) {
             return this.subCommands.get(args[0].toLowerCase()).getTabCompletions(server, sender, args, targetPos);
         }

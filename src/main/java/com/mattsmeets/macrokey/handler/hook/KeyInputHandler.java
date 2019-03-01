@@ -1,13 +1,13 @@
 package com.mattsmeets.macrokey.handler.hook;
 
-import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import net.java.games.input.Keyboard;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
