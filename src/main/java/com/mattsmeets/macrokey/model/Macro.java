@@ -1,5 +1,8 @@
 package com.mattsmeets.macrokey.model;
 
+import com.mattsmeets.macrokey.model.command.CommandInterface;
+import com.mattsmeets.macrokey.model.command.StringCommand;
+
 import java.util.UUID;
 
 /**
@@ -13,7 +16,7 @@ public class Macro implements MacroInterface {
     private UUID umid;
 
     /**
-     * Keycode of the button that is bound
+     * Key code of the button that is bound
      */
     private int keyCode;
 
@@ -40,16 +43,8 @@ public class Macro implements MacroInterface {
         this.repeat = repeat;
     }
 
-    public Macro(int keyCode, CommandInterface command, boolean active, boolean repeat) {
-        this(UUID.randomUUID(), keyCode, command, active, repeat);
-    }
-
-    public Macro(int keyCode, CommandInterface command, boolean active) {
+    private Macro(int keyCode, CommandInterface command, boolean active) {
         this(UUID.randomUUID(), keyCode, command, active, false);
-    }
-
-    public Macro(int keyCode, CommandInterface command) {
-        this(keyCode, command, true);
     }
 
     public Macro(int keyCode, String command, boolean active) {

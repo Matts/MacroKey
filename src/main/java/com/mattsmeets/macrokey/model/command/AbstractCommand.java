@@ -1,10 +1,10 @@
-package com.mattsmeets.macrokey.model;
+package com.mattsmeets.macrokey.model.command;
 
 public abstract class AbstractCommand implements CommandInterface {
 
     private final String type;
 
-    AbstractCommand(String type) {
+    AbstractCommand(final String type) {
         this.type = type;
     }
 

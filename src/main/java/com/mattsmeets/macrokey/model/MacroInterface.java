@@ -1,5 +1,7 @@
 package com.mattsmeets.macrokey.model;
 
+import com.mattsmeets.macrokey.model.command.CommandInterface;
+
 import java.util.UUID;
 
 public interface MacroInterface {
@@ -11,14 +13,14 @@ public interface MacroInterface {
      *
      * @return UUID unique macro identifier
      */
-    public UUID getUMID();
+    UUID getUMID();
 
     /**
      * Get the keyCode the Macro should be bound to
      *
      * @return int keyCode
      */
-    public int getKeyCode();
+    int getKeyCode();
 
     /**
      * Set the keyCode the Macro should be bound to
@@ -26,14 +28,14 @@ public interface MacroInterface {
      * @param keyCode the keyCode
      * @return the current Macro instance
      */
-    public Macro setKeyCode(int keyCode);
+    Macro setKeyCode(int keyCode);
 
     /**
      * Get the actual command that will can run
      *
      * @return String command
      */
-    public CommandInterface getCommand();
+    CommandInterface getCommand();
 
     /**
      * Set the actual command that will can run
@@ -41,14 +43,14 @@ public interface MacroInterface {
      * @param command the command
      * @return the current Macro instance
      */
-    public Macro setCommand(CommandInterface command);
+    Macro setCommand(CommandInterface command);
 
     /**
      * Is the Macro active?
      *
      * @return boolean isActive
      */
-    public boolean isActive();
+    boolean isActive();
 
     /**
      * Set the state of the Macro
@@ -56,14 +58,14 @@ public interface MacroInterface {
      * @param active isActive
      * @return the current Macro instance
      */
-    public Macro setActive(boolean active);
+    Macro setActive(boolean active);
 
     /**
      * When holding button, should we repeat?
      *
      * @return repeat
      */
-    public boolean willRepeat();
+    boolean willRepeat();
 
     /**
      * Set the 'repeat' flag on a macro.
@@ -71,6 +73,5 @@ public interface MacroInterface {
      * @param repeat willRepeat
      * @return the current Macro instance
      */
-    public Macro setRepeat(boolean repeat);
-
+    Macro setRepeat(boolean repeat);
 }

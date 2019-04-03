@@ -1,4 +1,4 @@
-package com.mattsmeets.macrokey.model;
+package com.mattsmeets.macrokey.model.command;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 
@@ -13,14 +13,15 @@ public interface CommandInterface {
 
     /**
      * Run Command
+     *
      * @param player the player
      */
-    void execute(EntityPlayerSP player);
+    void execute(final EntityPlayerSP player);
 
     /**
      * Type identifier used for (de)serialization
+     *
      * @return String
      */
     String getCommandType();
-
 }

@@ -1,7 +1,12 @@
 package com.mattsmeets.macrokey.repository;
 
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.model.*;
+import com.mattsmeets.macrokey.model.BindingsFile;
+import com.mattsmeets.macrokey.model.Layer;
+import com.mattsmeets.macrokey.model.LayerInterface;
+import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
+import com.mattsmeets.macrokey.model.command.StringCommand;
 import com.mattsmeets.macrokey.service.JsonConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -525,19 +530,13 @@ public class BindingsRepositoryTest {
         assertNotEquals(expectedResult, result);
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void testFindAllMacrosWithSyncTrue() throws IOException {
-        Macro macro = mock(Macro.class);
-
-        Set<MacroInterface> expectedResult = new HashSet<>();
-        expectedResult.add(macro);
-
         when(jsonConfig.getJSONObject()).thenThrow(new IOException());
 
-        Set<MacroInterface> result = this.bindingsRepository.findAllMacros(true);
+        final Set<MacroInterface> result = this.bindingsRepository.findAllMacros(true);
 
-        // will never come here, if so it should go red
-        assertEquals(expectedResult, result);
+        assertEquals(0, result.size());
     }
 
     @Test

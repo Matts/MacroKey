@@ -1,17 +1,20 @@
 package com.mattsmeets.macrokey.model.serializer;
 
-import com.google.gson.*;
-import com.mattsmeets.macrokey.model.AbstractCommand;
-import com.mattsmeets.macrokey.model.CommandInterface;
-import com.mattsmeets.macrokey.model.StringCommand;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.mattsmeets.macrokey.model.command.StringCommand;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandSerializer<CommandInterface> implements JsonSerializer<CommandInterface>, JsonDeserializer<CommandInterface> {
+public class CommandSerializer<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
-    private Map<String, Class> supportedTypes;
+    private final Map<String, Class> supportedTypes;
 
     public CommandSerializer() {
         this.supportedTypes = new HashMap<>();
@@ -19,10 +22,9 @@ public class CommandSerializer<CommandInterface> implements JsonSerializer<Comma
     }
 
     @Override
-    public CommandInterface deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonElement type = json.getAsJsonObject().get("type");
-
-        if(type == null || !this.supportedTypes.containsKey(type.getAsString())) {
+    public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        final JsonElement type = json.getAsJsonObject().get("type");
+        if (type == null || !this.supportedTypes.containsKey(type.getAsString())) {
             throw new JsonParseException("Could not parse command: " + json.toString());
         }
 
@@ -30,7 +32,7 @@ public class CommandSerializer<CommandInterface> implements JsonSerializer<Comma
     }
 
     @Override
-    public JsonElement serialize(CommandInterface src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
         return context.serialize(src.toString());
     }
 }

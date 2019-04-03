@@ -4,12 +4,9 @@ import com.mattsmeets.macrokey.model.MacroInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Set;
 
-@SideOnly(Side.CLIENT)
 public class MacroActivationEvent extends Event {
 
     /**
@@ -25,7 +22,7 @@ public class MacroActivationEvent extends Event {
      */
     private MacroState pressed;
 
-    public MacroActivationEvent(Set<MacroInterface> macros, MacroState pressed) {
+    MacroActivationEvent(Set<MacroInterface> macros, MacroState pressed) {
         this.macros = macros;
         this.pressed = pressed;
 
@@ -47,7 +44,7 @@ public class MacroActivationEvent extends Event {
     /**
      * States the key pressed event can be in
      */
-    public static enum MacroState {
+    public enum MacroState {
         KEY_UP(false),
         KEY_DOWN(true);
 

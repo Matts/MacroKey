@@ -74,9 +74,7 @@ public class Layer implements LayerInterface {
 
     @Override
     public boolean equals(Object obj) {
-        return
-                obj instanceof LayerInterface &&
-                        this.ulid.equals(((LayerInterface) obj).getULID());
+        return obj instanceof LayerInterface
+                && this.ulid.equals(((LayerInterface) obj).getULID());
     }
-
 }

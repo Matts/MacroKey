@@ -7,20 +7,16 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class ClientTickHandler {
-
     /**
      * Amount of ticks since last limited tick
      */
     private int delta;
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        EntityPlayerSP player = Minecraft.getInstance().player;
+    public void onTick(final TickEvent.ClientTickEvent event) {
+        final EntityPlayerSP player = Minecraft.getInstance().player;
 
         // check if we are in-game
         if (player == null) {
@@ -37,15 +33,12 @@ public class ClientTickHandler {
         // this will by default be 20 ticks
         if (delta < ModConfig.repeatDelay) {
             delta++;
-            return;
+        } else {
+            delta = 0;
+
+            // once the delta time has reached the delay,
+            // post a tick event for the repeating commands
+            MinecraftForge.EVENT_BUS.post(new InGameTickEvent.LimitedInGameTickEvent(player));
         }
-
-        // once the delta time has reached the delay,
-        // post a tick event for the repeating commands
-        MinecraftForge.EVENT_BUS.post(new InGameTickEvent.LimitedInGameTickEvent(player));
-
-        // set delta back to zero
-        delta = 0;
     }
-
 }

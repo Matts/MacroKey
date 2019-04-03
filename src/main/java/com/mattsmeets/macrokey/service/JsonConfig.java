@@ -3,32 +3,41 @@ package com.mattsmeets.macrokey.service;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.model.CommandInterface;
+import com.mattsmeets.macrokey.model.command.CommandInterface;
 import com.mattsmeets.macrokey.model.serializer.CommandSerializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
 public class JsonConfig {
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private File file;
-    private JSONService jsonService;
+    private JsonService jsonService;
 
     public JsonConfig(String parentFolder, String fileName) {
         this.file = new File(parentFolder + "/macrokey/" + fileName);
 
-        this.jsonService = new JSONService();
+        this.jsonService = new JsonService();
     }
 
     public void initializeFile() throws IOException {
-        File parentFolder = new File(this.file.getParent());
+        final File parentFolder = new File(this.file.getParent());
 
         if (!parentFolder.exists()) {
-            parentFolder.mkdirs();
+            final boolean result = parentFolder.mkdirs();
+            if (!result) {
+                LOGGER.error("Create folder failed for : " + file.getAbsolutePath());
+            }
         }
 
         if (!this.file.exists()) {
-            this.file.createNewFile();
+            final boolean result = this.file.createNewFile();
+            if (!result) {
+                LOGGER.error("Create folder failed for : " + file.getAbsolutePath());
+            }
         }
     }
 
@@ -44,10 +53,6 @@ public class JsonConfig {
         }
 
         return null;
-    }
-
-    public <T> T bindJsonToObject(Class<T> classToBind) throws IOException {
-        return bindJsonElementToObject(classToBind, getJSONElement());
     }
 
     public <T> T bindJsonElementToObject(Class<T> classToBind, JsonElement element) {

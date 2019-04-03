@@ -1,85 +1,69 @@
 package com.mattsmeets.macrokey;
 
+import com.mattsmeets.macrokey.command.CommandMacroKey;
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
-import com.mattsmeets.macrokey.proxy.CommonProxy;
+import com.mattsmeets.macrokey.handler.ChangeHandler;
+import com.mattsmeets.macrokey.handler.GameTickHandler;
+import com.mattsmeets.macrokey.handler.hook.ClientTickHandler;
+import com.mattsmeets.macrokey.handler.hook.GuiEventHandler;
+import com.mattsmeets.macrokey.handler.hook.KeyInputHandler;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
-import com.mattsmeets.macrokey.service.LogHelper;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@Mod(
-        modid = ModReference.MOD_ID,
-        name = BuildConfig.NAME,
-        version = BuildConfig.VERSION,
-        clientSideOnly = true,
-        useMetadata = true,
-        acceptedMinecraftVersions = BuildConfig.acceptedVersions,
-        updateJSON = BuildConfig.updateJSON,
-        certificateFingerprint = BuildConfig.fingerprint
-)
+@Mod(ModReference.MOD_ID)
 public class MacroKey {
+    private static final Logger LOGGER = LogManager.getLogger(ModReference.MOD_ID);
 
-    @Mod.Instance
-    public static MacroKey instance;
+    public static BindingsRepository bindingsRepository;
+    public static ModState modState;
 
-    @SidedProxy(clientSide = ModReference.CLIENT_PROXY)
-    public static CommonProxy proxy;
+    public MacroKey() {
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+    }
 
-    public LogHelper logger;
+    private void onServerStarting(final FMLServerStartingEvent event) {
+        new CommandMacroKey(event.getCommandDispatcher());
+    }
 
-    public JsonConfig bindingsJSONConfig;
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class RegistryEvents {
+        @SubscribeEvent
+        public static void clientSetup(final FMLClientSetupEvent event) throws IOException {
+            LOGGER.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
+            LOGGER.debug("PreInitialization");
 
-    public BindingsRepository bindingsRepository;
+            // set-up the bindings.json service & files
+            final JsonConfig bindingsJSONConfig = new JsonConfig(event.getMinecraftSupplier().get().gameDir.getAbsolutePath(), ModConfig.bindingFile);
+            bindingsJSONConfig.initializeFile();
 
-    public ModState modState;
+            // BindingsRepository has a dependency on the bindings.json file being created
+            bindingsRepository = new BindingsRepository(bindingsJSONConfig);
+            // Initialize the mod's state
+            modState = new ModState(bindingsRepository, bindingsRepository.findActiveLayer(true));
 
-    public KeyBinding[] forgeKeybindings;
+            LOGGER.info("Init macro keys");
 
-    @Mod.EventHandler
-    public void preInit(FMLClientSetupEvent event) throws IOException {
-        this.logger = new LogHelper(event.getModLog());
-        // MacroKey is a client side only mod, so we never want a server to run it
-        if (event.getSide() == Side.SERVER) {
-            this.logger.warn("Whoops! It seems you are trying to run MacroKey on a server... No worries, we will just disable.");
+            MinecraftForge.EVENT_BUS.register(new GameTickHandler(null, null));
+            MinecraftForge.EVENT_BUS.register(new ChangeHandler.LayerChangeHandler(bindingsRepository));
+            MinecraftForge.EVENT_BUS.register(new ChangeHandler.MacroChangeHandler(bindingsRepository));
+            MinecraftForge.EVENT_BUS.register(new KeyInputHandler(bindingsRepository, modState));
+            MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+            MinecraftForge.EVENT_BUS.register(new GuiEventHandler(modState));
         }
 
-        this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
-        this.logger.debug("PreInitialization");
-
-        // set-up the bindings.json service & files
-        this.bindingsJSONConfig = new JsonConfig(event.getModConfigurationDirectory().getAbsolutePath(), ModConfig.bindingFile);
-        this.bindingsJSONConfig.initializeFile();
-
-        // BindingsRepository has a dependency on the bindings.json file being created
-        this.bindingsRepository = new BindingsRepository(this.bindingsJSONConfig);
-        // Initialize the mod's state
-        this.modState = new ModState(this.bindingsRepository.findActiveLayer(true));
+        private RegistryEvents() {
+            // Hide the public constructor
+        }
     }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) throws IOException {
-        this.logger.info("Getting ready to take over the world!");
-        this.logger.debug("PreInitialization");
-
-        proxy.init();
-    }
-
-    @Mod.EventHandler
-    public void invalidFingerprint(FMLFingerprintViolationEvent event) {
-        this.logger = new LogHelper(ModReference.MOD_ID);
-
-        this.logger.warn("Invalid fingerprint detected! The version of the mod is most likely modified or an unofficial release.");
-        this.logger.warn("Please download the latest version from http://curse.com/project/243479");
-    }
-
 }

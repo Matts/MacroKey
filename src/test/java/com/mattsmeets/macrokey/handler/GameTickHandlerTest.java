@@ -3,7 +3,7 @@ package com.mattsmeets.macrokey.handler;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
-import com.mattsmeets.macrokey.model.CommandInterface;
+import com.mattsmeets.macrokey.model.command.CommandInterface;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;

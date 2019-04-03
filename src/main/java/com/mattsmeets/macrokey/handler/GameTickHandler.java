@@ -6,13 +6,10 @@ import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@SideOnly(Side.CLIENT)
 public class GameTickHandler {
 
     /**
@@ -25,7 +22,7 @@ public class GameTickHandler {
      */
     private Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler(HashSet macrosToRun, HashSet executorsToRun) {
+    public GameTickHandler(Set macrosToRun, Set executorsToRun) {
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
     }
