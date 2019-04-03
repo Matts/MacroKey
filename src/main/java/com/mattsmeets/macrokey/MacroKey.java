@@ -10,14 +10,19 @@ import com.mattsmeets.macrokey.handler.hook.GuiEventHandler;
 import com.mattsmeets.macrokey.handler.hook.KeyInputHandler;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 
@@ -54,12 +59,23 @@ public class MacroKey {
 
             LOGGER.info("Init macro keys");
 
-            MinecraftForge.EVENT_BUS.register(new GameTickHandler(null, null));
+            MinecraftForge.EVENT_BUS.register(new GameTickHandler(null, null, registerKeyBindings()));
             MinecraftForge.EVENT_BUS.register(new ChangeHandler.LayerChangeHandler(bindingsRepository));
             MinecraftForge.EVENT_BUS.register(new ChangeHandler.MacroChangeHandler(bindingsRepository));
             MinecraftForge.EVENT_BUS.register(new KeyInputHandler(bindingsRepository, modState));
             MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
             MinecraftForge.EVENT_BUS.register(new GuiEventHandler(modState));
+        }
+
+        private static KeyBinding[] registerKeyBindings() {
+            final KeyBinding managementKey = new KeyBinding("key.macrokey.management.desc", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_K), "key.macrokey.category");
+            final KeyBinding[] keyBindingList = new KeyBinding[]{managementKey};
+
+            for (final KeyBinding keyBinding : keyBindingList) {
+                ClientRegistry.registerKeyBinding(keyBinding);
+            }
+
+            return keyBindingList;
         }
 
         private RegistryEvents() {

@@ -6,12 +6,8 @@ import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,21 +25,10 @@ public class GameTickHandler {
      */
     private Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler(Set macrosToRun, Set executorsToRun) {
-        this.keyBindingList = registerKeyBindings();
+    public GameTickHandler(Set macrosToRun, Set executorsToRun, KeyBinding[] keyBindings) {
+        this.keyBindingList = keyBindings;
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
-    }
-
-    private static KeyBinding[] registerKeyBindings() {
-        final KeyBinding managementKey = new KeyBinding("key.macrokey.management.desc", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_K), "key.macrokey.category");
-        final KeyBinding[] keyBindingList = new KeyBinding[]{managementKey};
-
-        for (final KeyBinding keyBinding : keyBindingList) {
-            ClientRegistry.registerKeyBinding(keyBinding);
-        }
-
-        return keyBindingList;
     }
 
     @SubscribeEvent
