@@ -1,8 +1,6 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.Set;
@@ -13,10 +11,7 @@ public class MacroActivationEvent extends Event {
      * The macro('s) that have been activated
      */
     private Set<MacroInterface> macros;
-    /**
-     * Current player / sender
-     */
-    private EntityPlayerSP currentPlayer;
+
     /**
      * Current state of the button
      */
@@ -25,16 +20,10 @@ public class MacroActivationEvent extends Event {
     MacroActivationEvent(Set<MacroInterface> macros, MacroState pressed) {
         this.macros = macros;
         this.pressed = pressed;
-
-        this.currentPlayer = Minecraft.getInstance().player;
     }
 
     public Set<MacroInterface> getMacros() {
         return this.macros;
-    }
-
-    public EntityPlayerSP getCurrentPlayer() {
-        return currentPlayer;
     }
 
     public MacroState getMacroState() {
@@ -56,10 +45,6 @@ public class MacroActivationEvent extends Event {
 
         public boolean isKeyDown() {
             return this.state;
-        }
-
-        public boolean isKeyUp() {
-            return !this.state;
         }
     }
 
