@@ -31,8 +31,6 @@ public class GuiMacroManagement extends GuiScreen {
     private int currentSelectedLayer;
     private List<LayerInterface> layers;
 
-    private volatile boolean updateList = false;
-
     public GuiMacroManagement(final GuiScreen screen) {
         this.parentScreen = screen;
         this.currentSelectedLayer = -1;
@@ -78,11 +76,11 @@ public class GuiMacroManagement extends GuiScreen {
                     currentSelectedLayer = -1;
                 }
 
-                updateList = true;
+                updateMacroList();
             }
         });
 
-        this.updateList = true;
+        updateMacroList();
     }
 
     @Override
@@ -97,33 +95,6 @@ public class GuiMacroManagement extends GuiScreen {
 
         // Render Buttons & Labels
         super.render(mouseX, mouseY, partialTicks);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.updateList) {
-            return;
-        }
-
-        try {
-            this.layers = MacroKey.modState.getLayers(true);
-
-            final LayerInterface currentLayer =
-                    currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
-
-            this.macroListFragment = new MacroListFragment(this, currentLayer);
-
-            this.layerSwitcher.displayString =
-                    I18n.format("text.layer.display",
-                            currentLayer == null ? I18n.format("text.layer.master") : currentLayer.getDisplayName()
-                    );
-        } catch (IOException e) {
-            LOGGER.error(e);
-        } finally {
-            this.updateList = false;
-        }
     }
 
     @Override
@@ -159,5 +130,20 @@ public class GuiMacroManagement extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    private void updateMacroList() {
+        try {
+            this.layers = MacroKey.modState.getLayers(true);
+        } catch (IOException e) {
+            LOGGER.error(e);
+            return;
+        }
+
+        final LayerInterface currentLayer = currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
+        final String currentLayerName = currentLayer == null ? I18n.format("text.layer.master") : currentLayer.getDisplayName();
+
+        this.macroListFragment = new MacroListFragment(this, currentLayer);
+        this.layerSwitcher.displayString = I18n.format("text.layer.display", currentLayerName);
     }
 }

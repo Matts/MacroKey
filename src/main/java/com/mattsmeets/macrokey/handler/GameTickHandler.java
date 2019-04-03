@@ -5,13 +5,20 @@ import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class GameTickHandler {
 
+    private final KeyBinding[] keyBindingList;
     /**
      * private stash of macro's to run
      */
@@ -23,8 +30,20 @@ public class GameTickHandler {
     private Set<ExecuteOnTickInterface> executorsToRun;
 
     public GameTickHandler(Set macrosToRun, Set executorsToRun) {
+        this.keyBindingList = registerKeyBindings();
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
+    }
+
+    private static KeyBinding[] registerKeyBindings() {
+        final KeyBinding managementKey = new KeyBinding("key.macrokey.management.desc", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_K), "key.macrokey.category");
+        final KeyBinding[] keyBindingList = new KeyBinding[]{managementKey};
+
+        for (final KeyBinding keyBinding : keyBindingList) {
+            ClientRegistry.registerKeyBinding(keyBinding);
+        }
+
+        return keyBindingList;
     }
 
     @SubscribeEvent
@@ -43,6 +62,12 @@ public class GameTickHandler {
 
     @SubscribeEvent
     public void onTick(InGameTickEvent event) {
+        // find if the current key being pressed is the dedicated
+        // MacroKey gui button. If so, open its GUI
+        if (keyBindingList[0].isPressed()) {
+            MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
+        }
+
         // loop through all pending macro's sending their command
         // on a off-tick, it will only send normal macro's, on a
         // delayed tick it will also execute the repeatable macro's
