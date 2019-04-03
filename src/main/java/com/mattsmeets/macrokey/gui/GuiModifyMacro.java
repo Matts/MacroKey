@@ -34,9 +34,28 @@ public class GuiModifyMacro extends GuiScreen {
 
     private GuiTextField textFieldCommand;
 
-    private GuiButton btnKeyBinding;
+    private KeyBindingButton btnKeyBinding;
 
     private boolean changingKey = false;
+
+    class KeyBindingButton extends GuiButton {
+        KeyBindingButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
+            super(buttonId, x, y, widthIn, heightIn, buttonText);
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            changingKey = true;
+            updateDisplayString(macro, true, false);
+        }
+
+        void updateDisplayString(final MacroInterface macro, final boolean isListening, boolean isKeyAlreadyBind) {
+            final String keyValue = GLFW.glfwGetKeyName(macro.getKeyCode(), 0);
+            this.displayString = isListening ? TextFormatting.WHITE + "> " + TextFormatting.YELLOW + keyValue + TextFormatting.WHITE + " <"
+                    : isKeyAlreadyBind ? TextFormatting.GOLD + keyValue
+                    : keyValue;
+        }
+    }
 
     public GuiModifyMacro(final GuiScreen parentScreen, final MacroInterface macro) {
         this.parentScreen = parentScreen;
@@ -81,14 +100,7 @@ public class GuiModifyMacro extends GuiScreen {
         });
 
         // Modify key binding button
-        this.btnKeyBinding = this.addButton(new GuiButton(3, this.width / 2 - 75, 100, 150, 20, GLFW.glfwGetKeyName(macro.getKeyCode(), 0)) {
-            @Override
-            public void onClick(double mouseX, double mouseY) {
-                this.displayString = TextFormatting.WHITE + "> " + TextFormatting.YELLOW + this.displayString + TextFormatting.WHITE + " <";
-
-                changingKey = true;
-            }
-        });
+        this.btnKeyBinding = this.addButton(new KeyBindingButton(3, this.width / 2 - 75, 100, 150, 20, GLFW.glfwGetKeyName(macro.getKeyCode(), 0)));
 
         // Toggle macro repeat button
         this.addButton(new GuiButton(4, this.width / 2 - 75, 140, 75, 20, macro.willRepeat() ? enabledText : disabledText) {
@@ -147,7 +159,7 @@ public class GuiModifyMacro extends GuiScreen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifier) {
         if (this.changingKey) {
-            this.changingKey = false;
+            changingKey = false;
 
             if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
                 this.macro.setKeyCode(0);
@@ -155,21 +167,7 @@ public class GuiModifyMacro extends GuiScreen {
                 this.macro.setKeyCode(keyCode);
             }
 
-            this.btnKeyBinding.displayString = GLFW.glfwGetKeyName(keyCode, scanCode);
-
-            if (this.macro.getKeyCode() != 0) {
-                boolean isKeyAlreadyBind = false;
-                for (KeyBinding keybinding : mc.gameSettings.keyBindings) {
-                    if (keybinding.getKey().getKeyCode() == this.macro.getKeyCode()) {
-                        isKeyAlreadyBind = true;
-                        break;
-                    }
-                }
-
-                if (isKeyAlreadyBind) {
-                    this.btnKeyBinding.displayString = TextFormatting.GOLD + this.btnKeyBinding.displayString;
-                }
-            }
+            this.btnKeyBinding.updateDisplayString(macro, false, isKeyAlreadyBind());
 
             return true;
         }
@@ -193,8 +191,21 @@ public class GuiModifyMacro extends GuiScreen {
 
         if (this.changingKey) {
             this.changingKey = false;
+            this.btnKeyBinding.updateDisplayString(macro, false, isKeyAlreadyBind());
         }
 
         return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    private boolean isKeyAlreadyBind() {
+        if (this.macro.getKeyCode() != 0) {
+            for (KeyBinding keybinding : mc.gameSettings.keyBindings) {
+                if (keybinding.getKey().getKeyCode() == this.macro.getKeyCode()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
