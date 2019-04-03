@@ -191,6 +191,10 @@ public class BindingsRepository {
     }
 
     public boolean isMacroInLayer(MacroInterface macro, LayerInterface layer) {
+        if (layer == null) {
+            return true;
+        }
+
         return this.bindingsFile
                 .getLayers()
                 .stream().anyMatch(layerI ->
@@ -255,7 +259,7 @@ public class BindingsRepository {
                         (macro) ->
                                 macro.getKeyCode() == keyCode
                                         && macro.isActive()
-                                        && (layer == null || isMacroInLayer(macro, layer))
+                                        && isMacroInLayer(macro, layer)
                 )
                 .collect(Collectors.toSet());
     }
