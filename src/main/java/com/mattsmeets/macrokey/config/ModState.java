@@ -26,12 +26,10 @@ public class ModState {
         return this.activeLayer;
     }
 
-    public ModState setActiveLayer(LayerInterface layer) throws IOException {
+    public void setActiveLayer(LayerInterface layer) throws IOException {
         this.activeLayer = layer;
 
         bindingsRepository.setActiveLayer(layer == null ? null : layer.getULID(), true);
-
-        return this;
     }
 
     public List<LayerInterface> getLayers(boolean sync) throws IOException {
