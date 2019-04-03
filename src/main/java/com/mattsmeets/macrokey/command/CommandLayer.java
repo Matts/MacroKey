@@ -14,7 +14,7 @@ class CommandLayer {
 
     static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("layer")
-                .then(Commands.literal("toogle")
+                .then(Commands.literal("toggle")
                         .executes(ctx ->
                         {
                             MacroKey.modState.nextLayer();
