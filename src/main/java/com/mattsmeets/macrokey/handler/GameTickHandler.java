@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.handler;
 
+import com.mattsmeets.macrokey.ModKeyBinding;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
@@ -10,11 +11,16 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class GameTickHandler {
 
-    private final KeyBinding[] keyBindingList;
+    /**
+     * Mod KeyBinding list
+     */
+    private final Map<ModKeyBinding, KeyBinding> keyBindings;
+
     /**
      * private stash of macro's to run
      */
@@ -25,8 +31,8 @@ public class GameTickHandler {
      */
     private Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler(Set macrosToRun, Set executorsToRun, KeyBinding[] keyBindings) {
-        this.keyBindingList = keyBindings;
+    public GameTickHandler(Set macrosToRun, Set executorsToRun, Map<ModKeyBinding, KeyBinding> keyBindings) {
+        this.keyBindings = keyBindings;
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
     }
@@ -49,7 +55,7 @@ public class GameTickHandler {
     public void onTick(InGameTickEvent event) {
         // find if the current key being pressed is the dedicated
         // MacroKey gui button. If so, open its GUI
-        if (keyBindingList[0].isPressed()) {
+        if (keyBindings.get(ModKeyBinding.OPEN_MANAGEMENT_GUI).isPressed()) {
             MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
         }
 

@@ -1,5 +1,6 @@
 package com.mattsmeets.macrokey.handler;
 
+import com.mattsmeets.macrokey.ModKeyBinding;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
@@ -36,7 +37,7 @@ public class GameTickHandlerTest {
         Set<MacroInterface> macros = Collections.singleton(macro);
         when(event.getMacros()).thenReturn(macros);
 
-        GameTickHandler handler = new GameTickHandler(spySet, null, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(spySet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         handler.onKeyEvent(event);
 
@@ -57,7 +58,7 @@ public class GameTickHandlerTest {
 
         when(event.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_UP);
 
-        GameTickHandler handler = new GameTickHandler(spySet, null, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(spySet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         handler.onKeyEvent(event);
 
@@ -75,7 +76,7 @@ public class GameTickHandlerTest {
         Macro macro = mock(Macro.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(null, spySet, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(null, spySet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         ExecuteOnTickInterface executor = (boolean delay) -> {
         };
@@ -101,7 +102,7 @@ public class GameTickHandlerTest {
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         handler.onTick(event);
 
@@ -121,7 +122,7 @@ public class GameTickHandlerTest {
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         handler.onExecutorEvent(new ExecuteOnTickEvent(executor));
 
@@ -146,7 +147,7 @@ public class GameTickHandlerTest {
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         when(event.isLimitedTick()).thenReturn(true);
 
@@ -193,7 +194,7 @@ public class GameTickHandlerTest {
         MacroActivationEvent macroActivationEvent = mock(MacroActivationEvent.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(macroSet, null, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(macroSet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         when(macroActivationEvent.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_DOWN);
         when(macroActivationEvent.getMacros()).thenReturn(inputMacros);
@@ -243,7 +244,7 @@ public class GameTickHandlerTest {
         MacroActivationEvent macroActivationEvent = mock(MacroActivationEvent.class);
         KeyBinding keyBinding = mock(KeyBinding.class);
 
-        GameTickHandler handler = new GameTickHandler(macroSet, null, new KeyBinding[]{keyBinding});
+        GameTickHandler handler = new GameTickHandler(macroSet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
         when(macroActivationEvent.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_DOWN);
         when(macroActivationEvent.getMacros()).thenReturn(inputMacros);

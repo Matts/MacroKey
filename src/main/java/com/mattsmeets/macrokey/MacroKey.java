@@ -25,6 +25,8 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 @Mod(ModReference.MOD_ID)
 public class MacroKey {
@@ -67,15 +69,17 @@ public class MacroKey {
             MinecraftForge.EVENT_BUS.register(new GuiEventHandler(modState));
         }
 
-        private static KeyBinding[] registerKeyBindings() {
+        private static Map<ModKeyBinding, KeyBinding> registerKeyBindings() {
             final KeyBinding managementKey = new KeyBinding("key.macrokey.management.desc", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrMakeInput(GLFW.GLFW_KEY_K), "key.macrokey.category");
-            final KeyBinding[] keyBindingList = new KeyBinding[]{managementKey};
+            final Map<ModKeyBinding, KeyBinding> keyBindingMap = Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, managementKey);
 
-            for (final KeyBinding keyBinding : keyBindingList) {
-                ClientRegistry.registerKeyBinding(keyBinding);
-            }
+            keyBindingMap
+                    .entrySet()
+                    .stream()
+                    .map(Map.Entry::getValue)
+                    .forEach(ClientRegistry::registerKeyBinding);
 
-            return keyBindingList;
+            return keyBindingMap;
         }
 
         private RegistryEvents() {
