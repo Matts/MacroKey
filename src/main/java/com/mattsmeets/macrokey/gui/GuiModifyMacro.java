@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.gui;
 
 import com.mattsmeets.macrokey.event.MacroEvent;
+import com.mattsmeets.macrokey.gui.button.KeyBindingButton;
 import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.command.StringCommand;
@@ -8,8 +9,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
@@ -37,25 +36,6 @@ public class GuiModifyMacro extends GuiScreen {
     private KeyBindingButton btnKeyBinding;
 
     private boolean changingKey = false;
-
-    class KeyBindingButton extends GuiButton {
-        KeyBindingButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
-            super(buttonId, x, y, widthIn, heightIn, buttonText);
-        }
-
-        @Override
-        public void onClick(double mouseX, double mouseY) {
-            changingKey = true;
-            updateDisplayString(macro, true, false);
-        }
-
-        void updateDisplayString(final MacroInterface macro, final boolean isListening, boolean isKeyAlreadyBind) {
-            final String keyValue = GLFW.glfwGetKeyName(macro.getKeyCode(), 0);
-            this.displayString = isListening ? TextFormatting.WHITE + "> " + TextFormatting.YELLOW + keyValue + TextFormatting.WHITE + " <"
-                    : isKeyAlreadyBind ? TextFormatting.GOLD + keyValue
-                    : keyValue;
-        }
-    }
 
     public GuiModifyMacro(final GuiScreen parentScreen, final MacroInterface macro) {
         this.parentScreen = parentScreen;
@@ -100,7 +80,13 @@ public class GuiModifyMacro extends GuiScreen {
         });
 
         // Modify key binding button
-        this.btnKeyBinding = this.addButton(new KeyBindingButton(3, this.width / 2 - 75, 100, 150, 20, GLFW.glfwGetKeyName(macro.getKeyCode(), 0)));
+        this.btnKeyBinding = this.addButton(new KeyBindingButton(3, this.width / 2 - 75, 100, 150, 20, GLFW.glfwGetKeyName(macro.getKeyCode(), 0)) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                changingKey = true;
+                this.updateDisplayString(macro, true);
+            }
+        });
 
         // Toggle macro repeat button
         this.addButton(new GuiButton(4, this.width / 2 - 75, 140, 75, 20, macro.willRepeat() ? enabledText : disabledText) {
@@ -167,7 +153,7 @@ public class GuiModifyMacro extends GuiScreen {
                 this.macro.setKeyCode(keyCode);
             }
 
-            this.btnKeyBinding.updateDisplayString(macro, false, isKeyAlreadyBind());
+            this.btnKeyBinding.updateDisplayString(macro, false);
 
             return true;
         }
@@ -191,21 +177,9 @@ public class GuiModifyMacro extends GuiScreen {
 
         if (this.changingKey) {
             this.changingKey = false;
-            this.btnKeyBinding.updateDisplayString(macro, false, isKeyAlreadyBind());
+            this.btnKeyBinding.updateDisplayString(macro, false);
         }
 
         return super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    private boolean isKeyAlreadyBind() {
-        if (this.macro.getKeyCode() != 0) {
-            for (KeyBinding keybinding : mc.gameSettings.keyBindings) {
-                if (keybinding.getKey().getKeyCode() == this.macro.getKeyCode()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

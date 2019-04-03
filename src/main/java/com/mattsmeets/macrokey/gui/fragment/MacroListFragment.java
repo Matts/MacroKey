@@ -4,18 +4,15 @@ import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.gui.GuiMacroManagement;
 import com.mattsmeets.macrokey.gui.GuiModifyMacro;
+import com.mattsmeets.macrokey.gui.button.KeyBindingButton;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -48,7 +45,7 @@ public class MacroListFragment extends GuiListExtended<MacroListFragment.MacroEn
     public class MacroEntry extends GuiListExtended.IGuiListEntry<MacroEntry> {
         private final MacroInterface macro;
 
-        private final GuiButton btnChangeKeyBinding;
+        private final KeyBindingButton btnChangeKeyBinding;
         private final GuiButton btnRemoveKeyBinding;
         private final GuiButton btnEdit;
         private final GuiButton btnEnabledInLayer;
@@ -59,7 +56,7 @@ public class MacroListFragment extends GuiListExtended<MacroListFragment.MacroEn
         private MacroEntry(MacroInterface macro) {
             this.macro = macro;
 
-            this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, macro.getCommand().toString()) {
+            this.btnChangeKeyBinding = new KeyBindingButton(0, 0, 0, 75, 20, macro.getCommand().toString()) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     guiMacroManagement.macroModify = macro;
@@ -125,7 +122,7 @@ public class MacroListFragment extends GuiListExtended<MacroListFragment.MacroEn
 
                 this.btnChangeKeyBinding.x = getX() + 95;
                 this.btnChangeKeyBinding.y = getY();
-                this.btnChangeKeyBinding.displayString = getChangeKeyBindingDisplayString(macro, macroKeyCodeModifyFlag);
+                this.btnChangeKeyBinding.updateDisplayString(macro, macroKeyCodeModifyFlag);
                 this.btnChangeKeyBinding.render(mouseX, mouseY, 0.0f);
             } else {
                 this.btnEnabledInLayer.x = getX() + 95;
@@ -150,29 +147,6 @@ public class MacroListFragment extends GuiListExtended<MacroListFragment.MacroEn
             result = result || this.btnEdit.mouseReleased(mouseX, mouseY, button);
 
             return result;
-        }
-
-        private String getChangeKeyBindingDisplayString(final MacroInterface macro, final boolean macroKeyCodeModifyFlag) {
-            final String displayString = GLFW.glfwGetKeyName(macro.getKeyCode(), 0);
-            if (macroKeyCodeModifyFlag) {
-                return TextFormatting.WHITE + "> " + TextFormatting.YELLOW + displayString + TextFormatting.WHITE + " <";
-            } else if (isCurrentKeyAlreadyUsed(macro)) {
-                return TextFormatting.GOLD + displayString;
-            } else {
-                return displayString;
-            }
-        }
-
-        private boolean isCurrentKeyAlreadyUsed(final MacroInterface macro) {
-            if (macro.getKeyCode() != 0) {
-                for (KeyBinding keybinding : Minecraft.getInstance().gameSettings.keyBindings) {
-                    if (keybinding.getKey().getKeyCode() == macro.getKeyCode()) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }
