@@ -17,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 import java.io.IOException;
 import java.util.List;
 
-// TODO :
+// TODO : Clean this class
 public class GuiMacroManagement extends GuiScreen {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int BUTTON_LEFT = 0;

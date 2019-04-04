@@ -28,11 +28,12 @@ public class KeyInputHandler {
 
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
+        // TODO : KeyInputEvent.getKey() is not implemented yet. But there is a PR : https://github.com/MinecraftForge/MinecraftForge/pull/5533
         int keyCode = 0;
         boolean keyIsDown = false;
 
-        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeycode(keyCode, modState.getActiveLayer(), false);
-        if (macroList.size() == 0) {
+        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, modState.getActiveLayer(), false);
+        if (macroList.isEmpty()) {
             return;
         }
 

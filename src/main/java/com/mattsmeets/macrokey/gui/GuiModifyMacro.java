@@ -124,7 +124,7 @@ public class GuiModifyMacro extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, isUpdatingMacro ? this.editScreenTitleText : this.defaultScreenTitleText, this.width / 2, 8, 0xFFFFFF);
 
         // Render labels
-        // TODO : replace by GuiLabel
+        // TODO : replace by GuiLabel ?
         this.drawString(this.fontRenderer, repeatOnHoldText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(repeatOnHoldText) - 140, 145, 0x5F5F60);
         this.drawString(this.fontRenderer, enableCommandText, this.width / 2 + 50 - mc.fontRenderer.getStringWidth(enableCommandText) - 140, 168, 0x5F5F60);
         this.drawCenteredString(this.fontRenderer, commandBoxTitleText, this.width / 2, 37, 0x5F5F60);
