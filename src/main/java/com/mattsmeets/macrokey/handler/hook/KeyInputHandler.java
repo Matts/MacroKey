@@ -4,10 +4,11 @@ import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -28,9 +29,8 @@ public class KeyInputHandler {
 
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
-        // TODO : KeyInputEvent.getKey() is not implemented yet. But there is a PR : https://github.com/MinecraftForge/MinecraftForge/pull/5533
-        int keyCode = 0;
-        boolean keyIsDown = false;
+        final int keyCode = event.getKey();
+        final boolean keyIsDown = event.getAction() == GLFW.GLFW_PRESS;
 
         final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, modState.getActiveLayer(), false);
         if (macroList.isEmpty()) {

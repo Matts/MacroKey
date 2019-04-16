@@ -98,7 +98,7 @@ minecraft {
 dependencies {
     testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-core:2.7.22'
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.64'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.145'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
