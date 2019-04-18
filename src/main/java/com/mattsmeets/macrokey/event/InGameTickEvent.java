@@ -19,11 +19,6 @@ public class InGameTickEvent extends Event {
         this.limitedTickEvent = limited;
     }
 
-    public InGameTickEvent(EntityPlayerSP entityPlayerSP) {
-        this.currentPlayer = entityPlayerSP;
-        this.limitedTickEvent = false;
-    }
-
     public EntityPlayerSP getCurrentPlayer() {
         return currentPlayer;
     }
@@ -37,5 +32,4 @@ public class InGameTickEvent extends Event {
             super(entityPlayerSP, true);
         }
     }
-
 }

@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-		jcenter()
+        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -33,7 +33,7 @@ archivesBaseName = config.mod_name
 
 // if we are building from pipeline, then add build number to the version
 if (System.getenv().BUILD_NUMBER)
-	version = "${version}.${System.getenv().BUILD_NUMBER}"
+    version = "${version}.${System.getenv().BUILD_NUMBER}"
 
 // if we are not building with a key, add this to the version
 if (!project.hasProperty('signingKeystore')) {
@@ -96,9 +96,9 @@ minecraft {
 }
 
 dependencies {
-	testCompile "junit:junit:4.11"
+    testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-core:2.7.22'
-	minecraft 'net.minecraftforge:forge:1.13.2-25.0.64'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.145'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

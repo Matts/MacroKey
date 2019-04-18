@@ -1,11 +1,17 @@
 package com.mattsmeets.macrokey.repository;
 
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.model.*;
+import com.mattsmeets.macrokey.model.BindingsFile;
+import com.mattsmeets.macrokey.model.BindingsFileInterface;
+import com.mattsmeets.macrokey.model.Layer;
+import com.mattsmeets.macrokey.model.LayerInterface;
+import com.mattsmeets.macrokey.model.Macro;
+import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.service.JsonConfig;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -49,9 +55,10 @@ public class BindingsRepository {
      * @throws IOException when file can not be found or read
      */
     public Set<LayerInterface> findAllLayers(boolean sync) throws IOException {
-        if (sync)
+        if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
+        }
 
         return this.bindingsFile.getLayers();
     }
@@ -64,18 +71,16 @@ public class BindingsRepository {
      * @return the layer found, may be null
      * @throws IOException when file can not be found or read
      */
-    public LayerInterface findLayerByUUID(UUID ulid, boolean sync) throws IOException {
-        if (sync)
+    LayerInterface findLayerByUUID(UUID ulid, boolean sync) throws IOException {
+        if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
+        }
 
         return this.bindingsFile
                 .getLayers()
                 .stream()
-                .filter(
-                        (layer) ->
-                                layer.getULID().equals(ulid)
-                )
+                .filter(layer -> layer.getULID().equals(ulid))
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
                 })
@@ -83,7 +88,7 @@ public class BindingsRepository {
     }
 
     /**
-     * Add Layder
+     * Add Layer
      *
      * @param layer affected layer
      * @param sync  update file after adding layer
@@ -115,7 +120,7 @@ public class BindingsRepository {
                 this.bindingsFile
                         .getLayers()
                         .stream()
-                        .map((savedLayer) -> layer.getULID().equals(savedLayer.getULID()) ? layer : savedLayer)
+                        .map(savedLayer -> layer.getULID().equals(savedLayer.getULID()) ? layer : savedLayer)
                         .collect(Collectors.toSet())
         );
 
@@ -132,7 +137,7 @@ public class BindingsRepository {
      * @param sync update file after adding macro
      * @throws IOException when file can not be found or read
      */
-    public void deleteLayer(UUID ulid, boolean sync) throws IOException {
+    void deleteLayer(UUID ulid, boolean sync) throws IOException {
         this.bindingsFile.setLayers(
                 // get all layer's and filter them
                 // when the ulid of the layer matches
@@ -145,8 +150,9 @@ public class BindingsRepository {
                         .collect(Collectors.toSet())
         );
 
-        if (this.isActiveLayer(ulid, false))
+        if (this.isActiveLayer(ulid, false)) {
             this.setActiveLayer((UUID) null, false);
+        }
 
         if (sync) {
             // if specified to update configuration
@@ -170,21 +176,31 @@ public class BindingsRepository {
      *
      * @param sync update from file before retrieving all macros
      * @return list of all macros
-     * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findAllMacros(boolean sync) throws IOException {
-        if (sync)
+    public Set<MacroInterface> findAllMacros(boolean sync) {
+        if (sync) {
             // if specified to update memory with latest changes
-            loadConfiguration();
+            try {
+                loadConfiguration();
+            } catch (IOException e) {
+                return Collections.emptySet();
+            }
+        }
 
         return this.bindingsFile.getMacros();
     }
 
     public boolean isMacroInLayer(MacroInterface macro, LayerInterface layer) {
+        if (layer == null) {
+            return true;
+        }
+
         return this.bindingsFile
                 .getLayers()
                 .stream()
-                .filter(layerI -> layerI.getULID().equals(layer.getULID()) && layerI.getMacros().contains(macro.getUMID())).count() != 0;
+                .anyMatch(layerI ->
+                        layerI.getULID().equals(layer.getULID())
+                                && layerI.getMacros().contains(macro.getUMID()));
     }
 
     /**
@@ -195,10 +211,11 @@ public class BindingsRepository {
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public MacroInterface findMacroByUUID(UUID ulid, boolean sync) throws IOException {
-        if (sync)
+    MacroInterface findMacroByUUID(UUID ulid, boolean sync) throws IOException {
+        if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
+        }
 
         // get all macros and filter through them
         // searching for entries that have the given
@@ -207,11 +224,7 @@ public class BindingsRepository {
         return this.bindingsFile
                 .getMacros()
                 .stream()
-                .filter(
-                        (macro) ->
-                                macro.getUMID().equals(ulid)
-
-                )
+                .filter(macro -> macro.getUMID().equals(ulid))
                 .reduce((u, v) -> {
                     throw new IllegalStateException("More than one ID found");
                 })
@@ -219,17 +232,18 @@ public class BindingsRepository {
     }
 
     /**
-     * Find active macro's by its keycode
+     * Find active macro's by its keyCode
      *
      * @param keyCode uses Keyboard keyCode
      * @param sync    update from file before retrieving all macros
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findMacroByKeycode(int keyCode, LayerInterface layer, boolean sync) throws IOException {
-        if (sync)
+    public Set<MacroInterface> findMacroByKeyCode(int keyCode, LayerInterface layer, boolean sync) throws IOException {
+        if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
+        }
 
         // get all macros and filter through them
         // searching for entries that have the given
@@ -241,10 +255,10 @@ public class BindingsRepository {
                 .getMacros()
                 .stream()
                 .filter(
-                        (macro) ->
+                        macro ->
                                 macro.getKeyCode() == keyCode
                                         && macro.isActive()
-                                        && (layer == null || isMacroInLayer(macro, layer))
+                                        && isMacroInLayer(macro, layer)
                 )
                 .collect(Collectors.toSet());
     }
@@ -300,7 +314,7 @@ public class BindingsRepository {
      * @param persist persist changes to the layer
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacro(UUID umid, boolean sync, boolean persist) throws IOException {
+    void deleteMacro(UUID umid, boolean sync, boolean persist) throws IOException {
         this.bindingsFile.setMacros(
                 // get all macro's and filter them
                 // when the umid of the macro matches
@@ -330,7 +344,7 @@ public class BindingsRepository {
      * @param sync update file after adding macro
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacroFromLayer(UUID umid, boolean sync) throws IOException {
+    void deleteMacroFromLayer(UUID umid, boolean sync) throws IOException {
         // get all layers, and loop through them.
         // for each layer get all macro's and filter them
         // if they match the umid. Finally set the filtered
@@ -356,7 +370,7 @@ public class BindingsRepository {
      * @param sync  update file after adding macro
      * @throws IOException when file can not be found or read
      */
-    public void deleteMacroFromLayer(MacroInterface macro, boolean sync) throws IOException {
+    void deleteMacroFromLayer(MacroInterface macro, boolean sync) throws IOException {
         this.deleteMacroFromLayer(macro.getUMID(), sync);
     }
 
@@ -406,7 +420,7 @@ public class BindingsRepository {
      * @param sync  update file after setting active layer
      * @throws IOException when file can not be found or read
      */
-    public void setActiveLayer(LayerInterface layer, boolean sync) throws IOException {
+    void setActiveLayer(LayerInterface layer, boolean sync) throws IOException {
         this.setActiveLayer(layer.getULID(), sync);
     }
 
@@ -418,14 +432,15 @@ public class BindingsRepository {
      * @return true if the UUID given is the active layer
      * @throws IOException when file can not be found or read
      */
-    public boolean isActiveLayer(UUID ulid, boolean sync) throws IOException {
-        if (sync)
+    boolean isActiveLayer(UUID ulid, boolean sync) throws IOException {
+        if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
+        }
 
-        UUID activeULID = this.bindingsFile.getActiveLayer();
+        final UUID activeULID = this.bindingsFile.getActiveLayer();
 
-        return ulid != null && activeULID != null && ulid.equals(activeULID);
+        return ulid != null && ulid.equals(activeULID);
     }
 
     /**
@@ -436,7 +451,7 @@ public class BindingsRepository {
      * @return true if the Layer given is the active layer
      * @throws IOException when file can not be found or read
      */
-    public boolean isActiveLayer(Layer layer, boolean sync) throws IOException {
+    boolean isActiveLayer(Layer layer, boolean sync) throws IOException {
         return this.isActiveLayer(layer.getULID(), sync);
     }
 
@@ -445,7 +460,7 @@ public class BindingsRepository {
      *
      * @return will return the value of the "version" key
      */
-    public int findFileVersion() {
+    int findFileVersion() {
         return this.bindingsFile.getVersion();
     }
 
@@ -454,7 +469,7 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public void saveConfiguration() throws IOException {
+    void saveConfiguration() throws IOException {
         this.config.saveObjectToJson(this.bindingsFile);
     }
 
@@ -463,9 +478,8 @@ public class BindingsRepository {
      *
      * @throws IOException when file can not be found or read
      */
-    public void loadConfiguration() throws IOException {
-        JsonObject jsonObject = this.config.getJSONObject();
-
+    void loadConfiguration() throws IOException {
+        final JsonObject jsonObject = this.config.getJSONObject();
         if (jsonObject != null) {
             // on initialization the bindingsFile will not be set.
             if (this.bindingsFile == null) {
@@ -474,20 +488,20 @@ public class BindingsRepository {
 
             // retrieve all macro's from the bindings.json file
             // and add them inside our bindingsFile
-            MacroInterface[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
+            final MacroInterface[] macroArray = this.config.bindJsonElementToObject(Macro[].class, jsonObject.get("macros"));
             this.bindingsFile
                     .setMacros(Arrays
                             .stream(macroArray)
                             .collect(Collectors.toSet())
                     );
 
-            LayerInterface[] layerArray = this.config.bindJsonElementToObject(Layer[].class, jsonObject.get("layers"));
+            final LayerInterface[] layerArray = this.config.bindJsonElementToObject(Layer[].class, jsonObject.get("layers"));
             this.bindingsFile
                     .setLayers(Arrays
                             .stream(layerArray)
                             .collect(Collectors.toSet()));
 
-            UUID activeLayer = this.config.bindJsonElementToObject(UUID.class, jsonObject.get("activeLayer"));
+            final UUID activeLayer = this.config.bindJsonElementToObject(UUID.class, jsonObject.get("activeLayer"));
             this.bindingsFile
                     .setActiveLayer(activeLayer);
         } else {
@@ -505,8 +519,7 @@ public class BindingsRepository {
      *
      * @param bindingsFile instance of BindingsFile
      */
-    public void setBindingsFile(BindingsFileInterface bindingsFile) {
+    void setBindingsFile(BindingsFileInterface bindingsFile) {
         this.bindingsFile = bindingsFile;
     }
-
 }

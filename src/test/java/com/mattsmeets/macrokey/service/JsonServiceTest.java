@@ -11,10 +11,10 @@ import java.io.IOException;
 import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JSONServiceTest {
+public class JsonServiceTest {
 
     @Mock
-    private JSONService jsonService;
+    private JsonService jsonService;
 
     @Test
     public void loadJSONElementFromFileReturnsNullWhenFileDoesNotExist() throws IOException {

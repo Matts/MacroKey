@@ -2,90 +2,53 @@ package com.mattsmeets.macrokey.command;
 
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.LayerInterface;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSource;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+class CommandLayer {
+    private static final String LAYER_MASTER_TEXT = I18n.format("text.layer.master");
 
-public class CommandLayer extends StrippedCommand {
-    public final String
-            layerMasterText = I18n.format("text.layer.master");
-
-    @Override
-    public void execute(MinecraftServer server, ICommandSource sender, String[] args) throws CommandException {
-        if (args.length < 1) {
-            return;
-        }
-
-        if (args.length == 1) {
-            this.printLayerInformation(sender);
-
-            return;
-        }
-
-        if (args[1].equals("toggle")) {
-            this.nextLayer(server, sender, new String[] {args[0]});
-
-            return;
-        }
-
-        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
+    static ArgumentBuilder<CommandSource, ?> register() {
+        return Commands.literal("layer")
+                .then(Commands.literal("toggle")
+                        .executes(ctx ->
+                        {
+                            MacroKey.modState.nextLayer();
+                            return printLayerInformation(ctx);
+                        })).executes(
+                        CommandLayer::printLayerInformation
+                );
     }
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSource sender, String[] args, @Nullable BlockPos targetPos) {
-        List<String> list = new ArrayList<String>();
-        list.add("toggle");
+    private static int printLayerInformation(CommandContext<CommandSource> context) {
+        final LayerInterface activeLayer = MacroKey.modState.getActiveLayer();
+        final String layerDisplayName;
+        final int countMacroEnabled;
 
-        return list;
-    }
-
-    @Override
-    public String getUsage(ICommandSource sender) {
-        return "Usage: /macrokey layer [toggle]";
-    }
-
-    private void printLayerInformation(ICommandSource sender) {
-        LayerInterface activeLayer = MacroKey.instance.modState.getActiveLayer();
-
-        String layerDisplayName = layerMasterText;
-        int countMacroEnabled = 0;
-
-        if (activeLayer != null) {
+        if (activeLayer == null) {
+            layerDisplayName = LAYER_MASTER_TEXT;
+            countMacroEnabled = MacroKey.bindingsRepository.findAllMacros(false).size();
+        } else {
             layerDisplayName = activeLayer.getDisplayName();
             countMacroEnabled = activeLayer.getMacros().size();
-        } else {
-            try {
-                countMacroEnabled = MacroKey.instance.bindingsRepository.findAllMacros(false).size();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
-        sender.sendMessage(
+        context.getSource().sendFeedback(
                 new TextComponentTranslation(
                         "command.layer.information",
                         layerDisplayName,
                         countMacroEnabled
-                )
+                ), true
         );
+
+        return 0;
     }
 
-    private void nextLayer(MinecraftServer server, ICommandSource sender, String[] args) throws CommandException {
-        try {
-            MacroKey.instance.modState.nextLayer();
-
-            this.execute(server, sender, args);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private CommandLayer() {
+        // Hide the public constructor
     }
 }

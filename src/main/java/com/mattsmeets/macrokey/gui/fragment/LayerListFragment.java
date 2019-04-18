@@ -1,128 +1,90 @@
 package com.mattsmeets.macrokey.gui.fragment;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.gui.GuiLayerManagement;
 import com.mattsmeets.macrokey.gui.GuiModifyLayer;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
 
-import static com.mattsmeets.macrokey.MacroKey.instance;
-
-public class LayerListFragment extends GuiListExtended<LayerListFragment.KeyEntry> {
+public class LayerListFragment extends GuiListExtended<LayerListFragment.LayerEntry> {
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private final GuiLayerManagement guiLayerManagement;
 
-    private final GuiListExtended.IGuiListEntry[] listEntries;
-
-    public LayerListFragment(GuiLayerManagement guiLayerManagement) throws IOException {
+    public LayerListFragment(final GuiLayerManagement guiLayerManagement) throws IOException {
         super(guiLayerManagement.mc, guiLayerManagement.width + 45, guiLayerManagement.height, 63, guiLayerManagement.height - 32, 20);
 
         this.guiLayerManagement = guiLayerManagement;
 
-        List<LayerInterface> layers = instance.modState.getLayers(true);
-
-        this.listEntries = new GuiListExtended.IGuiListEntry[layers.size()];
-
-        for (int i = 0; i < layers.size(); i++) {
-            LayerInterface layer = layers.get(i);
-
-            this.listEntries[i] = new LayerListFragment.KeyEntry(layer);
+        for (LayerInterface layer : MacroKey.modState.getLayers(true)) {
+            addEntry(new LayerEntry(layer));
         }
     }
 
-
-    @Override
-    private KeyEntry getListEntry(int index) {
-        return this.listEntries[index];
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public class KeyEntry extends IGuiListEntry {
+    public class LayerEntry extends GuiListExtended.IGuiListEntry<LayerEntry> {
         private final LayerInterface layer;
 
-        private final String keyDesc;
+        private final GuiButton btnRemove;
+        private final GuiButton btnEdit;
 
-        private final GuiButton
-                btnRemove,
-                btnEdit;
-
-        private final String
-                removeLayerText = I18n.format("fragment.list.text.remove"),
-                editLayerText = I18n.format("edit");
-
-        private boolean deleted = false;
-
-        private KeyEntry(LayerInterface layer) {
+        private LayerEntry(final LayerInterface layer) {
             this.layer = layer;
-            this.keyDesc = layer.getDisplayName();
 
-            this.btnRemove = new GuiButton(1, 0, 0, 15, 20, this.removeLayerText);
-            this.btnEdit = new GuiButton(2, 0, 0, 60, 20, this.editLayerText);
-        }
-
-        @Override
-        public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float f) {
-            if (deleted) {
-                return;
-            }
-
-            mc.fontRenderer.drawString(this.keyDesc, x + 90 - mc.fontRenderer.getStringWidth(layer.getDisplayName()), y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
-
-            this.btnEdit.x = x + 140;
-            this.btnEdit.y = y;
-            this.btnEdit.displayString = this.editLayerText;
-
-            this.btnEdit.drawButton(mc, mouseX, mouseY, 0.0f);
-
-            this.btnRemove.x = x + 200;
-            this.btnRemove.y = y;
-            this.btnRemove.enabled = true;
-            this.btnRemove.drawButton(mc, mouseX, mouseY, 0.0f);
-        }
-
-        @Override
-        public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
-            if (this.btnEdit.mousePressed(mc, mouseX, mouseY)) {
-                mc.displayGuiScreen(new GuiModifyLayer(guiLayerManagement, layer));
-
-                return true;
-            }
-
-            if (this.btnRemove.mousePressed(mc, mouseX, mouseY)) {
-                try {
-                    if (this.layer.equals(instance.modState.getActiveLayer()))
-                        instance.modState.setActiveLayer(null);
-
-                    instance.bindingsRepository.deleteLayer(this.layer, true);
-
-                    this.deleted = true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    mc.displayGuiScreen(guiLayerManagement);
+            this.btnEdit = new GuiButton(1, 0, 0, 60, 20, I18n.format("edit")) {
+                @Override
+                public void onClick(double mouseX, double mouseY) {
+                    mc.displayGuiScreen(new GuiModifyLayer(guiLayerManagement, layer));
                 }
+            };
 
-                return true;
-            }
+            this.btnRemove = new GuiButton(2, 0, 0, 15, 20, I18n.format("fragment.list.text.remove")) {
+                @Override
+                public void onClick(double mouseX, double mouseY) {
+                    try {
+                        if (layer.equals(MacroKey.modState.getActiveLayer())) {
+                            MacroKey.modState.setActiveLayer(null);
+                        }
 
-            return false;
+                        MacroKey.bindingsRepository.deleteLayer(layer, true);
+                    } catch (IOException e) {
+                        LOGGER.error(e);
+                    } finally {
+                        mc.displayGuiScreen(guiLayerManagement);
+                    }
+                }
+            };
         }
 
         @Override
-        public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
-            this.btnEdit.mouseReleased(x, y);
+        public void drawEntry(int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
+            // Render layer name
+            mc.fontRenderer.drawString(layer.getDisplayName(),
+                    getX() + 90f - mc.fontRenderer.getStringWidth(layer.getDisplayName()),
+                    getY() + slotHeight / 2f - mc.fontRenderer.FONT_HEIGHT / 2f,
+                    0xFFFFFF);
+
+            // Render buttons
+            this.btnEdit.x = getX() + 140;
+            this.btnEdit.y = getY();
+            this.btnEdit.render(mouseX, mouseY, 0.0f);
+
+            this.btnRemove.x = getX() + 200;
+            this.btnRemove.y = getY();
+            this.btnRemove.render(mouseX, mouseY, 0.0f);
         }
 
         @Override
-        public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            final boolean btnEditResult = this.btnEdit.mouseClicked(mouseX, mouseY, button);
+            final boolean btnRemoveResult = this.btnRemove.mouseClicked(mouseX, mouseY, button);
+
+            return btnEditResult || btnRemoveResult;
         }
     }
-
 }
