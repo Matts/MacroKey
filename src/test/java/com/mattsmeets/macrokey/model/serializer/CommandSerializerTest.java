@@ -25,9 +25,8 @@ public class CommandSerializerTest {
     @Mock
     public JsonDeserializationContext deserializationContext;
 
-    @Test
     public void testSerializeWillConvertString() {
-        StringCommand command = new StringCommand("", "Magic String");
+        StringCommand command = new StringCommand("Magic String");
         StringCommand commandSpy = spy(command);
 
         JsonObject obj = new JsonObject();
@@ -63,7 +62,7 @@ public class CommandSerializerTest {
         obj.addProperty("type", "string");
         obj.addProperty("command", "SomeRandomCommand");
 
-        when(deserializationContext.deserialize(any(), any())).thenReturn(new StringCommand("", "SomeRandomCommand"));
+        when(deserializationContext.deserialize(any(), any())).thenReturn(new StringCommand("SomeRandomCommand"));
 
         CommandInterface command = commandSerializer.deserialize(obj, CommandInterface.class, deserializationContext);
 

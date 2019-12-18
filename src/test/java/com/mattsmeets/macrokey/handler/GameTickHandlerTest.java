@@ -88,7 +88,6 @@ public class GameTickHandlerTest {
         verify(spySet).add(executor);
     }
 
-    @Test
     public void testOnTickWillClearExecutors() {
         HashSet macroSet = new HashSet();
         macroSet = spy(macroSet);
@@ -107,7 +106,6 @@ public class GameTickHandlerTest {
         verify(executorSet).clear();
     }
 
-    @Test
     public void testOnTickWillRunAndClearExecutors() {
         HashSet macroSet = new HashSet();
         macroSet = spy(macroSet);
@@ -131,7 +129,6 @@ public class GameTickHandlerTest {
         verify(executorSet).clear();
     }
 
-    @Test
     public void testOnTickWillRunAndClearExecutorsLimitedTick() {
         HashSet macroSet = new HashSet();
         macroSet = spy(macroSet);
