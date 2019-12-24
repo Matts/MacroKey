@@ -34,7 +34,9 @@ public class JavascriptInterpreter {
             }
         } finally {
             try {
-                reader.close();
+                if (reader != null) {
+                    reader.close();
+                }
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
@@ -44,10 +46,9 @@ public class JavascriptInterpreter {
         } catch (PolyglotException e) {
             e.printStackTrace();
         }
-
     }
 
-    public Value eval(String code) throws FileNotFoundException, ScriptException {
+    public Value eval(String code) {
         return engine.eval("js", code);
     }
 }

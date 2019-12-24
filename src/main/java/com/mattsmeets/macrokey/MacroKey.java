@@ -2,14 +2,11 @@ package com.mattsmeets.macrokey;
 
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
-import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.proxy.CommonProxy;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JavascriptHelper;
-import com.mattsmeets.macrokey.service.JavascriptInterpreter;
 import com.mattsmeets.macrokey.service.JsonConfig;
 import com.mattsmeets.macrokey.service.LogHelper;
-import com.sun.javafx.application.PlatformImpl;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -60,9 +57,6 @@ public class MacroKey {
 
         this.logger.info("Hello World! Welcome to MacroKey Keybinding. Please sit back while we initialize...");
         this.logger.debug("PreInitialization");
-
-        // bypass to allow setTimeout to work in javascript.
-//        PlatformImpl.startup(() -> {});
 
         this.javascriptFileHelper = new JavascriptHelper(event.getModConfigurationDirectory().getAbsolutePath());
 

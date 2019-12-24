@@ -3,7 +3,6 @@ package com.mattsmeets.macrokey.service;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.CommandInterface;
 import com.mattsmeets.macrokey.model.serializer.CommandSerializer;
 
