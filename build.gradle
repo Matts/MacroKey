@@ -121,6 +121,11 @@ task signJar(dependsOn: ['jar']){
 
 build.dependsOn signJar
 
+shadowJar {
+    classifier = ""
+    configurations = [project.configurations.compile]
+}
+
 task deobfJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     from sourceSets.main.output
     classifier = 'dev'

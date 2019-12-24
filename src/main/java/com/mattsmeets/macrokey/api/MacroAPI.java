@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * MacroAPI implements the own MacroKey API, this will allow you to modify commands in commands. As this is very powerful,
+ * no money-back guarantee will be provided if the MacroAPI takes over the world when used incorrectly.
+ *
+ * @since 2.1
+ */
 public class MacroAPI {
 
     public static class Macro extends AbstractAPI {

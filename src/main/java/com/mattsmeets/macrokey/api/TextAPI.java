@@ -3,11 +3,21 @@ package com.mattsmeets.macrokey.api;
 import net.minecraft.util.text.TextFormatting;
 import org.graalvm.polyglot.HostAccess;
 
+/**
+ * TextAPI provides text formatting for commands. This can be used together with the ChatAPI
+ * to make nice looking text show on display
+ *
+ * @see ChatAPI
+ * @since 2.1
+ */
 public class TextAPI extends AbstractAPI {
 
     @HostAccess.Export
     public String SECTION_SIGN = "\u00a7";
 
+    /**
+     * getFormatByName allows you to manually fetch a formatter preset
+     */
     @HostAccess.Export
     public String getFormatByName(String name) {
         return getFormat(name);
@@ -67,7 +77,6 @@ public class TextAPI extends AbstractAPI {
         public String ITALIC = getFormat("ITALIC");
         @HostAccess.Export
         public String RESET = getFormat("RESET");
-
     }
 
     public static String getFormat(String name) {

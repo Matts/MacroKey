@@ -3,6 +3,11 @@ package com.mattsmeets.macrokey.api;
 import net.minecraft.client.Minecraft;
 import org.graalvm.polyglot.HostAccess;
 
+/**
+ * PlayerAPI implements various basic user actions and information retrieval tools.
+ *
+ * @since 2.1
+ */
 public class PlayerAPI extends AbstractAPI {
     public static class Position {
         @HostAccess.Export
@@ -31,6 +36,9 @@ public class PlayerAPI extends AbstractAPI {
         return Minecraft.getMinecraft().player.getUniqueID().toString();
     }
 
+    /**
+     * Pos will fetch the current players' position. Use functions X, Y or Z to get the position
+     */
     @HostAccess.Export
     public Position Pos = new Position();
 

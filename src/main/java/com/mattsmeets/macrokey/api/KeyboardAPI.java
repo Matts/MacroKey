@@ -3,6 +3,11 @@ package com.mattsmeets.macrokey.api;
 import org.graalvm.polyglot.HostAccess;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * KeyboardAPI allows you to implement your own custom keyboard functionality.
+ *
+ * @since 2.1
+ */
 public class KeyboardAPI extends AbstractAPI {
 
     @HostAccess.Export
