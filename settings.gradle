@@ -1,0 +1,3 @@
+include 'app'
+include 'TestCore'
+project(':TestCore').projectDir = new File('../TestCore')

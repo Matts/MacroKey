@@ -3,7 +3,6 @@ package com.mattsmeets.macrokey.api;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import org.graalvm.polyglot.HostAccess;
 
 public class ChatAPI extends AbstractAPI {
@@ -18,6 +17,7 @@ public class ChatAPI extends AbstractAPI {
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(message));
     }
 
+    @HostAccess.Export
     public String legalCharacters(String str) {
         StringBuilder builder = new StringBuilder();
 
