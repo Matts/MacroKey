@@ -57,3 +57,22 @@ edit=Edit
 key.macrokey.category=MacroKey Keybinding
 key.macrokey.management.desc=Open Macro Management GUI
 ####
+
+## Missing Translations ##
+key.macrokey.category=MacroKey Keybinding
+key.macrokey.management.desc=Macro Management
+gui.manage.text.title=Manage Macros
+gui.manage.text.macro.add=Add Macro
+fragment.list.text.remove=X
+gui.modify.text.save=Save Macro
+gui.modify.text.command=Command
+gui.modify.text.key=Key
+gui.modify.text.repeat=Repeat
+gui.modify.text.enable=Enabled
+text.layer.display=Layer: %1$s
+text.layer.master=Master
+gui.manage.text.layer.edit=Edit Layers
+gui.manage.layer.text.title=Manage Layers
+gui.manage.text.layer.add=Add Layer
+gui.modify.layer.text.save=Save Layer
+####
