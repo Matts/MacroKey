@@ -1,10 +1,5 @@
 package com.mattsmeets.macrokey.config;
 
-import com.mattsmeets.macrokey.ModReference;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-
 //@Config(modid = ModReference.MOD_ID)
 //@Config.LangKey("macrokey.config.title")
 public class ModConfig {
@@ -24,13 +19,13 @@ public class ModConfig {
     //@Config.Comment("Customize the position that the button for switching layer should use, expected is {x, y, width, height} (default: -100, 128, 200, 20)")
     public static int[] buttonLayerSwitchSettings = {-100, 128, 200, 20};
 
-    @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
-    public static class EventHandler {
-        @SubscribeEvent
-        public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(ModReference.MOD_ID)) {
-                //ConfigManager.sync(ModReference.MOD_ID, Config.Type.INSTANCE);
-            }
-        }
-    }
+//    @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
+//    public static class EventHandler {
+//        @SubscribeEvent
+//        public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
+//            if (event.getModID().equals(ModReference.MOD_ID)) {
+//                //ConfigManager.sync(ModReference.MOD_ID, Config.Type.INSTANCE);
+//            }
+//        }
+//    }
 }

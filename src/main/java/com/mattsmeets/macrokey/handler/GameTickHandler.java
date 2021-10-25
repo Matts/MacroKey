@@ -6,7 +6,7 @@ import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -19,19 +19,19 @@ public class GameTickHandler {
     /**
      * Mod KeyBinding list
      */
-    private final Map<ModKeyBinding, KeyBinding> keyBindings;
+    private final Map<ModKeyBinding, KeyMapping> keyBindings;
 
     /**
      * private stash of macro's to run
      */
-    private Set<MacroInterface> macrosToRun;
+    private final Set<MacroInterface> macrosToRun;
 
     /**
      * private stash of executor's to run
      */
-    private Set<ExecuteOnTickInterface> executorsToRun;
+    private final Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler(Set macrosToRun, Set executorsToRun, Map<ModKeyBinding, KeyBinding> keyBindings) {
+    public GameTickHandler(Set<MacroInterface> macrosToRun, Set<ExecuteOnTickInterface> executorsToRun, Map<ModKeyBinding, KeyMapping> keyBindings) {
         this.keyBindings = keyBindings;
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;
@@ -55,7 +55,7 @@ public class GameTickHandler {
     public void onTick(InGameTickEvent event) {
         // find if the current key being pressed is the dedicated
         // MacroKey gui button. If so, open its GUI
-        if (keyBindings.get(ModKeyBinding.OPEN_MANAGEMENT_GUI).isPressed()) {
+        if (keyBindings.get(ModKeyBinding.OPEN_MANAGEMENT_GUI).isDown()) {
             MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
         }
 

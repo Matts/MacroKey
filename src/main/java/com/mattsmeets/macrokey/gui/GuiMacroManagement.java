@@ -2,13 +2,15 @@ package com.mattsmeets.macrokey.gui;
 
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.MacroEvent;
-import com.mattsmeets.macrokey.gui.fragment.MacroListFragment;
+import com.mattsmeets.macrokey.gui.list.MacroListFragment;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,56 +20,56 @@ import java.io.IOException;
 import java.util.List;
 
 // TODO : Clean this class
-public class GuiMacroManagement extends GuiScreen {
+public class GuiMacroManagement extends Screen {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int BUTTON_LEFT = 0;
 
-    private final GuiScreen parentScreen;
+    private final Screen parentScreen;
     private MacroListFragment macroListFragment;
-    private GuiButton layerSwitcher;
+    private Button layerSwitcher;
 
     public MacroInterface macroModify;
 
     private int currentSelectedLayer;
     private List<LayerInterface> layers;
 
-    public GuiMacroManagement(final GuiScreen screen) {
+    public GuiMacroManagement(final Screen screen) {
+        super(new TranslatableComponent("controls.title"));
+//        super(screen, Minecraft.getInstance().options, new TranslatableComponent("controls.title"));
         this.parentScreen = screen;
         this.currentSelectedLayer = -1;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
         final GuiMacroManagement that = this;
-
         // Cancel button
-        this.addButton(new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, I18n.format("gui.done")) {
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("gui.done"), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                Minecraft.getInstance().displayGuiScreen(parentScreen);
+                Minecraft.getInstance().setScreen(parentScreen);
             }
         });
 
         // Add macro button
-        this.addButton(new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.format("gui.manage.text.macro.add")) {
+        this.addRenderableWidget(new Button( this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TranslatableComponent("gui.manage.text.macro.add"), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                Minecraft.getInstance().displayGuiScreen(new GuiModifyMacro(that));
+                Minecraft.getInstance().setScreen(new GuiModifyMacro(that));
             }
         });
 
         // Open layer manager button
-        this.addButton(new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, I18n.format("gui.manage.text.layer.edit")) {
+        this.addRenderableWidget(new Button( this.width / 2 - 155 + 160, 40, 150, 20, new TranslatableComponent("gui.manage.text.layer.edit"), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                Minecraft.getInstance().displayGuiScreen(new GuiLayerManagement(that));
+//                Minecraft.getInstance().setScreen(new GuiLayerManagement(that));
             }
         });
 
-        this.layerSwitcher = this.addButton(new GuiButton(3, this.width / 2 - 155, 40, 150, 20, I18n.format("gui.manage.text.layer.switch")) {
+        this.layerSwitcher = this.addRenderableWidget(new Button( this.width / 2 - 155, 40, 150, 20, new TranslatableComponent("gui.manage.text.layer.switch"), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 if (currentSelectedLayer < layers.size() - 1) {
@@ -84,17 +86,16 @@ public class GuiMacroManagement extends GuiScreen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-
+    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ps);
         // Render macro list
-        this.macroListFragment.drawScreen(mouseX, mouseY, partialTicks);
+        this.macroListFragment.render(ps, mouseX, mouseY, partialTicks);
 
         // Render Title
-        this.drawCenteredString(this.fontRenderer, I18n.format("gui.manage.text.title"), this.width / 2, 8, 0xFFFFFF);
+        drawCenteredString(ps, this.font, I18n.get("gui.manage.text.title"), this.width / 2, 8, 0xFFFFFF);
 
         // Render Buttons & Labels
-        super.render(mouseX, mouseY, partialTicks);
+        super.render(ps,mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -128,7 +129,7 @@ public class GuiMacroManagement extends GuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean isPauseScreen() {
         return false;
     }
 
@@ -141,9 +142,9 @@ public class GuiMacroManagement extends GuiScreen {
         }
 
         final LayerInterface currentLayer = currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
-        final String currentLayerName = currentLayer == null ? I18n.format("text.layer.master") : currentLayer.getDisplayName();
+        final String currentLayerName = currentLayer == null ? I18n.get("text.layer.master") : currentLayer.getDisplayName();
 
         this.macroListFragment = new MacroListFragment(this, currentLayer);
-        this.layerSwitcher.displayString = I18n.format("text.layer.display", currentLayerName);
+        this.layerSwitcher.setMessage(new TranslatableComponent("text.layer.display", currentLayerName));
     }
 }

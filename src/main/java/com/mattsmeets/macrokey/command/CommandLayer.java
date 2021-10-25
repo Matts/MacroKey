@@ -4,15 +4,15 @@ import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
 class CommandLayer {
-    private static final String LAYER_MASTER_TEXT = I18n.format("text.layer.master");
+    private static final String LAYER_MASTER_TEXT = I18n.get("text.layer.master");
 
-    static ArgumentBuilder<CommandSource, ?> register() {
+    static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("layer")
                 .then(Commands.literal("toggle")
                         .executes(ctx ->
@@ -24,7 +24,7 @@ class CommandLayer {
                 );
     }
 
-    private static int printLayerInformation(CommandContext<CommandSource> context) {
+    private static int printLayerInformation(CommandContext<CommandSourceStack> context) {
         final LayerInterface activeLayer = MacroKey.modState.getActiveLayer();
         final String layerDisplayName;
         final int countMacroEnabled;
@@ -37,11 +37,11 @@ class CommandLayer {
             countMacroEnabled = activeLayer.getMacros().size();
         }
 
-        context.getSource().sendFeedback(
-                new TextComponentTranslation(
+        context.getSource().sendSuccess(
+                new TextComponent(I18n.get(
                         "command.layer.information",
                         layerDisplayName,
-                        countMacroEnabled
+                        countMacroEnabled)
                 ), true
         );
 

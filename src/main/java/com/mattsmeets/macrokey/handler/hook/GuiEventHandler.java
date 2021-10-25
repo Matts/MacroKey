@@ -5,12 +5,14 @@ import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,7 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * Add the switch layer button to the main menu.
  */
 public class GuiEventHandler {
-    private GuiButton switchButton = null;
+    private Button switchButton = null;
     private ModState modState;
 
     public GuiEventHandler(final ModState modState) {
@@ -37,26 +39,25 @@ public class GuiEventHandler {
      */
     @SubscribeEvent
     public void init(final GuiScreenEvent.InitGuiEvent event) {
-        final GuiScreen gui = event.getGui();
-
+        final Screen gui = event.getGui();
         if (isNotMainMenu(event.getGui())) return;
         if (isSwitchButtonDisabled()) return;
 
-        switchButton = new GuiButton(
-                ModConfig.buttonLayerSwitcherId,
+        switchButton = new Button(
                 gui.width / 2 + ModConfig.buttonLayerSwitchSettings[0],
                 gui.height / 4 + ModConfig.buttonLayerSwitchSettings[1],
                 ModConfig.buttonLayerSwitchSettings[2],
                 ModConfig.buttonLayerSwitchSettings[3],
-                getLayerButtonLabel(modState.getActiveLayer())
+                getLayerButtonLabel(modState.getActiveLayer()),
+                Button::onPress
         ) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                this.displayString = getLayerButtonLabel(modState.nextLayer());
+                this.setMessage(getLayerButtonLabel(modState.nextLayer()));
             }
         };
 
-        event.addButton(switchButton);
+        event.addWidget(switchButton);
     }
 
     /**
@@ -70,7 +71,7 @@ public class GuiEventHandler {
         if (isNotMainMenu(event.getGui())
                 || isSwitchButtonDisabled()
                 || switchButton == null
-                || !switchButton.isMouseOver()) {
+                || !switchButton.isMouseOver(event.getMouseX(), event.getMouseY())) {
             return;
         }
 
@@ -87,33 +88,34 @@ public class GuiEventHandler {
         if (isNotMainMenu(event.getGui())
                 || isSwitchButtonDisabled()
                 || switchButton == null
-                || !switchButton.isMouseOver()) {
+                || !switchButton.isHovered()) {
             return;
         }
 
-        final MouseHelper mouseHelper = Minecraft.getInstance().mouseHelper;
-        event.getGui().drawHoveringText(
-                I18n.format("text.layer.hover.right_click"),
-                (int) (mouseHelper.getMouseX() / 2),
-                (int) (mouseHelper.getMouseY() / 2)
-        );
+        final MouseHandler mouseHelper = Minecraft.getInstance().mouseHandler;
+        PoseStack posestack = new PoseStack();
+        event.getGui().renderTooltip(
+                posestack,
+                new TranslatableComponent("text.layer.hover.right_click"),
+                (int) (mouseHelper.xpos() / 2),
+                (int) (mouseHelper.ypos() / 2));
     }
 
     //----------
     // Helpers
     //----------
 
-    private static boolean isNotMainMenu(final GuiScreen gui) {
-        return !(gui instanceof GuiIngameMenu);
+    private static boolean isNotMainMenu(final Screen gui) {
+        return !(gui instanceof PauseScreen);
     }
 
     private static boolean isSwitchButtonDisabled() {
         return ModConfig.buttonLayerSwitcherId == -1;
     }
 
-    private static String getLayerButtonLabel(final LayerInterface layer) {
-        return I18n.format("text.layer.display",
-                layer == null ? I18n.format("text.layer.master") : layer.getDisplayName()
+    private static TranslatableComponent getLayerButtonLabel(final LayerInterface layer) {
+        return new TranslatableComponent("text.layer.display",
+                layer == null ? I18n.get("text.layer.master") : layer.getDisplayName()
         );
     }
 }

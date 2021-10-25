@@ -1,6 +1,6 @@
 package com.mattsmeets.macrokey.event;
 
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.eventbus.api.Event;
 
 public class InGameTickEvent extends Event {
@@ -8,18 +8,18 @@ public class InGameTickEvent extends Event {
     /**
      * Current player / sender
      */
-    private EntityPlayerSP currentPlayer;
+    private LocalPlayer currentPlayer;
     /**
      * Is this a limited tick event
      */
     private boolean limitedTickEvent;
 
-    public InGameTickEvent(EntityPlayerSP entityPlayerSP, boolean limited) {
+    public InGameTickEvent(LocalPlayer entityPlayerSP, boolean limited) {
         this.currentPlayer = entityPlayerSP;
         this.limitedTickEvent = limited;
     }
 
-    public EntityPlayerSP getCurrentPlayer() {
+    public LocalPlayer getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -28,7 +28,7 @@ public class InGameTickEvent extends Event {
     }
 
     public static class LimitedInGameTickEvent extends InGameTickEvent {
-        public LimitedInGameTickEvent(EntityPlayerSP entityPlayerSP) {
+        public LimitedInGameTickEvent(LocalPlayer entityPlayerSP) {
             super(entityPlayerSP, true);
         }
     }
