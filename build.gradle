@@ -141,10 +141,9 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-//    test "junit:junit:4.11"
-//    test 'org.mockito:mockito-core:2.7.22'
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.103'
-
+    testImplementation "junit:junit:4.13.2"
+    testImplementation 'org.mockito:mockito-core:2.28.2'
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency

@@ -40,7 +40,7 @@ public class GameTickHandler {
 
     @SubscribeEvent
     public void onKeyEvent(MacroActivationEvent event) {
-        if (Minecraft.getInstance().screen != null) {
+        if (Minecraft.getInstance() != null && Minecraft.getInstance().screen != null) {
             return;
         }
         if (event.getMacroState().isKeyDown()) {

@@ -8,8 +8,10 @@ import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.command.CommandInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.main.GameConfig;
+import net.minecraft.client.player.LocalPlayer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -25,13 +27,13 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnKeyEventAddsMacroWhenKeyDown() {
-        HashSet set = new HashSet();
-        HashSet spySet = spy(set);
+        HashSet<MacroInterface> set = new HashSet<MacroInterface>();
+        HashSet<MacroInterface> spySet = spy(set);
 
         MacroActivationEvent event = mock(MacroActivationEvent.class);
 
         Macro macro = mock(Macro.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         when(event.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_DOWN);
         Set<MacroInterface> macros = Collections.singleton(macro);
@@ -48,13 +50,13 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnKeyEventAddsMacroWhenKeyUp() {
-        HashSet set = new HashSet();
-        HashSet spySet = spy(set);
+        HashSet<MacroInterface> set = new HashSet<MacroInterface>();
+        HashSet<MacroInterface> spySet = spy(set);
 
         MacroActivationEvent event = mock(MacroActivationEvent.class);
 
         Macro macro = mock(Macro.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         when(event.getMacroState()).thenReturn(MacroActivationEvent.MacroState.KEY_UP);
 
@@ -68,13 +70,13 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnExecutorEventWillAddExecutor() {
-        HashSet set = new HashSet();
-        HashSet spySet = spy(set);
+        HashSet<ExecuteOnTickInterface> set = new HashSet<ExecuteOnTickInterface>();
+        HashSet<ExecuteOnTickInterface> spySet = spy(set);
 
         ExecuteOnTickEvent event = mock(ExecuteOnTickEvent.class);
 
         Macro macro = mock(Macro.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(null, spySet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
@@ -91,16 +93,16 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnTickWillClearExecutors() {
-        HashSet macroSet = new HashSet();
+        HashSet<MacroInterface> macroSet = new HashSet<MacroInterface>();
         macroSet = spy(macroSet);
 
-        HashSet executorSet = new HashSet();
+        HashSet<ExecuteOnTickInterface> executorSet = new HashSet<ExecuteOnTickInterface>();
         executorSet = spy(executorSet);
 
         InGameTickEvent event = mock(InGameTickEvent.class);
         Macro macro = mock(Macro.class);
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
@@ -111,16 +113,16 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnTickWillRunAndClearExecutors() {
-        HashSet macroSet = new HashSet();
+        HashSet<MacroInterface> macroSet = new HashSet<MacroInterface>();
         macroSet = spy(macroSet);
 
-        HashSet executorSet = new HashSet();
+        HashSet<ExecuteOnTickInterface> executorSet = new HashSet<ExecuteOnTickInterface>();
         executorSet = spy(executorSet);
 
         InGameTickEvent event = mock(InGameTickEvent.class);
         Macro macro = mock(Macro.class);
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
@@ -136,16 +138,16 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnTickWillRunAndClearExecutorsLimitedTick() {
-        HashSet macroSet = new HashSet();
+        Set<MacroInterface> macroSet = new HashSet<MacroInterface>();
         macroSet = spy(macroSet);
 
-        HashSet executorSet = new HashSet();
+        HashSet<ExecuteOnTickInterface> executorSet = new HashSet<ExecuteOnTickInterface>();
         executorSet = spy(executorSet);
 
         InGameTickEvent event = mock(InGameTickEvent.class);
         Macro macro = mock(Macro.class);
         ExecuteOnTickInterface executor = mock(ExecuteOnTickInterface.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(macroSet, executorSet, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
@@ -163,10 +165,10 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnTickWillRunNotRepeatingMacros() {
-        HashSet macroSet = new HashSet();
+        HashSet<MacroInterface> macroSet = new HashSet<>();
         macroSet = spy(macroSet);
 
-        EntityPlayerSP player = mock(EntityPlayerSP.class);
+        LocalPlayer player = mock(LocalPlayer.class);
 
         InGameTickEvent event = mock(InGameTickEvent.class);
         Macro macro = mock(Macro.class);
@@ -182,17 +184,17 @@ public class GameTickHandlerTest {
         when(macro.getCommand()).thenReturn(command);
         when(macro1.getCommand()).thenReturn(command);
 
-        HashSet inputMacros = new HashSet();
+        HashSet<MacroInterface> inputMacros = new HashSet<>();
         inputMacros.add(macro);
         inputMacros.add(macro1);
         inputMacros.add(macro2);
 
-        HashSet expectedMacros = new HashSet();
+        HashSet<MacroInterface> expectedMacros = new HashSet<>();
         inputMacros.add(macro);
         inputMacros.add(macro1);
 
         MacroActivationEvent macroActivationEvent = mock(MacroActivationEvent.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(macroSet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
@@ -212,10 +214,10 @@ public class GameTickHandlerTest {
 
     @Test
     public void testOnTickWillRunRepeatingMacrosOnLimitedTick() {
-        HashSet macroSet = new HashSet();
+        HashSet<MacroInterface> macroSet = new HashSet<>();
         macroSet = spy(macroSet);
 
-        EntityPlayerSP player = mock(EntityPlayerSP.class);
+        LocalPlayer player = mock(LocalPlayer.class);
 
         InGameTickEvent event = mock(InGameTickEvent.class);
         Macro macro = mock(Macro.class);
@@ -232,17 +234,17 @@ public class GameTickHandlerTest {
         when(macro1.getCommand()).thenReturn(command);
         when(macro2.getCommand()).thenReturn(command);
 
-        HashSet inputMacros = new HashSet();
+        HashSet<MacroInterface> inputMacros = new HashSet<>();
         inputMacros.add(macro);
         inputMacros.add(macro1);
         inputMacros.add(macro2);
 
-        HashSet expectedMacros = new HashSet();
+        HashSet<MacroInterface> expectedMacros = new HashSet<>();
         inputMacros.add(macro);
         inputMacros.add(macro1);
 
         MacroActivationEvent macroActivationEvent = mock(MacroActivationEvent.class);
-        KeyBinding keyBinding = mock(KeyBinding.class);
+        KeyMapping keyBinding = mock(KeyMapping.class);
 
         GameTickHandler handler = new GameTickHandler(macroSet, null, Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, keyBinding));
 
