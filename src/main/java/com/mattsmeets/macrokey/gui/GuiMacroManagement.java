@@ -35,7 +35,6 @@ public class GuiMacroManagement extends Screen {
 
     public GuiMacroManagement(final Screen screen) {
         super(new TranslatableComponent("controls.title"));
-//        super(screen, Minecraft.getInstance().options, new TranslatableComponent("controls.title"));
         this.parentScreen = screen;
         this.currentSelectedLayer = -1;
     }
@@ -65,7 +64,7 @@ public class GuiMacroManagement extends Screen {
         this.addRenderableWidget(new Button( this.width / 2 - 155 + 160, 40, 150, 20, new TranslatableComponent("gui.manage.text.layer.edit"), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-//                Minecraft.getInstance().setScreen(new GuiLayerManagement(that));
+                Minecraft.getInstance().setScreen(new GuiLayerManagement(that));
             }
         });
 
@@ -130,7 +129,7 @@ public class GuiMacroManagement extends Screen {
 
     @Override
     public boolean isPauseScreen() {
-        return false;
+        return true;
     }
 
     private void updateMacroList() {

@@ -17,7 +17,7 @@ public class ModConfig {
     public static int buttonLayerSwitcherId = 823358142;
 
     //@Config.Comment("Customize the position that the button for switching layer should use, expected is {x, y, width, height} (default: -100, 128, 200, 20)")
-    public static int[] buttonLayerSwitchSettings = {-100, 128, 200, 20};
+    public static int[] buttonLayerSwitchSettings = {-102, 128, 204, 20};
 
 //    @Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
 //    public static class EventHandler {

@@ -7,6 +7,7 @@ import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -39,6 +40,9 @@ public class GameTickHandler {
 
     @SubscribeEvent
     public void onKeyEvent(MacroActivationEvent event) {
+        if (Minecraft.getInstance().screen != null) {
+            return;
+        }
         if (event.getMacroState().isKeyDown()) {
             this.macrosToRun.addAll(event.getMacros());
         } else {

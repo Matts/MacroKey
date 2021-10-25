@@ -1,60 +1,70 @@
 package com.mattsmeets.macrokey.gui;
 
-import com.mattsmeets.macrokey.gui.fragment.LayerListFragment;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import com.google.common.collect.ImmutableList;
+import com.mattsmeets.macrokey.gui.list.LayerListFragment;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
-public class GuiLayerManagement extends GuiScreen {
+public class GuiLayerManagement extends Screen {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private final GuiScreen parentScreen;
+    private final Screen parentScreen;
 
-    private final String screenTitle = I18n.format("gui.manage.layer.text.title");
-    private final String addLayerButtonText = I18n.format("gui.manage.text.layer.add");
-    private final String doneText = I18n.format("gui.done");
+    private final String screenTitle = I18n.get("gui.manage.layer.text.title");
+    private final String addLayerButtonText = I18n.get("gui.manage.text.layer.add");
+    private final String doneText = I18n.get("gui.done");
 
     private LayerListFragment layerListFragment;
 
-    GuiLayerManagement(GuiScreen screen) {
+    private Button btnDone, btnAdd;
+
+    GuiLayerManagement(Screen screen) {
+        super(new TextComponent("test"));
         this.parentScreen = screen;
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ps);
 
         // Render list
-        this.layerListFragment.drawScreen(mouseX, mouseY, partialTicks);
+        this.layerListFragment.render(ps, mouseX, mouseY, partialTicks);
 
         // Render title
-        this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xFFFFFF);
+        drawCenteredString(ps, this.font, this.screenTitle, this.width / 2, 8, 0xFFFFFF);
 
         // Render buttons & labels
-        super.render(mouseX, mouseY, partialTicks);
+        super.render(ps, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void initGui() {
+    public void init() {
         final GuiLayerManagement that = this;
 
         // Cancel button
-        this.addButton(new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.doneText) {
+        btnDone = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TextComponent(this.doneText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                mc.displayGuiScreen(parentScreen);
+                Minecraft.getInstance().setScreen(parentScreen);
             }
         });
 
         // Add layer button
-        this.addButton(new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.addLayerButtonText) {
+        btnAdd = this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TextComponent(this.addLayerButtonText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                mc.displayGuiScreen(new GuiModifyLayer(that));
+                Minecraft.getInstance().setScreen(new GuiModifyLayer(that));
             }
         });
 
@@ -63,6 +73,14 @@ public class GuiLayerManagement extends GuiScreen {
         } catch (IOException e) {
             LOGGER.error(e);
         }
+    }
+
+    public List<? extends GuiEventListener> children() {
+        return ImmutableList.of(this.btnAdd, this.btnDone);
+    }
+
+    public List<? extends NarratableEntry> narratables() {
+        return ImmutableList.of(this.btnAdd, this.btnDone);
     }
 
     @Override
@@ -75,7 +93,7 @@ public class GuiLayerManagement extends GuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
+    public boolean isPauseScreen() {
+        return true;
     }
 }

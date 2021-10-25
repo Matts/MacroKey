@@ -59,7 +59,7 @@ public class MacroKey {
 
             // BindingsRepository has a dependency on the bindings.json file being created
             bindingsRepository = new BindingsRepository(bindingsJSONConfig);
-bindingsRepository.addMacro(new Macro(87, "/test", true), true);
+
             // Initialize the mod's state
             modState = new ModState(bindingsRepository, bindingsRepository.findActiveLayer(true));
 

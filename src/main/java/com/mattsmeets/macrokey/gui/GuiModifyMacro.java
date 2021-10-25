@@ -97,6 +97,7 @@ public class GuiModifyMacro extends Screen {
                 this.updateDisplayString(macro, true);
             }
         });
+        this.btnKeyBinding.updateDisplayString(this.macro, false);
 
         // Toggle macro repeat button
         this.addRenderableWidget(new Button(this.width / 2 - 75, 140, 75, 20, new TextComponent(macro.willRepeat() ? enabledText : disabledText), Button::onPress) {
@@ -114,7 +115,7 @@ public class GuiModifyMacro extends Screen {
             public void onClick(double mouseX, double mouseY) {
                 macro.setActive(!macro.isActive());
 
-                this.setMessage(new TextComponent(macro.willRepeat() ? enabledText : disabledText));
+                this.setMessage(new TextComponent(macro.isActive() ? enabledText : disabledText));
             }
         });
 
@@ -122,7 +123,6 @@ public class GuiModifyMacro extends Screen {
         this.textFieldCommand = new EditBox(this.font, this.width / 2 - 100, 50, 200, 20, new TextComponent("test"));
         this.textFieldCommand.setFocus(true);
         this.textFieldCommand.setMaxLength(Integer.MAX_VALUE);
-//        this.textFieldCommand.setMessage(new TextComponent(this.isUpdatingMacro ? macro.getCommand().toString() : StringUtils.EMPTY));
         this.textFieldCommand.setValue(this.isUpdatingMacro ? macro.getCommand().toString() : StringUtils.EMPTY);
         this.addRenderableWidget(this.textFieldCommand);
     }
@@ -198,5 +198,10 @@ public class GuiModifyMacro extends Screen {
         }
 
         return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return true;
     }
 }
