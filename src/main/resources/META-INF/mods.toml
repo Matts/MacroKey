@@ -22,7 +22,7 @@ displayName="${mod_name}" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 updateJSONURL="${update_url}" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://curse.com/project/243479" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/macrokey-keybinding" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="macrokey.png" #optional
 # A text field displayed in the mod UI
@@ -52,4 +52,4 @@ This mod enables the use of commands that you can bind to keys. PSA to all admin
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.17.1,1.18)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
