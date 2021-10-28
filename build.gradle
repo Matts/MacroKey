@@ -30,6 +30,15 @@ version = config.mc_version + '-' + config.mod_version
 group = config.mod_group
 archivesBaseName = config.mod_name
 
+if (System.getenv().BUILD_NUMBER)
+    version = "${version}.${System.getenv().BUILD_NUMBER}"
+
+// if we are not building with a key, add this to the version
+if (!project.hasProperty('signingKeystore')) {
+    project.properties.put('signingFingerprint', 'unsigned')
+    version = version + '-unsigned'
+}
+
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 

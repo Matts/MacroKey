@@ -49,7 +49,7 @@ public class LayerListFragment extends ContainerObjectSelectionList<LayerListFra
         private LayerEntry(final LayerInterface layer) {
             this.layer = layer;
 
-            this.btnEdit = new Button(0, 0, 60, 20, new TextComponent("edit"), Button::onPress) {
+            this.btnEdit = new Button(0, 0, 60, 20, new TranslatableComponent("edit"), Button::onPress) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     minecraft.setScreen(new GuiModifyLayer(guiLayerManagement, layer));
