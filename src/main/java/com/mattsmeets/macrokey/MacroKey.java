@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
@@ -39,6 +40,7 @@ public class MacroKey {
     public static ModState modState;
 
     public MacroKey() {
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC, "macrokey.toml");
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
     }
 
@@ -54,7 +56,7 @@ public class MacroKey {
             LOGGER.debug("PreInitialization");
 
             // set-up the bindings.json service & files
-            final JsonConfig bindingsJSONConfig = new JsonConfig(Minecraft.getInstance().gameDirectory.getAbsolutePath(), ModConfig.bindingFile);
+            final JsonConfig bindingsJSONConfig = new JsonConfig(Minecraft.getInstance().gameDirectory.getAbsolutePath(), ModConfig.bindingFile.get());
             bindingsJSONConfig.initializeFile();
 
             // BindingsRepository has a dependency on the bindings.json file being created

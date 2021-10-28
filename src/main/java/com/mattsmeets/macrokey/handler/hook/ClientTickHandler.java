@@ -31,7 +31,7 @@ public class ClientTickHandler {
         // how fast a repeating command should execute
         // retrieve the given delay within the config,
         // this will by default be 20 ticks
-        if (delta < ModConfig.repeatDelay) {
+        if (delta < ModConfig.repeatDelay.get()) {
             delta++;
         } else {
             delta = 0;

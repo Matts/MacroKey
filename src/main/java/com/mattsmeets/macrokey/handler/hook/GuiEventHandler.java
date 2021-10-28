@@ -44,10 +44,10 @@ public class GuiEventHandler {
         if (isSwitchButtonDisabled()) return;
 
         switchButton = new Button(
-                gui.width / 2 + ModConfig.buttonLayerSwitchSettings[0],
-                gui.height / 4 + ModConfig.buttonLayerSwitchSettings[1],
-                ModConfig.buttonLayerSwitchSettings[2],
-                ModConfig.buttonLayerSwitchSettings[3],
+                gui.width / 2 + ModConfig.buttonLayerSwitchSetting1.get(),
+                gui.height / 4 + ModConfig.buttonLayerSwitchSetting2.get(),
+                ModConfig.buttonLayerSwitchSetting3.get(),
+                ModConfig.buttonLayerSwitchSetting4.get(),
                 getLayerButtonLabel(modState.getActiveLayer()),
                 Button::onPress
         ) {
@@ -110,7 +110,7 @@ public class GuiEventHandler {
     }
 
     private static boolean isSwitchButtonDisabled() {
-        return ModConfig.buttonLayerSwitcherId == -1;
+        return ModConfig.buttonLayerSwitcherId.get() == -1;
     }
 
     private static TranslatableComponent getLayerButtonLabel(final LayerInterface layer) {

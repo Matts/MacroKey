@@ -18,7 +18,7 @@ public class JsonConfig {
     private JsonService jsonService;
 
     public JsonConfig(String parentFolder, String fileName) {
-        this.file = new File(parentFolder + "/macrokey/" + fileName);
+        this.file = new File(parentFolder + "/config/macrokey/" + fileName);
 
         this.jsonService = new JsonService();
     }
