@@ -18,7 +18,7 @@ public class KeyBindingButton extends Button {
     public void updateDisplayString(final MacroInterface macro, final boolean isListening) {
         String keyValue = GLFW.glfwGetKeyName(macro.getKeyCode(), 0);
         if(keyValue == null) {
-            keyValue = I18n.get("narrator.controls.unbound");
+            keyValue = I18n.get("key.keyboard.unknown");
         }
         this.setMessage(new TextComponent(isListening ? ChatFormatting.WHITE + "> " + ChatFormatting.YELLOW + keyValue + ChatFormatting.WHITE + " <"
                 : isMacroKeyAlreadyBind(macro) ? ChatFormatting.GOLD + keyValue
