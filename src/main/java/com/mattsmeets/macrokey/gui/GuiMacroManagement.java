@@ -1,179 +1,149 @@
 package com.mattsmeets.macrokey.gui;
 
+import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.MacroEvent;
-import com.mattsmeets.macrokey.gui.fragment.MacroListFragment;
+import com.mattsmeets.macrokey.gui.list.MacroListFragment;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.world.BossInfo;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 
-import static com.mattsmeets.macrokey.MacroKey.instance;
+// TODO : Clean this class
+public class GuiMacroManagement extends Screen {
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final int BUTTON_LEFT = 0;
 
-public class GuiMacroManagement extends GuiScreen {
-
-    private final GuiScreen parentScreen;
-    private final String
-            screenTitle = I18n.format("gui.manage.text.title"),
-            layerMasterText = I18n.format("text.layer.master"),
-            addMacroButtonText = I18n.format("gui.manage.text.macro.add"),
-            layerEditorButtonText = I18n.format("gui.manage.text.layer.edit"),
-            layerSwitcherButtonText = I18n.format("gui.manage.text.layer.switch");
-    private final String
-            doneText = I18n.format("gui.done");
-    public MacroInterface macroModify;
+    private final Screen parentScreen;
     private MacroListFragment macroListFragment;
-    private GuiButton
-            buttonDone,
-            buttonAdd,
-            layerEditor,
-            layerSwitcher;
+    private Button layerSwitcher;
+
+    public MacroInterface macroModify;
 
     private int currentSelectedLayer;
     private List<LayerInterface> layers;
 
-    private volatile boolean updateList = false;
-
-    public GuiMacroManagement(GuiScreen screen) {
+    public GuiMacroManagement(final Screen screen) {
+        super(new TranslatableComponent("controls.title"));
         this.parentScreen = screen;
         this.currentSelectedLayer = -1;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void init() {
+        super.init();
 
-        if (this.updateList) {
-            this.updateScreen();
-        }
+        final GuiMacroManagement that = this;
+        // Cancel button
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("gui.done"), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                Minecraft.getInstance().setScreen(parentScreen);
+            }
+        });
 
-        this.macroListFragment.drawScreen(mouseX, mouseY, partialTicks);
+        // Add macro button
+        this.addRenderableWidget(new Button( this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TranslatableComponent("gui.manage.text.macro.add"), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                Minecraft.getInstance().setScreen(new GuiModifyMacro(that));
+            }
+        });
 
-        this.buttonDone.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-        this.buttonAdd.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
+        // Open layer manager button
+        this.addRenderableWidget(new Button( this.width / 2 - 155 + 160, 40, 150, 20, new TranslatableComponent("gui.manage.text.layer.edit"), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                Minecraft.getInstance().setScreen(new GuiLayerManagement(that));
+            }
+        });
 
-        this.layerEditor.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-
-        this.layerSwitcher.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, 0.0f);
-
-        this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 16777215);
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        switch (button.id) {
-            case 0:
-                this.mc.displayGuiScreen(this.parentScreen);
-                break;
-            case 1:
-                this.mc.displayGuiScreen(new GuiModifyMacro(this));
-                break;
-            case 2:
-                this.mc.displayGuiScreen(new GuiLayerManagement(this));
-                break;
-            case 3:
-                if (this.currentSelectedLayer < this.layers.size() - 1) {
-                    this.currentSelectedLayer++;
+        this.layerSwitcher = this.addRenderableWidget(new Button( this.width / 2 - 155, 40, 150, 20, new TranslatableComponent("gui.manage.text.layer.switch"), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                if (currentSelectedLayer < layers.size() - 1) {
+                    currentSelectedLayer++;
                 } else {
-                    this.currentSelectedLayer = -1;
+                    currentSelectedLayer = -1;
                 }
 
-                this.updateList = true;
-                break;
-        }
-    }
+                updateMacroList();
+            }
+        });
 
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui() {
-        this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.doneText));
-        this.buttonList.add(this.buttonAdd = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.addMacroButtonText));
-
-        this.buttonList.add(this.layerEditor = new GuiButton(2, this.width / 2 - 155 + 160, 40, 150, 20, this.layerEditorButtonText));
-        this.buttonList.add(this.layerSwitcher = new GuiButton(3, this.width / 2 - 155, 40, 150, 20, this.layerSwitcherButtonText));
-
-        this.updateList = true;
-    }
-
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-
-        if (!this.updateList) {
-            return;
-        }
-
-        try {
-            this.layers = instance.modState.getLayers(true);
-
-            LayerInterface currentLayer =
-                    currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
-
-            this.macroListFragment = new MacroListFragment(this, currentLayer);
-
-            this.layerSwitcher.displayString =
-                    I18n.format("text.layer.display",
-                            currentLayer == null ? this.layerMasterText : currentLayer.getDisplayName()
-                    );
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            this.updateList = false;
-        }
+        updateMacroList();
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ps);
+        // Render macro list
+        this.macroListFragment.render(ps, mouseX, mouseY, partialTicks);
+
+        // Render Title
+        drawCenteredString(ps, this.font, I18n.get("gui.manage.text.title"), this.width / 2, 8, 0xFFFFFF);
+
+        // Render Buttons & Labels
+        super.render(ps,mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
         if (this.macroModify == null) {
-            super.keyTyped(typedChar, keyCode);
-
-            return;
+            return super.keyPressed(keyCode, scanCode, modifier);
         }
 
-        if (keyCode == Keyboard.KEY_ESCAPE) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             this.macroModify.setKeyCode(0);
-        } else if (keyCode != 0) {
+        } else if (keyCode != GLFW.GLFW_KEY_UNKNOWN) {
             this.macroModify.setKeyCode(keyCode);
-        } else if (typedChar > 0) {
-            this.macroModify.setKeyCode(typedChar + 256);
         }
 
         MinecraftForge.EVENT_BUS.post(new MacroEvent.MacroChangedEvent(this.macroModify));
 
         this.macroModify = null;
+
+        return true;
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (this.macroModify != null) {
             this.macroModify = null;
-        } else if (mouseButton != 0 || !this.macroListFragment.mouseClicked(mouseX, mouseY, mouseButton)) {
+        } else if (mouseButton != BUTTON_LEFT || !this.macroListFragment.mouseClicked(mouseX, mouseY, mouseButton)) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
-    }
 
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-
-        this.macroListFragment.handleMouseInput();
-    }
-
-    @Override
-    public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
+
+    private void updateMacroList() {
+        try {
+            this.layers = MacroKey.modState.getLayers(true);
+        } catch (IOException e) {
+            LOGGER.error(e);
+            return;
+        }
+
+        final LayerInterface currentLayer = currentSelectedLayer == -1 ? null : this.layers.get(currentSelectedLayer);
+        final String currentLayerName = currentLayer == null ? I18n.get("text.layer.master") : currentLayer.getDisplayName();
+
+        this.macroListFragment = new MacroListFragment(this, currentLayer);
+        this.layerSwitcher.setMessage(new TranslatableComponent("text.layer.display", currentLayerName));
     }
 }

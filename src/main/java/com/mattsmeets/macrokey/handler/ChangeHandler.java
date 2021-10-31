@@ -2,42 +2,47 @@ package com.mattsmeets.macrokey.handler;
 
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.event.MacroEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mattsmeets.macrokey.repository.BindingsRepository;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
 
-import static com.mattsmeets.macrokey.MacroKey.instance;
-
 public class ChangeHandler {
+    final BindingsRepository bindingsRepository;
 
-    @SideOnly(Side.CLIENT)
-    public static class MacroChangeHandler {
+    ChangeHandler(final BindingsRepository bindingsRepository) {
+        this.bindingsRepository = bindingsRepository;
+    }
+
+    public static class MacroChangeHandler extends ChangeHandler {
+        public MacroChangeHandler(BindingsRepository bindingsRepository) {
+            super(bindingsRepository);
+        }
 
         @SubscribeEvent
         public void macroChangedEvent(MacroEvent.MacroChangedEvent event) throws IOException {
-            instance.bindingsRepository.updateMacro(event.getMacroChanged(), true);
+            bindingsRepository.updateMacro(event.getMacroChanged(), true);
         }
 
         @SubscribeEvent
         public void macroAddedEvent(MacroEvent.MacroAddedEvent event) throws IOException {
-            instance.bindingsRepository.addMacro(event.getMacro(), true);
+            bindingsRepository.addMacro(event.getMacro(), true);
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static class LayerChangeHandler {
+    public static class LayerChangeHandler extends ChangeHandler {
+        public LayerChangeHandler(BindingsRepository bindingsRepository) {
+            super(bindingsRepository);
+        }
 
         @SubscribeEvent
         public void layerAddedEvent(LayerEvent.LayerAddedEvent event) throws IOException {
-            instance.bindingsRepository.addLayer(event.getLayer(), true);
+            bindingsRepository.addLayer(event.getLayer(), true);
         }
 
         @SubscribeEvent
         public void layerChangedEvent(LayerEvent.LayerChangedEvent event) throws IOException {
-            instance.bindingsRepository.updateLayer(event.getLayerChanged(), true);
+            bindingsRepository.updateLayer(event.getLayerChanged(), true);
         }
     }
-
 }
