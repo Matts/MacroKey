@@ -1,6 +1,6 @@
 package com.mattsmeets.macrokey.model.command;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 
 public interface CommandInterface {
 
@@ -16,7 +16,7 @@ public interface CommandInterface {
      *
      * @param player the player
      */
-    void execute(final LocalPlayer player);
+    void execute(final ClientPlayerEntity player);
 
     /**
      * Type identifier used for (de)serialization

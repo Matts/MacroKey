@@ -5,14 +5,15 @@ import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.MouseHelper;
+import net.minecraft.client.gui.screen.IngameMenuScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -92,11 +93,11 @@ public class GuiEventHandler {
             return;
         }
 
-        final MouseHandler mouseHelper = Minecraft.getInstance().mouseHandler;
-        PoseStack posestack = new PoseStack();
+        final MouseHelper mouseHelper = Minecraft.getInstance().mouseHandler;
+        MatrixStack posestack = new MatrixStack();
         event.getGui().renderTooltip(
                 posestack,
-                new TranslatableComponent("text.layer.hover.right_click"),
+                new TranslationTextComponent("text.layer.hover.right_click"),
                 (int) (mouseHelper.xpos() / 2),
                 (int) (mouseHelper.ypos() / 2));
     }
@@ -106,15 +107,15 @@ public class GuiEventHandler {
     //----------
 
     private static boolean isNotMainMenu(final Screen gui) {
-        return !(gui instanceof PauseScreen);
+        return !(gui instanceof IngameMenuScreen);
     }
 
     private static boolean isSwitchButtonDisabled() {
         return ModConfig.buttonLayerSwitcherId.get() == -1;
     }
 
-    private static TranslatableComponent getLayerButtonLabel(final LayerInterface layer) {
-        return new TranslatableComponent("text.layer.display",
+    private static TranslationTextComponent getLayerButtonLabel(final LayerInterface layer) {
+        return new TranslationTextComponent("text.layer.display",
                 layer == null ? I18n.get("text.layer.master") : layer.getDisplayName()
         );
     }

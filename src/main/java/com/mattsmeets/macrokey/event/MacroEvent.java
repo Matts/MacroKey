@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.model.MacroInterface;
+
 import net.minecraftforge.eventbus.api.Event;
 
 public class MacroEvent {

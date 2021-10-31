@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.model.LayerInterface;
+
 import net.minecraftforge.eventbus.api.Event;
 
 public class LayerEvent {

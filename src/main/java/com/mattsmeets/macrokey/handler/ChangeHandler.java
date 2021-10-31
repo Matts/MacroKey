@@ -1,11 +1,12 @@
 package com.mattsmeets.macrokey.handler;
 
+import java.io.IOException;
+
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.event.MacroEvent;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.io.IOException;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChangeHandler {
     final BindingsRepository bindingsRepository;

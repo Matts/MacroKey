@@ -1,9 +1,10 @@
 package com.mattsmeets.macrokey.event;
 
-import com.mattsmeets.macrokey.model.MacroInterface;
-import net.minecraftforge.eventbus.api.Event;
-
 import java.util.Set;
+
+import com.mattsmeets.macrokey.model.MacroInterface;
+
+import net.minecraftforge.eventbus.api.Event;
 
 public class MacroActivationEvent extends Event {
 

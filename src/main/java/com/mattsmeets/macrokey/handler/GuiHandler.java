@@ -1,18 +1,19 @@
 package com.mattsmeets.macrokey.handler;
 
 import com.mattsmeets.macrokey.config.ModConfig;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 
 public class GuiHandler {
 
 //    @Override
-    public Object getServerGuiElement(int id, Player player, Level world, int x, int y, int z) {
+    public Object getServerGuiElement(int id, PlayerEntity player, World world, int x, int y, int z) {
         return null;
     }
 
 //    @Override
-    public Object getClientGuiElement(int id, Player player, Level world, int x, int y, int z) {
+    public Object getClientGuiElement(int id, PlayerEntity player, World world, int x, int y, int z) {
         if (id == ModConfig.guiMacroManagementId) {
 //            return new GuiMacroManagement(Minecraft.getInstance().currentScreen);
         }

@@ -1,11 +1,6 @@
 package com.mattsmeets.macrokey.config;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 //@Config(modid = ModReference.MOD_ID)
 //@Config.LangKey("macrokey.config.title")

@@ -1,5 +1,13 @@
 package com.mattsmeets.macrokey.gui.list;
 
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.ImmutableList;
 import com.mattsmeets.macrokey.MacroKey;
 import com.mattsmeets.macrokey.event.LayerEvent;
@@ -8,26 +16,19 @@ import com.mattsmeets.macrokey.gui.GuiModifyMacro;
 import com.mattsmeets.macrokey.gui.button.KeyBindingButton;
 import com.mattsmeets.macrokey.model.LayerInterface;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class MacroListFragment extends ContainerObjectSelectionList<MacroListFragment.Entry> {
+public class MacroListFragment extends ExtendedList<MacroListFragment.Entry> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final GuiMacroManagement guiMacroManagement;
@@ -51,7 +52,7 @@ public class MacroListFragment extends ContainerObjectSelectionList<MacroListFra
     }
 
     @OnlyIn(Dist.CLIENT)
-    public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
+    public abstract static class Entry extends ExtendedList.AbstractListEntry<Entry> {
     }
 
     public class MacroEntry extends Entry {
@@ -68,14 +69,14 @@ public class MacroListFragment extends ContainerObjectSelectionList<MacroListFra
         private MacroEntry(MacroInterface macro) {
             this.macro = macro;
 
-            this.btnChangeKeyBinding = new KeyBindingButton( 0, 0, 75, 20, new TranslatableComponent(macro.getCommand().toString()), Button::onPress) {
+            this.btnChangeKeyBinding = new KeyBindingButton( 0, 0, 75, 20, new TranslationTextComponent(macro.getCommand().toString()), Button::onPress) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     guiMacroManagement.macroModify = macro;
                 }
             };
 
-            this.btnRemoveKeyBinding = new Button(0, 0, 15, 20, new TranslatableComponent("fragment.list.text.remove"), Button::onPress) {
+            this.btnRemoveKeyBinding = new Button(0, 0, 15, 20, new TranslationTextComponent("fragment.list.text.remove"), Button::onPress) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     try {
@@ -88,22 +89,22 @@ public class MacroListFragment extends ContainerObjectSelectionList<MacroListFra
                 }
             };
 
-            this.btnEdit = new Button(0, 0, 30, 20, new TranslatableComponent("edit"), Button::onPress) {
+            this.btnEdit = new Button(0, 0, 30, 20, new TranslationTextComponent("edit"), Button::onPress) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     minecraft.setScreen(new GuiModifyMacro(guiMacroManagement, macro));
                 }
             };
 
-            this.btnEnabledInLayer = new Button( 0, 0, 75, 20, new TranslatableComponent(MacroKey.bindingsRepository.isMacroInLayer(macro, currentLayer) ? this.enabledText : this.disabledText), Button::onPress) {
+            this.btnEnabledInLayer = new Button( 0, 0, 75, 20, new TranslationTextComponent(MacroKey.bindingsRepository.isMacroInLayer(macro, currentLayer) ? this.enabledText : this.disabledText), Button::onPress) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     if (MacroKey.bindingsRepository.isMacroInLayer(macro, currentLayer)) {
                         currentLayer.removeMacro(macro);
-                        this.setMessage(new TextComponent(disabledText));
+                        this.setMessage(new StringTextComponent(disabledText));
                     } else {
                         currentLayer.addMacro(macro);
-                        this.setMessage(new TextComponent(enabledText));
+                        this.setMessage(new StringTextComponent(enabledText));
                     }
 
                     MinecraftForge.EVENT_BUS.post(new LayerEvent.LayerChangedEvent(currentLayer));
@@ -112,7 +113,7 @@ public class MacroListFragment extends ContainerObjectSelectionList<MacroListFra
         }
 
         @Override
-        public void render(PoseStack ps, int entryWidth, int entryHeight, int mouseX, int mouseY, int c, int b, int a, boolean isSelected, float partialTicks) {
+        public void render(MatrixStack ps, int entryWidth, int entryHeight, int mouseX, int mouseY, int c, int b, int a, boolean isSelected, float partialTicks) {
             boolean macroKeyCodeModifyFlag = this.macro.equals(guiMacroManagement.macroModify);
 
             // Render macro command
@@ -140,11 +141,7 @@ public class MacroListFragment extends ContainerObjectSelectionList<MacroListFra
             }
         }
 
-        public List<? extends GuiEventListener> children() {
-            return ImmutableList.of(this.btnEdit, this.btnChangeKeyBinding, this.btnRemoveKeyBinding, this.btnEnabledInLayer);
-        }
-
-        public List<? extends NarratableEntry> narratables() {
+        public List<? extends IGuiEventListener> children() {
             return ImmutableList.of(this.btnEdit, this.btnChangeKeyBinding, this.btnRemoveKeyBinding, this.btnEnabledInLayer);
         }
 

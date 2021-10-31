@@ -1,26 +1,27 @@
 package com.mattsmeets.macrokey.handler;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.mattsmeets.macrokey.ModKeyBinding;
 import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
-import net.minecraft.client.KeyMapping;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class GameTickHandler {
 
     /**
      * Mod KeyBinding list
      */
-    private final Map<ModKeyBinding, KeyMapping> keyBindings;
+    private final Map<ModKeyBinding, KeyBinding> keyBindings;
 
     /**
      * private stash of macro's to run
@@ -32,7 +33,7 @@ public class GameTickHandler {
      */
     private final Set<ExecuteOnTickInterface> executorsToRun;
 
-    public GameTickHandler(Set<MacroInterface> macrosToRun, Set<ExecuteOnTickInterface> executorsToRun, Map<ModKeyBinding, KeyMapping> keyBindings) {
+    public GameTickHandler(Set<MacroInterface> macrosToRun, Set<ExecuteOnTickInterface> executorsToRun, Map<ModKeyBinding, KeyBinding> keyBindings) {
         this.keyBindings = keyBindings;
         this.macrosToRun = macrosToRun == null ? new HashSet<>() : macrosToRun;
         this.executorsToRun = executorsToRun == null ? new HashSet<>() : executorsToRun;

@@ -3,7 +3,7 @@ package com.mattsmeets.macrokey.handler.hook;
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.event.InGameTickEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +16,7 @@ public class ClientTickHandler {
 
     @SubscribeEvent
     public void onTick(final TickEvent.ClientTickEvent event) {
-        final LocalPlayer player = Minecraft.getInstance().player;
+        final ClientPlayerEntity player = Minecraft.getInstance().player;
 
         // check if we are in-game
         if (player == null) {

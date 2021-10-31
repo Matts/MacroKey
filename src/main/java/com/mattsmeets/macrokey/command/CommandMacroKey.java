@@ -2,12 +2,13 @@ package com.mattsmeets.macrokey.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.commands.CommandSourceStack;
+
+import net.minecraft.command.CommandSource;
 
 public class CommandMacroKey {
-    public CommandMacroKey(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public CommandMacroKey(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(
-                LiteralArgumentBuilder.<CommandSourceStack>literal("macrokey")
+                LiteralArgumentBuilder.<CommandSource>literal("macrokey")
                         .then(CommandLayer.register())
                         .then(CommandOpenGUI.register())
         );

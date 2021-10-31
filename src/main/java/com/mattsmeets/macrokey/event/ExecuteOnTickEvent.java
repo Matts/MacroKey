@@ -1,6 +1,7 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+
 import net.minecraftforge.eventbus.api.Event;
 
 public class ExecuteOnTickEvent extends Event {

@@ -1,5 +1,13 @@
 package com.mattsmeets.macrokey;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
+
 import com.mattsmeets.macrokey.command.CommandMacroKey;
 import com.mattsmeets.macrokey.config.ModConfig;
 import com.mattsmeets.macrokey.config.ModState;
@@ -8,29 +16,22 @@ import com.mattsmeets.macrokey.handler.GameTickHandler;
 import com.mattsmeets.macrokey.handler.hook.ClientTickHandler;
 import com.mattsmeets.macrokey.handler.hook.GuiEventHandler;
 import com.mattsmeets.macrokey.handler.hook.KeyInputHandler;
-import com.mattsmeets.macrokey.model.Macro;
 import com.mattsmeets.macrokey.repository.BindingsRepository;
 import com.mattsmeets.macrokey.service.JsonConfig;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
-import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 @Mod(ModReference.MOD_ID)
 public class MacroKey {
@@ -75,9 +76,9 @@ public class MacroKey {
             MinecraftForge.EVENT_BUS.register(new GuiEventHandler(modState));
         }
 
-        private static Map<ModKeyBinding, KeyMapping> registerKeyBindings() {
-            final KeyMapping managementKey = new KeyMapping(I18n.get("key.macrokey.management.desc"), KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_K), "key.macrokey.category");
-            final Map<ModKeyBinding, KeyMapping> keyBindingMap = Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, managementKey);
+        private static Map<ModKeyBinding, KeyBinding> registerKeyBindings() {
+            final KeyBinding managementKey = new KeyBinding(I18n.get("key.macrokey.management.desc"), KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_K), "key.macrokey.category");
+            final Map<ModKeyBinding, KeyBinding> keyBindingMap = Collections.singletonMap(ModKeyBinding.OPEN_MANAGEMENT_GUI, managementKey);
 
             keyBindingMap
                     .values()

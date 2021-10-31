@@ -1,6 +1,6 @@
 package com.mattsmeets.macrokey.model.command;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 
 /**
  * Old vanilla MacroKey command execution
@@ -19,7 +19,7 @@ public class StringCommand extends AbstractCommand implements CommandInterface {
     }
 
     @Override
-    public void execute(final LocalPlayer player) {
+    public void execute(final ClientPlayerEntity player) {
         // send command or text to server. For the time being it is
         // not possible to execute client-only commands. Tested and its
         // cool that the mod can bind its own GUI to different keys

@@ -1,17 +1,19 @@
 package com.mattsmeets.macrokey.gui;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.commons.lang3.StringUtils;
 
 public class GuiModifyLayer extends Screen {
 
@@ -24,12 +26,12 @@ public class GuiModifyLayer extends Screen {
 
     private final String cancelText = I18n.get("gui.cancel");
 
-    private EditBox textFieldName;
+    private TextFieldWidget textFieldName;
 
     private boolean existing;
 
     public GuiModifyLayer(Screen guiScreen, LayerInterface layer) {
-        super(new TextComponent("test"));
+        super(new StringTextComponent("test"));
         this.parentScreen = guiScreen;
         this.result = layer == null ? new Layer() : layer;
         this.existing = layer != null;
@@ -44,7 +46,7 @@ public class GuiModifyLayer extends Screen {
         super.init();
 
         // Add layer button
-        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TextComponent(this.saveLayerButtonText), Button::onPress) {
+        this.addButton(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new StringTextComponent(this.saveLayerButtonText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 if (textFieldName.getValue().length() <= 1) {
@@ -64,22 +66,22 @@ public class GuiModifyLayer extends Screen {
         });
 
         // Cancel button
-        this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TextComponent(this.cancelText), Button::onPress) {
+        this.addButton(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new StringTextComponent(this.cancelText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 Minecraft.getInstance().setScreen(parentScreen);
             }
         });
 
-        this.textFieldName = new EditBox(this.font, this.width / 2 - 100, 50, 200, 20, new TextComponent(existing ? result.getDisplayName() : StringUtils.EMPTY));
+        this.textFieldName = new TextFieldWidget(this.font, this.width / 2 - 100, 50, 200, 20, new StringTextComponent(existing ? result.getDisplayName() : StringUtils.EMPTY));
         this.textFieldName.setFocus(true);
         this.textFieldName.setMaxLength(20);
         this.textFieldName.setValue(existing ? result.getDisplayName() : StringUtils.EMPTY);
-        this.addRenderableWidget(this.textFieldName);
+        this.addButton(this.textFieldName);
     }
 
     @Override
-    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack ps, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(ps);
 
         // Render title

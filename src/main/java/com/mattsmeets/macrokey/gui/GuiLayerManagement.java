@@ -1,20 +1,21 @@
 package com.mattsmeets.macrokey.gui;
 
-import com.google.common.collect.ImmutableList;
-import com.mattsmeets.macrokey.gui.list.LayerListFragment;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
+import com.mattsmeets.macrokey.gui.list.LayerListFragment;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiLayerManagement extends Screen {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -30,12 +31,12 @@ public class GuiLayerManagement extends Screen {
     private Button btnDone, btnAdd;
 
     GuiLayerManagement(Screen screen) {
-        super(new TextComponent("test"));
+        super(new StringTextComponent("test"));
         this.parentScreen = screen;
     }
 
     @Override
-    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack ps, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(ps);
 
         // Render list
@@ -53,7 +54,7 @@ public class GuiLayerManagement extends Screen {
         final GuiLayerManagement that = this;
 
         // Cancel button
-        btnDone = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TextComponent(this.doneText), Button::onPress) {
+        btnDone = this.addButton(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new StringTextComponent(this.doneText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 Minecraft.getInstance().setScreen(parentScreen);
@@ -61,7 +62,7 @@ public class GuiLayerManagement extends Screen {
         });
 
         // Add layer button
-        btnAdd = this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new TextComponent(this.addLayerButtonText), Button::onPress) {
+        btnAdd = this.addButton(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new StringTextComponent(this.addLayerButtonText), Button::onPress) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 Minecraft.getInstance().setScreen(new GuiModifyLayer(that));
@@ -75,11 +76,7 @@ public class GuiLayerManagement extends Screen {
         }
     }
 
-    public List<? extends GuiEventListener> children() {
-        return ImmutableList.of(this.btnAdd, this.btnDone);
-    }
-
-    public List<? extends NarratableEntry> narratables() {
+    public List<? extends IGuiEventListener> children() {
         return ImmutableList.of(this.btnAdd, this.btnDone);
     }
 
