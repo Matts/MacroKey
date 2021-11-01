@@ -5,34 +5,29 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 
-public class JSONService {
-
+class JsonService {
     /**
      * JSON File Reader
      *
      * @param file A JSON file
      * @return The JSON contents of the give file
-     * @throws IOException When the file is not found, or not readable/
+     * @throws IOException When the file is not found, or not readable
      */
-    public JsonElement loadJSONElementFromFile(File file) throws IOException {
-        JsonParser parser = new JsonParser();
-        return parser.parse(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+    JsonElement loadJSONElementFromFile(File file) throws IOException {
+        return new JsonParser().parse(new InputStreamReader(new FileInputStream(file), "UTF-8"));
     }
 
-    public void saveJSONElementToFile(JsonElement element, File file) throws IOException {
-        Writer writer = new FileWriter(file);
+    <T> void saveObjectsToFile(T element, File file) throws IOException {
+        final Writer writer = new FileWriter(file);
 
-        Gson gson = new GsonBuilder().create();
-        gson.toJson(element, writer);
-        writer.close();
-    }
-
-    public <T> void saveObjectsToFile(T element, File file) throws IOException {
-        Writer writer = new FileWriter(file);
-
-        Gson gson = new GsonBuilder().create();
+        final Gson gson = new GsonBuilder().create();
         gson.toJson(element, writer);
         writer.close();
     }

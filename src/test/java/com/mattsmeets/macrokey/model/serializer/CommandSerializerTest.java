@@ -1,8 +1,8 @@
 package com.mattsmeets.macrokey.model.serializer;
 
 import com.google.gson.*;
-import com.mattsmeets.macrokey.model.CommandInterface;
-import com.mattsmeets.macrokey.model.StringCommand;
+import com.mattsmeets.macrokey.model.command.CommandInterface;
+import com.mattsmeets.macrokey.model.command.StringCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

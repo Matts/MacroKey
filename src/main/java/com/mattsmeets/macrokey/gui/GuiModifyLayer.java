@@ -1,117 +1,123 @@
 package com.mattsmeets.macrokey.gui;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mattsmeets.macrokey.event.LayerEvent;
 import com.mattsmeets.macrokey.model.Layer;
 import com.mattsmeets.macrokey.model.LayerInterface;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.io.IOException;
+public class GuiModifyLayer extends Screen {
 
-public class GuiModifyLayer extends GuiScreen {
-
-    private final GuiScreen parentScreen;
+    private final Screen parentScreen;
     private final LayerInterface result;
 
-    private final String
-            defaultScreenTitleText = I18n.format("gui.modify.layer.text.title.new"),
-            editScreenTitleText = I18n.format("gui.modify.layer.text.title.edit"),
-            saveLayerButtonText = I18n.format("gui.modify.layer.text.save");
+    private final String defaultScreenTitleText = I18n.get("gui.modify.layer.text.title.new");
+    private final String editScreenTitleText = I18n.get("gui.modify.layer.text.title.edit");
+    private final String saveLayerButtonText = I18n.get("gui.modify.layer.text.save");
 
-    private final String
-            cancelText = I18n.format("gui.cancel");
+    private final String cancelText = I18n.get("gui.cancel");
 
-    private GuiButton addButton, cancelButton;
-
-    private GuiTextField textFieldName;
+    private TextFieldWidget textFieldName;
 
     private boolean existing;
 
-    public GuiModifyLayer(GuiScreen guiScreen, LayerInterface layer) {
+    public GuiModifyLayer(Screen guiScreen, LayerInterface layer) {
+        super(new StringTextComponent("test"));
         this.parentScreen = guiScreen;
         this.result = layer == null ? new Layer() : layer;
         this.existing = layer != null;
     }
 
-    public GuiModifyLayer(GuiScreen guiScreen) {
-        this(guiScreen, null);
+    GuiModifyLayer(Screen parentScreen) {
+        this(parentScreen, null);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawDefaultBackground();
+    public void init() {
+        super.init();
 
-        this.drawCenteredString(this.fontRenderer, !existing ? this.defaultScreenTitleText : this.editScreenTitleText, this.width / 2, 8, 16777215);
-
-        addButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-        cancelButton.drawButton(parentScreen.mc, mouseX, mouseY, 0.0f);
-
-        this.textFieldName.drawTextBox();
-    }
-
-    public void updateScreen() {
-        this.textFieldName.updateCursorCounter();
-    }
-
-    @Override
-    public void initGui() {
-        super.initGui();
-
-        this.buttonList.add(addButton = new GuiButton(0, this.width / 2 - 155, this.height - 29, 150, 20, this.saveLayerButtonText));
-        this.buttonList.add(cancelButton = new GuiButton(1, this.width / 2 - 155 + 160, this.height - 29, 150, 20, this.cancelText));
-
-        this.textFieldName = new GuiTextField(9, this.fontRenderer, this.width / 2 - 100, 50, 200, 20);
-        this.textFieldName.setFocused(true);
-        this.textFieldName.setMaxStringLength(20);
-
-        if (existing) {
-            textFieldName.setText(result.getDisplayName());
-        }
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        super.actionPerformed(button);
-
-        switch (button.id) {
-            case 0:
-                if (this.textFieldName.getText().length() <= 1) {
-                    break;
+        // Add layer button
+        this.addButton(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new StringTextComponent(this.saveLayerButtonText), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                if (textFieldName.getValue().length() <= 1) {
+                    return;
                 }
 
-                this.result.setDisplayName(this.textFieldName.getText());
+                result.setDisplayName(textFieldName.getValue());
 
-                if (this.existing) {
-                    MinecraftForge.EVENT_BUS.post(new LayerEvent.LayerChangedEvent(this.result));
+                if (existing) {
+                    MinecraftForge.EVENT_BUS.post(new LayerEvent.LayerChangedEvent(result));
                 } else {
-                    MinecraftForge.EVENT_BUS.post(new LayerEvent.LayerAddedEvent(this.result));
+                    MinecraftForge.EVENT_BUS.post(new LayerEvent.LayerAddedEvent(result));
                 }
-            case 1:
-                this.mc.displayGuiScreen(parentScreen);
-                break;
-        }
+
+                Minecraft.getInstance().setScreen(parentScreen);
+            }
+        });
+
+        // Cancel button
+        this.addButton(new Button(this.width / 2 - 155 + 160, this.height - 29, 150, 20, new StringTextComponent(this.cancelText), Button::onPress) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                Minecraft.getInstance().setScreen(parentScreen);
+            }
+        });
+
+        this.textFieldName = new TextFieldWidget(this.font, this.width / 2 - 100, 50, 200, 20, new StringTextComponent(existing ? result.getDisplayName() : StringUtils.EMPTY));
+        this.textFieldName.setFocus(true);
+        this.textFieldName.setMaxLength(20);
+        this.textFieldName.setValue(existing ? result.getDisplayName() : StringUtils.EMPTY);
+        this.addButton(this.textFieldName);
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (this.textFieldName.isFocused()) {
-            this.textFieldName.textboxKeyTyped(typedChar, keyCode);
+    public void render(MatrixStack ps, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(ps);
 
-            return;
-        }
+        // Render title
+        drawCenteredString(ps, this.font, !existing ? this.defaultScreenTitleText : this.editScreenTitleText, this.width / 2, 8, 0xFFFFFF);
 
-        super.keyTyped(typedChar, keyCode);
+        // Render buttons & labels
+        super.render(ps, mouseX, mouseY, partialTicks);
+
+        // Render text fields
+        this.textFieldName.render(ps, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+    public void tick() {
+        this.textFieldName.tick();
+    }
 
+    @Override
+    public boolean charTyped(char keyValue, int modifier) {
+        return this.textFieldName.charTyped(keyValue, modifier);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        return textFieldName.keyPressed(keyCode, scanCode, modifier);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         this.textFieldName.mouseClicked(mouseX, mouseY, mouseButton);
+
+        return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
 }

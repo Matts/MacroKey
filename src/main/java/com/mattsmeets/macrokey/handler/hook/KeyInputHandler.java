@@ -1,69 +1,58 @@
 package com.mattsmeets.macrokey.handler.hook;
 
-import com.mattsmeets.macrokey.MacroKey;
-import com.mattsmeets.macrokey.event.ExecuteOnTickEvent;
+import com.mattsmeets.macrokey.config.ModState;
 import com.mattsmeets.macrokey.event.MacroActivationEvent;
 import com.mattsmeets.macrokey.model.MacroInterface;
-import com.mattsmeets.macrokey.model.lambda.ExecuteOnTickInterface;
+import com.mattsmeets.macrokey.repository.BindingsRepository;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.mattsmeets.macrokey.MacroKey.instance;
-
 public class KeyInputHandler {
 
+    private final BindingsRepository bindingsRepository;
+    private final ModState modState;
     // private stash of pressed keys
-    private Set<Integer> pressedKeys;
+    private final Set<Integer> pressedKeys;
 
-    public KeyInputHandler() {
+    public KeyInputHandler(final BindingsRepository bindingsRepository, final ModState modState) {
+        this.bindingsRepository = bindingsRepository;
+        this.modState = modState;
         this.pressedKeys = new HashSet<>();
     }
 
-    @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
-        int keyCode = Keyboard.getEventKey();
+        final int keyCode = event.getKey();
+        final boolean keyIsDown = event.getAction() == GLFW.GLFW_PRESS;
 
-        // find if the current key being pressed is the dedicated
-        // MacroKey gui button. If so, open its GUI
-        if (instance.forgeKeybindings[0].isPressed()) {
-            MinecraftForge.EVENT_BUS.post(new ExecuteOnTickEvent(ExecuteOnTickInterface.openMacroKeyGUI));
-        }
-
-        // find all macro's by the current key pressed, while not syncing
-        Set<MacroInterface> macros =
-                instance.bindingsRepository.findMacroByKeycode(keyCode, instance.modState.getActiveLayer(), false);
-
-        // if the list is not empty
-        if (macros.size() == 0) {
-            macros = null;
+        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, modState.getActiveLayer(), false);
+        if (macroList.isEmpty()) {
             return;
         }
 
-        if (Keyboard.getEventKeyState() && !this.pressedKeys.contains(keyCode)) {
+        if (keyIsDown && !this.pressedKeys.contains(keyCode)) {
             /*
              * if the key has not been pressed during last events, send
              * an event, and add it to the current index of pressed keys
              */
-            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macros));
+            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationPressEvent(macroList));
+
             this.pressedKeys.add(keyCode);
-        } else if (!Keyboard.getEventKeyState() && this.pressedKeys.contains(keyCode)) {
+        } else if (!keyIsDown && this.pressedKeys.contains(keyCode)) {
             /*
              * if the key has been pressed during last events, send
              * an event, and remove it from the current index of pressed keys
              */
-            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macros));
+            MinecraftForge.EVENT_BUS.post(new MacroActivationEvent.MacroActivationReleaseEvent(macroList));
+
             this.pressedKeys.remove(keyCode);
         }
     }
-
 }

@@ -1,21 +1,22 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://plugins.gradle.org/m2/'}
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+//        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
     }
 }
 
-// setup plugins to use
-plugins {
-    id 'de.fuerstenau.buildconfig' version '1.1.8'
-    id 'idea'
-    id 'net.minecraftforge.gradle.forge' version '2.0.2'
-}
+//apply plugin: 'de.fuerstenau.buildconfig'
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
-// setup external properties file
 ext.configFile = file "build.properties"
 
 // read external properties file
@@ -25,14 +26,12 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-// set default version, group and package namespace
 version = config.mc_version + '-' + config.mod_version
 group = config.mod_group
 archivesBaseName = config.mod_name
 
-// if we are building from pipeline, then add build number to the version
 if (System.getenv().BUILD_NUMBER)
-	version = "${version}.${System.getenv().BUILD_NUMBER}"
+    version = "${version}.${System.getenv().BUILD_NUMBER}"
 
 // if we are not building with a key, add this to the version
 if (!project.hasProperty('signingKeystore')) {
@@ -40,37 +39,163 @@ if (!project.hasProperty('signingKeystore')) {
     version = version + '-unsigned'
 }
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+minecraft {
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD   Snapshot are built nightly.
+    // stable     #          Stables are built at the discretion of the MCP team.
+    // official   MCVersion  Official field/method names from Mojang mapping files
+    //
+    // You must be aware of the Mojang license when using the 'official' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'official', version: '1.16.5'
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                macrokey {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                macrokey {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'macrokey', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                macrokey {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
-minecraft {
-	version = "${config.mc_version}-${config.forge_version}"
-    runDir = "run"
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    mappings = 'stable_39'
-    makeObfSourceJar = false
+repositories {
+    // Put repositories for dependencies here
+    // ForgeGradle automatically adds the Forge maven and Maven Central for you
+
+    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    // flatDir {
+    //     dir 'libs'
+    // }
 }
 
 dependencies {
-	testCompile "junit:junit:4.11"
-    testCompile 'org.mockito:mockito-core:2.7.22'
+    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.8'
+    testImplementation "junit:junit:4.13.2"
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    // Real mod deobf dependency examples - these get remapped to your current mappings
+    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
+    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
+    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
+
+    // Examples using mod jars from ./libs
+    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
-buildConfig {
-    sourceSets{
-        appName = config.mod_name
-        main {
-            buildConfigField "String", "acceptedVersions", config.accepted_versions
-                buildConfigField "String", "fingerprint", project.findProperty('signingFingerprint')
-                buildConfigField "String", "updateJSON",
-                        config.update_url +
-                                '?mkver=' + project.version +
-                                '&mcver=' + config.mc_version +
-                                '&fmver=' + config.forge_version +
-                                '&fngpt=' + project.findProperty('signingFingerprint')
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "macrokey",
+                "Specification-Vendor"    : "mattsmeets",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "mattsmeets",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
         }
     }
 }
@@ -79,19 +204,23 @@ processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "mod_version", project.version
     inputs.property "mod_name", config.mod_name
-    inputs.property "mc_version", project.minecraft.version
-
+    inputs.property "mc_version", config.mc_version
+    inputs.property "update_url", config.update_url
+    duplicatesStrategy = 'warn'
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
+        include 'META-INF/mods.toml'
         // replace variable
-        expand 'mod_name':config.mod_name, 'mod_version':project.version, 'mc_version':project.minecraft.version
+        expand 'mod_name':config.mod_name, 'mod_version':project.version, 'mc_version':config.mc_version, 'update_url': config.update_url +
+                '?mkver=' + project.version +
+                '&mcver=' + config.mc_version +
+                '&fmver=' + config.forge_version +
+                '&fngpt=' + project.findProperty('signingFingerprint')
     }
 
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'META-INF/mods.toml'
     }
 }
 

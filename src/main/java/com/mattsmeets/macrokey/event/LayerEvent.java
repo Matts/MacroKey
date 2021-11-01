@@ -1,10 +1,10 @@
 package com.mattsmeets.macrokey.event;
 
 import com.mattsmeets.macrokey.model.LayerInterface;
-import net.minecraftforge.fml.common.eventhandler.Event;
+
+import net.minecraftforge.eventbus.api.Event;
 
 public class LayerEvent {
-
     public static class LayerChangedEvent extends Event {
         private final LayerInterface layer;
 
@@ -29,4 +29,7 @@ public class LayerEvent {
         }
     }
 
+    private LayerEvent() {
+        // Hide the public constructor
+    }
 }
