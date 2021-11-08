@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JsonServiceTest {
+public class JSONServiceTest {
 
     @Mock
     private JsonService jsonService;
