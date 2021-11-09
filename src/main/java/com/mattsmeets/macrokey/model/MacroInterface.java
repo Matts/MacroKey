@@ -74,4 +74,10 @@ public interface MacroInterface {
      * @return the current Macro instance
      */
     Macro setRepeat(boolean repeat);
+
+    Macro setInterfaceType(int interfaceType);
+    int getInterfaceType();
+
+    Macro setModifier(int modifier);
+    int getModifier();
 }
