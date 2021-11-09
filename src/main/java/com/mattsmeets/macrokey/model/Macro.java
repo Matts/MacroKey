@@ -15,6 +15,12 @@ public class Macro implements MacroInterface {
      */
     private UUID umid;
 
+    // 0 = keyboard, 1 = mouse
+    private int interfaceType = 0;
+
+    // 0 = no modifier
+    private int modifier = 0;
+
     /**
      * Key code of the button that is bound
      */
@@ -40,6 +46,18 @@ public class Macro implements MacroInterface {
         this.keyCode = keyCode;
         this.command = command;
         this.active = active;
+        this.interfaceType = 0;
+        this.modifier = 0;
+        this.repeat = repeat;
+    }
+
+    public Macro(UUID umid, int keyCode, CommandInterface command, int interfaceType, int modifier, boolean active, boolean repeat) {
+        this.umid = umid;
+        this.keyCode = keyCode;
+        this.command = command;
+        this.active = active;
+        this.interfaceType = interfaceType;
+        this.modifier = modifier;
         this.repeat = repeat;
     }
 
@@ -99,6 +117,30 @@ public class Macro implements MacroInterface {
         this.repeat = repeat;
 
         return this;
+    }
+
+    @Override
+    public Macro setInterfaceType(int interfaceType) {
+        this.interfaceType = interfaceType;
+
+        return this;
+    }
+
+    @Override
+    public int getInterfaceType() {
+        return 0;
+    }
+
+    @Override
+    public Macro setModifier(int modifier) {
+        this.modifier = modifier;
+
+return this;
+    }
+
+    @Override
+    public int getModifier() {
+        return 0;
     }
 
 }

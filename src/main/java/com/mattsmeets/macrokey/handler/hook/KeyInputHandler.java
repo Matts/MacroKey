@@ -28,11 +28,20 @@ public class KeyInputHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-    public void onKeyInputEvent(InputEvent.KeyInputEvent event) throws IOException {
-        final int keyCode = event.getKey();
-        final boolean keyIsDown = event.getAction() == GLFW.GLFW_PRESS;
+    public void onKeyInputEvent(InputEvent event) throws IOException {
+        int keyCode = -1;
+        boolean keyIsDown = false;
+        int interfaceType = 0;
+        if(event instanceof InputEvent.KeyInputEvent) {
+            keyCode = ((InputEvent.KeyInputEvent) event).getKey();
+            keyIsDown = ((InputEvent.KeyInputEvent) event).getAction() == GLFW.GLFW_PRESS;
+        } else if(event instanceof InputEvent.RawMouseEvent) {
+            keyCode = ((InputEvent.RawMouseEvent) event).getButton();
+            keyIsDown = ((InputEvent.RawMouseEvent) event).getAction() == GLFW.GLFW_PRESS;
+            interfaceType = 1;
+        }
 
-        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, modState.getActiveLayer(), false);
+        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, interfaceType, modState.getActiveLayer(), false);
         if (macroList.isEmpty()) {
             return;
         }
