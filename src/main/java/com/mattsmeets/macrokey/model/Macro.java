@@ -128,19 +128,19 @@ public class Macro implements MacroInterface {
 
     @Override
     public int getInterfaceType() {
-        return 0;
+        return this.interfaceType;
     }
 
     @Override
     public Macro setModifier(int modifier) {
         this.modifier = modifier;
 
-return this;
+        return this;
     }
 
     @Override
     public int getModifier() {
-        return 0;
+        return this.modifier;
     }
 
 }

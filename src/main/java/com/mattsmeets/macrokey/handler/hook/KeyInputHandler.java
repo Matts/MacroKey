@@ -32,16 +32,22 @@ public class KeyInputHandler {
         int keyCode = -1;
         boolean keyIsDown = false;
         int interfaceType = 0;
+        int modifier = 0;
+        if(!(event instanceof InputEvent.KeyInputEvent || event instanceof InputEvent.RawMouseEvent)) {
+            return;
+        }
         if(event instanceof InputEvent.KeyInputEvent) {
             keyCode = ((InputEvent.KeyInputEvent) event).getKey();
             keyIsDown = ((InputEvent.KeyInputEvent) event).getAction() == GLFW.GLFW_PRESS;
-        } else if(event instanceof InputEvent.RawMouseEvent) {
+            modifier = ((InputEvent.KeyInputEvent) event).getModifiers();
+        } else {
             keyCode = ((InputEvent.RawMouseEvent) event).getButton();
             keyIsDown = ((InputEvent.RawMouseEvent) event).getAction() == GLFW.GLFW_PRESS;
+            modifier = ((InputEvent.RawMouseEvent) event).getMods();
             interfaceType = 1;
         }
 
-        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, interfaceType, modState.getActiveLayer(), false);
+        final Set<MacroInterface> macroList = bindingsRepository.findMacroByKeyCode(keyCode, interfaceType, modifier, modState.getActiveLayer(), false);
         if (macroList.isEmpty()) {
             return;
         }

@@ -239,7 +239,7 @@ public class BindingsRepository {
      * @return list of active macro's with the given keyCode as trigger
      * @throws IOException when file can not be found or read
      */
-    public Set<MacroInterface> findMacroByKeyCode(int keyCode, int interfaceType, LayerInterface layer, boolean sync) throws IOException {
+    public Set<MacroInterface> findMacroByKeyCode(int keyCode, int interfaceType, int modifiers, LayerInterface layer, boolean sync) throws IOException {
         if (sync) {
             // if specified to update memory with latest changes
             loadConfiguration();
@@ -256,7 +256,9 @@ public class BindingsRepository {
                 .stream()
                 .filter(
                         macro ->
-                                macro.getKeyCode() == keyCode && macro.getInterfaceType() == interfaceType
+                                macro.getKeyCode() == keyCode
+                                        && macro.getInterfaceType() == interfaceType
+                                        && macro.getModifier() == modifiers
                                         && macro.isActive()
                                         && isMacroInLayer(macro, layer)
                 )
