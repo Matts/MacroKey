@@ -13,7 +13,8 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -38,9 +39,9 @@ public class GuiEventHandler {
      * @param event The init GUI event.
      */
     @SubscribeEvent
-    public void init(final GuiScreenEvent.InitGuiEvent event) {
-        final Screen gui = event.getGui();
-        if (isNotMainMenu(event.getGui())) return;
+    public void init(final ScreenEvent.InitScreenEvent event) {
+        final Screen gui = event.getScreen();
+        if (isNotMainMenu(event.getScreen())) return;
         if (isSwitchButtonDisabled()) return;
 
         switchButton = new Button(
@@ -57,7 +58,7 @@ public class GuiEventHandler {
             }
         };
 
-        event.addWidget(switchButton);
+        event.addListener(switchButton);
     }
 
     /**
@@ -67,8 +68,8 @@ public class GuiEventHandler {
      * @param event The mouse click event.
      */
     @SubscribeEvent(receiveCanceled = true)
-    public void mouseClickedEvent(final GuiScreenEvent.MouseClickedEvent.Post event) {
-        if (isNotMainMenu(event.getGui())
+    public void mouseClickedEvent(final ScreenEvent.MouseClickedEvent.Post event) {
+        if (isNotMainMenu(event.getScreen())
                 || isSwitchButtonDisabled()
                 || switchButton == null
                 || !switchButton.isMouseOver(event.getMouseX(), event.getMouseY())) {
@@ -84,17 +85,17 @@ public class GuiEventHandler {
      * @param event The draw screen event.
      */
     @SubscribeEvent(receiveCanceled = true)
-    public void render(final GuiScreenEvent.DrawScreenEvent.Post event) {
-        if (isNotMainMenu(event.getGui())
+    public void render(final ScreenEvent.DrawScreenEvent.Post event) {
+        if (isNotMainMenu(event.getScreen())
                 || isSwitchButtonDisabled()
                 || switchButton == null
-                || !switchButton.isHovered()) {
+                || !switchButton.isHoveredOrFocused()) {
             return;
         }
 
         final MouseHandler mouseHelper = Minecraft.getInstance().mouseHandler;
         PoseStack posestack = new PoseStack();
-        event.getGui().renderTooltip(
+        event.getScreen().renderTooltip(
                 posestack,
                 new TranslatableComponent("text.layer.hover.right_click"),
                 (int) (mouseHelper.xpos() / 2),
